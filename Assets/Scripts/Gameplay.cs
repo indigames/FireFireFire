@@ -23,6 +23,8 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator Start()
     {
+        Application.targetFrameRate = 60;
+
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
 
