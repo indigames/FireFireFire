@@ -171,7 +171,7 @@ PlayerSettings:
     Android: net.indigames.firefirefire
     Standalone: unity.DefaultCompany.FPS2
     Tizen: com.Company.ProductName
-    iPhone: com.Company.ProductName
+    iPhone: net.indigames.firefirefire
     tvOS: com.Company.ProductName
   buildNumber:
     iPhone: 0
@@ -238,10 +238,10 @@ PlayerSettings:
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 1
   iosCopyPluginsCodeInsteadOfSymlink: 0
-  appleDeveloperTeamID: 
-  iOSManualSigningProvisioningProfileID: 
+  appleDeveloperTeamID: R2TWY42MN5
+  iOSManualSigningProvisioningProfileID: 7902f68b-5bec-4fb1-a953-b59e9b29e638
   tvOSManualSigningProvisioningProfileID: 
-  iOSManualSigningProvisioningProfileType: 0
+  iOSManualSigningProvisioningProfileType: 2
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 0
   iOSRequireARKit: 0
