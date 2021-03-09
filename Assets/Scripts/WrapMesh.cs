@@ -107,21 +107,31 @@ public class WrapMesh : MonoBehaviour
                 for (var j = 0; j < simplifiedVertices.Length; j++)
                     simplifiedVertices[j] *= 0.8f;
                 simplifier.Vertices = simplifiedVertices;
-                simplifier.SimplifyMesh(0.4f);
+                simplifier.SimplifyMesh(0.1f);
 
                 this.colliderMesh = simplifier.ToMesh();
             }
+
+            var collider_extents = colliderMesh.bounds.extents;
+            var collider_center = colliderMesh.bounds.center;
+            var max_extent = Mathf.Max(collider_extents.x, collider_extents.y, collider_extents.z);
 
             //CREATE Trigger here
             var trigger_object = new GameObject("Trigger");
             trigger_object.transform.SetParent(transform);
             trigger_object.transform.localPosition = trigger_object.transform.localEulerAngles = Vector3.zero;
             trigger_object.layer = LayerUtil.LAYER_WRAP_TRIGGER;
+
+            //var trigger_collider = trigger_object.AddComponent<SphereCollider>();
+            //trigger_collider.isTrigger = true;
+            //trigger_collider.radius = max_extent * 1.2f;
+            //trigger_collider.transform.localPosition = collider_center;
+
             var trigger_collider = trigger_object.AddComponent<MeshCollider>();
             trigger_collider.convex = true;
             trigger_collider.isTrigger = true;
             trigger_collider.sharedMesh = this.colliderMesh;
-            trigger_collider.transform.localScale = Vector3.one * 1.5f;
+            trigger_collider.transform.localScale = new Vector3(1.7f, 1.7f, 1f);
         }
 
     }
@@ -234,4 +244,22 @@ public class WrapMesh : MonoBehaviour
         mc.convex = false;
     }
 
+    public WrapMesh MakeInstanceFromModel(Transform target, Transform parent = null)
+    {
+        gameObject.name = target.name;
+        if (parent == null) parent = transform.parent;
+
+        //create new wrapmesh instance
+        var result = Instantiate(this, parent);
+        result.transform.position = target.position;
+
+        //duplicate target model inside new wrap mesh
+        target = Instantiate(target);
+        target.gameObject.SetActive(true);
+        target.SetParent(result.transform);
+
+        //activate it and return
+        result.gameObject.SetActive(true);
+        return result;
+    }
 }

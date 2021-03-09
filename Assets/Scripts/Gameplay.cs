@@ -5,15 +5,26 @@ using UnityEngine;
 
 public class Gameplay : MonoBehaviour
 {
+    public Action callbackRestart;
     public Action<int> callbackRemainingMeshblock;
     public Action callbackVictory;
     public Action callbackDefeat;
 
-    public MeshBlock baseMeshBlock;
-    public MeshBlock emptyMeshBlock;
-    public WrapMeshInteraction targetMesh;
-    public Transform itemsContainer;
+    public GameObject stageTemplate;
 
+    [Space]
+    public Transform areaTarget;
+    public Transform areaPreview;
+
+    [Space]
+    public MeshBlock baseMeshBlock;
+    public WrapMesh baseWrapMesh;
+
+    [Space]
+    public Transform previewArea;
+    public FirestarterArea fireStarterArea;
+
+    WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
     int nextMeshBlockIndex;
     MeshBlock nextMeshBlock;
@@ -28,24 +39,43 @@ public class Gameplay : MonoBehaviour
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
 
+        RestartGame();
+    }
+
+    public void RestartGame()
+    {
+        StopAllCoroutines();
         StartCoroutine(CoGameplay());
     }
 
     IEnumerator CoGameplay()
     {
+        foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
+        availableMeshBlocks.Clear();
+        if (targetMesh != null) Destroy(targetMesh.gameObject);
+        fireStarterArea.Restart();
+
         // collect child transforms from items container
-        List<Transform> transforms = new List<Transform>();
-        for (var i = 0; i < itemsContainer.childCount; i++) transforms.Add(itemsContainer.GetChild(i));
+        List<StageItem> stageItems = new List<StageItem>(stageTemplate.GetComponentsInChildren<StageItem>(true));
+        StageTarget stageTarget = stageTemplate.GetComponentInChildren<StageTarget>(true);
 
         // create new meshblocks here
-        foreach (var transform in transforms)
+        foreach (var stageItem in stageItems)
         {
-            var newMeshBlock = emptyMeshBlock.MakeInstanceFromModel(transform);
+            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem.transform);
             newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
+            newMeshBlock.transform.position = areaPreview.position;
             availableMeshBlocks.Add(newMeshBlock);
+
+            stageItem.gameObject.SetActive(false);
         }
+
+        // create the target here
+        targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget.transform).GetComponent<WrapMeshInteraction>();
+        targetMesh.transform.position = areaTarget.position;
+        stageTarget.gameObject.SetActive(false);
 
         yield return true;
         yield return true;
@@ -63,11 +93,11 @@ public class Gameplay : MonoBehaviour
 
             for (var dt = 0f; dt < 1; dt += Time.deltaTime / 0.25f)
             {
-                nextMeshBlock.transform.position = Vector3.Lerp(new Vector3(0, 22, -2), new Vector3(0, 20, -4), dt);
+                nextMeshBlock.transform.position = Vector3.Lerp(new Vector3(0, 22, -2), new Vector3(0, 20, 0), dt);
                 nextMeshBlock.transform.localScale = Vector3.Lerp(new Vector3(2, 2, 2), new Vector3(1, 1, 1), dt);
                 yield return true;
             }
-            nextMeshBlock.transform.position = new Vector3(0, 18, -2);
+            nextMeshBlock.transform.position = new Vector3(0, 20, 0);
             nextMeshBlock.transform.localScale = Vector3.one;
 
             this.nextMeshBlock = nextMeshBlock;
@@ -76,13 +106,13 @@ public class Gameplay : MonoBehaviour
             while (waitingForLaunch && victory == false) yield return true;
             if (victory) yield break;
 
-            var fromLaunchPosition = nextMeshBlock.transform.position;
-            for (var dt = 0f; dt < 1; dt += Time.deltaTime / 0.15f)
-            {
-                nextMeshBlock.transform.position = Vector3.Lerp(fromLaunchPosition, nextLaunchPosition, dt);
-                yield return true;
-            }
-            nextMeshBlock.transform.position = nextLaunchPosition;
+            //var fromLaunchPosition = nextMeshBlock.transform.position;
+            //for (var dt = 0f; dt < 1; dt += Time.deltaTime / 0.15f)
+            //{
+            //    nextMeshBlock.transform.position = Vector3.Lerp(fromLaunchPosition, nextLaunchPosition, dt);
+            //    yield return true;
+            //}
+            //nextMeshBlock.transform.position = nextLaunchPosition;
             nextMeshBlock.GetRigidbody.isKinematic = false;
             nextMeshBlock.ResetStatus();
 
@@ -140,9 +170,35 @@ public class Gameplay : MonoBehaviour
         }
     }
 
+    void UpdateDrag()
+    {
+        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
+        {
+            nextMeshBlock.MovementMode = true;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //RaycastHit hitInfo;
+            //if (Physics.Raycast(ray, out hitInfo, 9999, LayerUtil.MASK_WRAP_MESH) && hitInfo.transform != null) return;
+
+            var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
+            float distance;
+            plane.Raycast(ray, out distance);
+
+            var pos = ray.GetPoint(distance);
+
+            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 50;
+        }
+
+        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
+        {
+            nextMeshBlock.GetRigidbody.velocity = Vector3.zero;
+            nextMeshBlock.MovementMode = false;
+            waitingForLaunch = false;
+        }
+    }
+
     void UpdateCheckForVictory()
     {
-        if (targetMesh.MeshIgnited && victory == false)
+        if (targetMesh != null && targetMesh.MeshIgnited && victory == false)
         {
             victory = true;
             StopAllCoroutines();
@@ -152,7 +208,8 @@ public class Gameplay : MonoBehaviour
 
     private void Update()
     {
-        UpdateLaunch();
+        //UpdateLaunch();
+        UpdateDrag();
         UpdateCheckForVictory();
     }
 }

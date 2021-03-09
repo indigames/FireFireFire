@@ -73,9 +73,20 @@ public class WrapMeshInteraction : MonoBehaviour
                 vertex.spreadDurations[i] = vertex.spreadDeltas[i] = (map_vertices[vertex.neighbors[i]].position - vertex.position).sqrMagnitude * SPREAD_RATE;
     }
 
-    public void ResetVertices()
+    public void Restart()
     {
+        for (var i = 0; i < colors.Count; i++) colors[i] = Color.clear;
+        applyingColors = true;
+        canSpreadTo = false;
+        mapCollision.Clear();
 
+        foreach (var vertex in vertices)
+        {
+            vertex.snuffed = false;
+            vertex.spreaded = false;
+            for (var i = 0; i < vertex.neighbors.Count; i++)
+                vertex.spreadDeltas[i] = vertex.spreadDurations[i];
+        }
     }
 
     bool applyingColors = false;
@@ -128,7 +139,11 @@ public class WrapMeshInteraction : MonoBehaviour
             if (vertex.snuffed && this.colors[vertex.index].a > 0.5f + float.Epsilon * 2)
             {
                 var c = this.colors[vertex.index];
+
+                var alpha_step = Mathf.RoundToInt(c.a / 0.1f);
                 c.a -= deltaTime * (0.5F / SNUFF_DURATION);
+                if (alpha_step != Mathf.RoundToInt(c.a / 0.1f)) CheckSpreadToOther(vertex.index);
+
                 if (c.a < 0.5f)
                 {
                     c.a = 0.5f + float.Epsilon;
@@ -235,9 +250,11 @@ public class WrapMeshInteraction : MonoBehaviour
         if (this.canSpreadTo == false) return;
 
         var dist = transform.position - position;
+        if (dist.sqrMagnitude <= float.Epsilon) dist = Vector3.forward;
         RaycastHit hitInfo;
+
         if (GetComponent<Collider>().Raycast(new Ray(position - dist, dist), out hitInfo, 20f) == false
-         && GetComponent<Collider>().Raycast(new Ray(position + Vector3.up * 0.4f - Vector3.forward, Vector3.forward), out hitInfo, 4f) == false)
+            && GetComponent<Collider>().Raycast(new Ray(position - Vector3.forward * 10, Vector3.forward), out hitInfo, 20f) == false)
             return;
 
         var index = hitInfo.triangleIndex;
@@ -260,7 +277,7 @@ public class WrapMeshInteraction : MonoBehaviour
             if (wrapMeshInteraction == null) continue;
 
             var pos = keyval.Value;
-            if ((pos - position).sqrMagnitude > 0.2f) continue;
+            if ((pos - position).sqrMagnitude > 0.5f) continue;
 
             //spread to other here
             wrapMeshInteraction.SpreadFromPoint(pos);

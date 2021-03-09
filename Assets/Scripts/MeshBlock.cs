@@ -13,6 +13,8 @@ public class MeshBlock : MonoBehaviour
     float duration = 2.5f;
 
     public Rigidbody GetRigidbody => GetComponent<Rigidbody>();
+    float baseMass;
+    bool movementMode = false;
 
     // Use this for initialization
     IEnumerator Start()
@@ -21,6 +23,8 @@ public class MeshBlock : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
 
         yield return true;
+
+        baseMass = rigidBody.mass;
         meshCollider.sharedMesh = wrapMesh.colliderMesh;
 
         if (template) gameObject.SetActive(false);
@@ -28,6 +32,36 @@ public class MeshBlock : MonoBehaviour
 
     public bool MeshSnuffed => wrapMeshInteraction.MeshSnuffed;
     public bool MeshIgnited => wrapMeshInteraction.MeshIgnited;
+
+    public void Restart()
+    {
+        MovementMode = false;
+        wrapMeshInteraction.Restart();
+    }
+
+    public bool MovementMode
+    {
+        set
+        {
+            SetMovementMode(value);
+        }
+    }
+
+    public void SetMovementMode(bool value)
+    {
+        movementMode = value;
+        ResetStatus();
+        if (value)
+        {
+            rigidBody.isKinematic = false;
+            rigidBody.mass = 0.0001f;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+        } else
+        {
+            rigidBody.mass = baseMass;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionZ;
+        }
+    }
 
     public void ResetStatus()
     {
@@ -37,6 +71,8 @@ public class MeshBlock : MonoBehaviour
 
     private void Update()
     {
+        //if (movementMode == false)
+        //{
         if (duration > 0)
         {
             duration -= Time.deltaTime;
@@ -51,6 +87,15 @@ public class MeshBlock : MonoBehaviour
             rigidBody.isKinematic = true;
             wrapMeshInteraction.canSpreadTo = true;
         }
+        //}
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        //if (other.gameObject.layer == LayerUtil.LAYER_WRAP_TRIGGER)
+        //{
+        //    Debug.Log(other);
+        //}
     }
 
     public MeshBlock MakeInstance(Vector3 position, Transform parent = null)
@@ -64,10 +109,16 @@ public class MeshBlock : MonoBehaviour
     }
 
     public MeshBlock MakeInstanceFromModel(Transform target, Transform parent = null) {
+        gameObject.name = target.name;
         if (parent == null) parent = transform.parent;
+
         var result = Instantiate(this, parent);
         result.transform.position = target.position;
+
+        target = Instantiate(target);
+        target.gameObject.SetActive(true);
         target.SetParent(result.transform);
+
         result.template = false;
         result.gameObject.SetActive(true);
         return result;

@@ -10,6 +10,11 @@ public class FirestarterArea : MonoBehaviour
         StartCoroutine(CoAutoLit());
     }
 
+    public void Restart()
+    {
+        wrapMeshes.Clear();
+    }
+
     IEnumerator CoAutoLit()
     {
         while (true)
@@ -17,7 +22,9 @@ public class FirestarterArea : MonoBehaviour
             foreach (var wrapMesh in wrapMeshes)
             {
                 var position = wrapMesh.transform.position;
-                position.y = transform.position.y - 1;
+                //position.y = transform.position.y - 1;
+
+                //position = wrapMesh.GetComponent<MeshCollider>().ClosestPoint(position);
                 wrapMesh.SpreadFromPoint(position);
             }
             yield return new WaitForSeconds(0.2f);

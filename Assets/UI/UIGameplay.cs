@@ -15,19 +15,26 @@ public class UIGameplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameplay.callbackRestart += Restart;
         gameplay.callbackRemainingMeshblock += ResetRemainingCount;
         gameplay.callbackVictory += Victory;
         gameplay.callbackDefeat += Defeat;
     }
 
+    void Restart()
+    {
+        markerVictory.SetActive(false);
+        markerDefeat.SetActive(false);
+    }
+
     void ResetRemainingCount(int count)
     {
         if (count > 1)
-            textRemaining.text = string.Format("{0} items\nremaning", count);
+            textRemaining.text = string.Format("{0} items remaning", count);
         else if (count == 1)
-            textRemaining.text = "1 item\nremaning";
+            textRemaining.text = "1 item remaning";
         else
-            textRemaining.text = "No item\nremaning";
+            textRemaining.text = "No item remaning";
     }
 
     void Victory()
@@ -38,6 +45,11 @@ public class UIGameplay : MonoBehaviour
     void Defeat()
     {
         markerDefeat.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        gameplay.RestartGame();
     }
 
 }
