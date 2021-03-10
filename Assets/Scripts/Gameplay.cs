@@ -23,6 +23,9 @@ public class Gameplay : MonoBehaviour
     [Space]
     public Transform previewArea;
     public FirestarterArea fireStarterArea;
+    public ParticleSystem fireParticles;
+
+    public Camera previewCamera;
 
     WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
@@ -35,6 +38,7 @@ public class Gameplay : MonoBehaviour
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
+        previewCamera.backgroundColor = Color.clear;
 
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
@@ -45,11 +49,14 @@ public class Gameplay : MonoBehaviour
     public void RestartGame()
     {
         StopAllCoroutines();
+        callbackRestart?.Invoke();
         StartCoroutine(CoGameplay());
     }
 
     IEnumerator CoGameplay()
     {
+        victory = false;
+        fireParticles.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         availableMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
