@@ -239,7 +239,7 @@ PlayerSettings:
   iOSRenderExtraFrameOnPause: 1
   iosCopyPluginsCodeInsteadOfSymlink: 0
   appleDeveloperTeamID: R2TWY42MN5
-  iOSManualSigningProvisioningProfileID: 7902f68b-5bec-4fb1-a953-b59e9b29e638
+  iOSManualSigningProvisioningProfileID: ed70a7ae-5a45-43ad-b5be-6dcd307842e0
   tvOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 2
   tvOSManualSigningProvisioningProfileType: 0
