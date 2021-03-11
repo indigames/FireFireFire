@@ -831,6 +831,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIVictory
       objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676707, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1429,6 +1434,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIDefeat
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676707, guid: 220433e564c456d48897c41a7f0719c2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
@@ -3480,6 +3490,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIGameplay
       objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676707, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3585,6 +3600,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6416528849484916542, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -83
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d512687f564e597489eb32297f233d9e, type: 3}
 --- !u!224 &5478539384197013600
@@ -3621,6 +3641,7 @@ GameObject:
   - component: {fileID: 5478539384197013607}
   - component: {fileID: 5478539384197013606}
   - component: {fileID: 5478539384197013605}
+  - component: {fileID: 5478539384197013608}
   m_Layer: 5
   m_Name: UserInterface
   m_TagString: Untagged
@@ -3688,3 +3709,15 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 100
   m_TargetDisplay: 0
+--- !u!114 &5478539384197013608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5478539384197013604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd89e9aec003184b82b06c48c2af644, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
