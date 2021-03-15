@@ -22,12 +22,16 @@ public class UIGameplay : MonoBehaviour
 
     void ResetRemainingCount(int count)
     {
-        if (count > 1)
-            textRemaining.text = string.Format("<color=red>{0}</color> items remaning", count);
-        else if (count == 1)
-            textRemaining.text = "<color=red>1</color> item remaning";
-        else
-            textRemaining.text = "No item remaning";
+
+        textRemaining.text = string.Format("x<color=red>{0}</color>", count);
+
+
+        //if (count > 1)
+        //    textRemaining.text = string.Format("<color=red>{0}</color> items remaning", count);
+        //else if (count == 1)
+        //    textRemaining.text = "<color=red>1</color> item remaning";
+        //else
+        //    textRemaining.text = "No item remaning";
     }
 
     public void RestartGame()

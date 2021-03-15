@@ -28,6 +28,8 @@ public class WrapMesh : MonoBehaviour
     // Start is called before the first frame update
 
     LayerMask layerMask;
+    [System.NonSerialized]
+    public MeshCollider wrapMeshTrigger;
 
     void Start()
     {
@@ -117,21 +119,40 @@ public class WrapMesh : MonoBehaviour
             var max_extent = Mathf.Max(collider_extents.x, collider_extents.y, collider_extents.z);
 
             //CREATE Trigger here
-            var trigger_object = new GameObject("Trigger");
-            trigger_object.transform.SetParent(transform);
-            trigger_object.transform.localPosition = trigger_object.transform.localEulerAngles = Vector3.zero;
-            trigger_object.layer = LayerUtil.LAYER_WRAP_TRIGGER;
+            var existing_trigger_colliders = new List<MeshCollider>(targetContainer.GetComponentsInChildren<MeshCollider>());
+            var existing_trigger_collider = existing_trigger_colliders.Find((c) => c.gameObject != gameObject && c.isTrigger);
 
-            //var trigger_collider = trigger_object.AddComponent<SphereCollider>();
-            //trigger_collider.isTrigger = true;
-            //trigger_collider.radius = max_extent * 1.2f;
-            //trigger_collider.transform.localPosition = collider_center;
+            if (existing_trigger_collider != null)
+            {
+                var scale = existing_trigger_collider.transform.localScale;
+                scale.x *= 1.2f;
+                scale.y *= 1.2f;
+                scale.z *= 1.2f;
+                existing_trigger_collider.transform.localScale = scale;
+                existing_trigger_collider.transform.SetParent(transform);
+                existing_trigger_collider.gameObject.layer = LayerUtil.LAYER_WRAP_TRIGGER;
 
-            var trigger_collider = trigger_object.AddComponent<MeshCollider>();
-            trigger_collider.convex = true;
-            trigger_collider.isTrigger = true;
-            trigger_collider.sharedMesh = this.colliderMesh;
-            trigger_collider.transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+                this.wrapMeshTrigger = existing_trigger_collider;                
+            }
+            else
+            {
+                var trigger_object = new GameObject("Trigger");
+                trigger_object.transform.SetParent(transform);
+                trigger_object.transform.localPosition = trigger_object.transform.localEulerAngles = Vector3.zero;
+                trigger_object.layer = LayerUtil.LAYER_WRAP_TRIGGER;
+
+                //var trigger_collider = trigger_object.AddComponent<SphereCollider>();
+                //trigger_collider.isTrigger = true;
+                //trigger_collider.radius = max_extent * 1.2f;
+                //trigger_collider.transform.localPosition = collider_center;
+
+                var trigger_collider = trigger_object.AddComponent<MeshCollider>();
+                trigger_collider.convex = true;
+                trigger_collider.isTrigger = true;
+                trigger_collider.sharedMesh = this.colliderMesh;
+                trigger_collider.transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+                this.wrapMeshTrigger = trigger_collider;
+            }
         }
 
     }
@@ -260,6 +281,13 @@ public class WrapMesh : MonoBehaviour
 
         //activate it and return
         result.gameObject.SetActive(true);
+        return result;
+    }
+
+    public WrapMesh MakeInstanceFromModel(StageTarget target, Transform parent = null)
+    {
+        var result = MakeInstanceFromModel(target.transform);
+        result.GetComponent<WrapMeshInteraction>().spreadSpeed = target.spreadSpeed;
         return result;
     }
 }

@@ -16,7 +16,7 @@ public class WrapMeshInteraction : MonoBehaviour
     }
 
     private const float SNUFF_DURATION = 3f; //Default is 2f
-    private const float SPREAD_SPEED = 1f; //Default is 1d
+    private const float SPREAD_SPEED = 3f; //Default is 1d
     private MeshFilter meshFilter;
     private WrapMesh wrapMesh;
     private List<Vertex> vertices = new List<Vertex>();
@@ -249,6 +249,7 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         if (this.canSpreadTo == false) return;
 
+        position.z = transform.position.z;
         var dist = transform.position - position;
         if (dist.sqrMagnitude <= float.Epsilon) dist = Vector3.forward;
         RaycastHit hitInfo;
@@ -277,6 +278,7 @@ public class WrapMeshInteraction : MonoBehaviour
             if (wrapMeshInteraction == null) continue;
 
             var pos = keyval.Value;
+            pos.z = position.z;
             if ((pos - position).sqrMagnitude > 0.5f) continue;
 
             //spread to other here
@@ -288,7 +290,7 @@ public class WrapMeshInteraction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshInteractionEnter(this);
+        other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshTriggerEnter(wrapMesh.wrapMeshTrigger);
     }
 
     private void OnTriggerStay(Collider other)
@@ -303,8 +305,8 @@ public class WrapMeshInteraction : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshInteractionExit(this);
-        if (mapCollision.ContainsKey(other.gameObject)) mapCollision.Remove(other.gameObject);
+        other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshTriggerExit(wrapMesh.wrapMeshTrigger);
+        //if (mapCollision.ContainsKey(other.gameObject)) mapCollision.Remove(other.gameObject);
     }
 }
 

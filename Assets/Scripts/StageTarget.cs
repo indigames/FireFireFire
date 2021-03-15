@@ -4,15 +4,6 @@ using UnityEngine;
 
 public class StageTarget : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Range(1, 5)]
+    public int spreadSpeed = 3;
 }

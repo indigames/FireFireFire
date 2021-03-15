@@ -4,17 +4,28 @@ using UnityEngine;
 [RequireComponent(typeof(MeshCollider), typeof(Rigidbody))]
 public class MeshBlock : MonoBehaviour
 {
+    const float COLLISION_TRESHOLD = 0.5f;
+    const float AUTO_SLEEP_DURATION = 5f;
+    const float BURN_DELAY_DURATION = 1f;
+
     MeshCollider meshCollider;
     Rigidbody rigidBody;
     public WrapMesh wrapMesh;
     public WrapMeshInteraction wrapMeshInteraction;
 
     public bool template = true;
-    float duration = 2.5f;
+    [Range(0, 1)]
+    public float drag_rate = 0.25f;
+    float duration = AUTO_SLEEP_DURATION;
+    float burndelay = BURN_DELAY_DURATION;
+    float collision_delay = COLLISION_TRESHOLD;
 
     public Rigidbody GetRigidbody => GetComponent<Rigidbody>();
     float baseMass;
+    float baseDrag;
+    float baseAngularDrag;
     bool movementMode = false;
+    bool collided = false;
 
     // Use this for initialization
     IEnumerator Start()
@@ -25,6 +36,9 @@ public class MeshBlock : MonoBehaviour
         yield return true;
 
         baseMass = rigidBody.mass;
+        baseDrag = rigidBody.drag;
+        baseAngularDrag = rigidBody.angularDrag;
+
         meshCollider.sharedMesh = wrapMesh.colliderMesh;
 
         if (template) gameObject.SetActive(false);
@@ -35,7 +49,14 @@ public class MeshBlock : MonoBehaviour
 
     public void Restart()
     {
+        burndelay = BURN_DELAY_DURATION;
+        collision_delay = COLLISION_TRESHOLD;
         MovementMode = false;
+
+        collided = false;
+        rigidBody.drag = baseDrag;
+        rigidBody.angularDrag = baseAngularDrag;
+
         wrapMeshInteraction.Restart();
     }
 
@@ -65,16 +86,30 @@ public class MeshBlock : MonoBehaviour
 
     public void ResetStatus()
     {
-        duration = 2.5f;
+        duration = AUTO_SLEEP_DURATION;
+        burndelay = BURN_DELAY_DURATION;
+        collision_delay = COLLISION_TRESHOLD;
         wrapMeshInteraction.canSpreadTo = false;
     }
 
     private void Update()
     {
-        //if (movementMode == false)
-        //{
+        if (movementMode) return;
+
+        if (collided && burndelay > 0)
+        {
+            burndelay -= Time.deltaTime;
+            if (burndelay < 0) wrapMeshInteraction.canSpreadTo = true;
+        }
+
         if (duration > 0)
         {
+            if (collided)
+            {
+                rigidBody.drag += 15f * Time.deltaTime * drag_rate;
+                rigidBody.angularDrag += 15f * Time.deltaTime * drag_rate;
+            }
+
             duration -= Time.deltaTime;
             if (duration < 0)
             {
@@ -87,7 +122,17 @@ public class MeshBlock : MonoBehaviour
             rigidBody.isKinematic = true;
             wrapMeshInteraction.canSpreadTo = true;
         }
-        //}
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (movementMode) return;
+
+        if (collision_delay > 0)
+        {
+            collision_delay -= Time.fixedDeltaTime;
+            if (collision_delay < 0) collided = true;
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -121,6 +166,13 @@ public class MeshBlock : MonoBehaviour
 
         result.template = false;
         result.gameObject.SetActive(true);
+        return result;
+    }
+
+    public MeshBlock MakeInstanceFromModel(StageItem item, Transform parent = null)
+    {
+        var result = MakeInstanceFromModel(item.transform, parent);
+        result.GetComponentInChildren<WrapMeshInteraction>().spreadSpeed = item.spreadSpeed;
         return result;
     }
 }

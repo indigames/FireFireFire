@@ -12,35 +12,36 @@ public class FirestarterArea : MonoBehaviour
 
     public void Restart()
     {
-        wrapMeshes.Clear();
+        wrapColliders.Clear();
     }
 
     IEnumerator CoAutoLit()
     {
         while (true)
         {
-            foreach (var wrapMesh in wrapMeshes)
+            foreach (var wrapMesh in wrapColliders)
             {
-                var position = wrapMesh.transform.position;
-                //position.y = transform.position.y - 1;
-
-                //position = wrapMesh.GetComponent<MeshCollider>().ClosestPoint(position);
-                wrapMesh.SpreadFromPoint(position);
+                #pragma warning disable
+                var collider = wrapMesh.GetComponent<MeshCollider>();
+                var position = collider.ClosestPoint(transform.position) ;
+                #pragma warning restore
+                position += Vector3.up * 0.1f;
+                collider.GetComponentInParent<WrapMeshInteraction>().SpreadFromPoint(position);
             }
             yield return new WaitForSeconds(0.2f);
         }
     }
 
 
-    HashSet<WrapMeshInteraction> wrapMeshes = new HashSet<WrapMeshInteraction>();
+    HashSet<Collider> wrapColliders = new HashSet<Collider>();
 
-    public void WrapMeshInteractionEnter(WrapMeshInteraction other)
+    public void WrapMeshTriggerEnter(Collider other)
     {
-        wrapMeshes.Add(other);
+        wrapColliders.Add(other);
     }
 
-    public void WrapMeshInteractionExit(WrapMeshInteraction other)
+    public void WrapMeshTriggerExit(Collider other)
     {
-        wrapMeshes.Remove(other);
+        wrapColliders.Remove(other);
     }
 }

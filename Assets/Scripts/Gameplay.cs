@@ -33,6 +33,7 @@ public class Gameplay : MonoBehaviour
     MeshBlock nextMeshBlock;
     bool waitingForLaunch = false;
     Vector3 nextLaunchPosition;
+    bool gameover = false;
     bool victory = false;
 
     IEnumerator Start()
@@ -55,6 +56,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoGameplay()
     {
+        gameover = false;
         victory = false;
         fireParticles.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
@@ -69,7 +71,7 @@ public class Gameplay : MonoBehaviour
         // create new meshblocks here
         foreach (var stageItem in stageItems)
         {
-            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem.transform);
+            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem);
             newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
@@ -80,7 +82,7 @@ public class Gameplay : MonoBehaviour
         }
 
         // create the target here
-        targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget.transform).GetComponent<WrapMeshInteraction>();
+        targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
         targetMesh.transform.position = areaTarget.position;
         stageTarget.gameObject.SetActive(false);
 
@@ -94,6 +96,8 @@ public class Gameplay : MonoBehaviour
             if (i < availableMeshBlocks.Count - 1) availableMeshBlocks[i + 1].gameObject.SetActive(true);
 
             var nextMeshBlock = availableMeshBlocks[i];
+            nextMeshBlock.MovementMode = true;
+            nextMeshBlock.GetRigidbody.isKinematic = true;
             nextMeshBlock.gameObject.SetActive(true);
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
@@ -143,6 +147,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        gameover = true;
         yield return new WaitForSeconds(1);
         yield return true;
 
@@ -151,6 +156,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoDefeat()
     {
+        gameover = true;
         yield return true;
 
         callbackDefeat?.Invoke();
@@ -192,7 +198,7 @@ public class Gameplay : MonoBehaviour
 
             var pos = ray.GetPoint(distance);
 
-            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 50;
+            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 15;
         }
 
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
