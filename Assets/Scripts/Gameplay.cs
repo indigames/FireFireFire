@@ -112,6 +112,7 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.transform.localScale = Vector3.one;
 
             this.nextMeshBlock = nextMeshBlock;
+            nextMeshBlock.MovementMode = false;
             waitingForLaunch = true;
 
             while (waitingForLaunch && victory == false) yield return true;
@@ -185,6 +186,15 @@ public class Gameplay : MonoBehaviour
 
     void UpdateDrag()
     {
+        if (nextMeshBlock == null || waitingForLaunch == false) return;
+
+        if (nextMeshBlock.MovementMode == false)
+        {
+            nextMeshBlock.MovementMode = true;
+            nextMeshBlock.GetRigidbody.isKinematic = true;
+            return;
+        }
+
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
         {
             nextMeshBlock.MovementMode = true;
@@ -222,7 +232,52 @@ public class Gameplay : MonoBehaviour
     private void Update()
     {
         //UpdateLaunch();
-        UpdateDrag();
+        //UpdateDrag();
+        UpdateDragTetris();
         UpdateCheckForVictory();
+    }
+
+    Vector3 recentNextMeshBlockPosition;
+    int nextMeshBlockPauseFrames = 0;
+    void UpdateDragTetris()
+    {
+        if (nextMeshBlock == null || waitingForLaunch == false) return;
+
+        if (nextMeshBlock.MovementMode == false)
+        {
+            nextMeshBlock.MovementMode = true;
+            nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
+            recentNextMeshBlockPosition = nextMeshBlock.transform.position;
+            nextMeshBlockPauseFrames = 0;
+            return;
+        }
+
+        nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
+
+
+        if (Input.GetMouseButton(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
+            float distance;
+            plane.Raycast(ray, out distance);
+            var pos = ray.GetPoint(distance);
+
+            if (pos.x + 0.2f < recentNextMeshBlockPosition.x) nextMeshBlock.GetRigidbody.velocity += Vector3.left * 5;
+            if (pos.x - 0.2f > recentNextMeshBlockPosition.x) nextMeshBlock.GetRigidbody.velocity += Vector3.right * 5;
+        }
+
+        // CHECK FOR STOPPING CONDITION
+        var ydiff = nextMeshBlock.transform.position.y - recentNextMeshBlockPosition.y;
+        recentNextMeshBlockPosition = nextMeshBlock.transform.position;
+        var ydiff_moving = ydiff < -0.001f;
+
+        if (ydiff_moving == false && nextMeshBlock.SoftCollided) {
+            nextMeshBlock.MovementMode = false;
+            waitingForLaunch = false;
+            return;
+        }
+
+
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class MeshBlock : MonoBehaviour
 {
     const float COLLISION_TRESHOLD = 0.5f;
+    const float SOFT_COLLISION_TRESHOLD = 0.03f;
     const float AUTO_SLEEP_DURATION = 5f;
     const float BURN_DELAY_DURATION = 1f;
 
@@ -19,6 +20,7 @@ public class MeshBlock : MonoBehaviour
     float duration = AUTO_SLEEP_DURATION;
     float burndelay = BURN_DELAY_DURATION;
     float collision_delay = COLLISION_TRESHOLD;
+    float soft_collision_delay = SOFT_COLLISION_TRESHOLD;
 
     public Rigidbody GetRigidbody => GetComponent<Rigidbody>();
     float baseMass;
@@ -26,6 +28,9 @@ public class MeshBlock : MonoBehaviour
     float baseAngularDrag;
     bool movementMode = false;
     bool collided = false;
+
+    bool softCollided = false; // check collided even in movement mode
+    public bool SoftCollided => softCollided;
 
     // Use this for initialization
     IEnumerator Start()
@@ -51,9 +56,11 @@ public class MeshBlock : MonoBehaviour
     {
         burndelay = BURN_DELAY_DURATION;
         collision_delay = COLLISION_TRESHOLD;
+        soft_collision_delay = SOFT_COLLISION_TRESHOLD;
         MovementMode = false;
 
         collided = false;
+        softCollided = false;
         rigidBody.drag = baseDrag;
         rigidBody.angularDrag = baseAngularDrag;
 
@@ -62,10 +69,8 @@ public class MeshBlock : MonoBehaviour
 
     public bool MovementMode
     {
-        set
-        {
-            SetMovementMode(value);
-        }
+        set => SetMovementMode(value);
+        get => movementMode;
     }
 
     public void SetMovementMode(bool value)
@@ -89,6 +94,7 @@ public class MeshBlock : MonoBehaviour
         duration = AUTO_SLEEP_DURATION;
         burndelay = BURN_DELAY_DURATION;
         collision_delay = COLLISION_TRESHOLD;
+        soft_collision_delay = SOFT_COLLISION_TRESHOLD;
         wrapMeshInteraction.canSpreadTo = false;
     }
 
@@ -126,8 +132,12 @@ public class MeshBlock : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        if (soft_collision_delay > 0)
+        {
+            soft_collision_delay -= Time.fixedDeltaTime;
+            if (soft_collision_delay < 0) softCollided = true;
+        }
         if (movementMode) return;
-
         if (collision_delay > 0)
         {
             collision_delay -= Time.fixedDeltaTime;

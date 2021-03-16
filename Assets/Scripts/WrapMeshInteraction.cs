@@ -15,8 +15,8 @@ public class WrapMeshInteraction : MonoBehaviour
         public bool snuffed;
     }
 
-    private const float SNUFF_DURATION = 3f; //Default is 2f
-    private const float SPREAD_SPEED = 3f; //Default is 1d
+    private const float SNUFF_DURATION = 4f; //Default is32f
+    private const float SPREAD_SPEED = 3f; //Default is 3f
     private MeshFilter meshFilter;
     private WrapMesh wrapMesh;
     private List<Vertex> vertices = new List<Vertex>();
