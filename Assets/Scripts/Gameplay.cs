@@ -10,7 +10,7 @@ public class Gameplay : MonoBehaviour
     public Action callbackVictory;
     public Action callbackDefeat;
 
-    public GameObject stageTemplate;
+    public StageCollection stageCollection;
 
     [Space]
     public Transform areaTarget;
@@ -37,6 +37,8 @@ public class Gameplay : MonoBehaviour
     bool gameover = false;
     bool victory = false;
 
+    Stage currentStage;
+
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
@@ -45,12 +47,18 @@ public class Gameplay : MonoBehaviour
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
 
-        RestartGame();
+        RestartGame(false);
     }
 
-    public void RestartGame()
+    public void RestartGame(bool nextStage)
     {
         StopAllCoroutines();
+
+        if (nextStage)
+            currentStage = stageCollection.CurrentStage;
+        else
+            currentStage = stageCollection.NextStage;
+
         callbackRestart?.Invoke();
         StartCoroutine(CoGameplay());
     }
@@ -66,8 +74,8 @@ public class Gameplay : MonoBehaviour
         fireStarterArea.Restart();
 
         // collect child transforms from items container
-        List<StageItem> stageItems = new List<StageItem>(stageTemplate.GetComponentsInChildren<StageItem>(true));
-        StageTarget stageTarget = stageTemplate.GetComponentInChildren<StageTarget>(true);
+        List<StageItem> stageItems = new List<StageItem>(currentStage.GetComponentsInChildren<StageItem>(true));
+        StageTarget stageTarget = currentStage.GetComponentInChildren<StageTarget>(true);
 
         // create new meshblocks here
         foreach (var stageItem in stageItems)

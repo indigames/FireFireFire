@@ -36,7 +36,7 @@ public class UIGameplay : MonoBehaviour
 
     public void RestartGame()
     {
-        gameplay.RestartGame();
+        gameplay.RestartGame(false);
     }
 
 }

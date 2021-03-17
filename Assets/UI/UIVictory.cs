@@ -16,7 +16,7 @@ public class UIVictory : MonoBehaviour
 
     public void Continue()
     {
-        gameplay.RestartGame();
+        gameplay.RestartGame(true);
         StartCoroutine(Hide());
     }
 

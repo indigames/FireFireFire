@@ -8,8 +8,31 @@ using UnityEditor;
 public class StageCollection : MonoBehaviour
 {
 
+    [HideInInspector]
     public UnityEngine.Object targetPrefabFolder;
+    [HideInInspector]
+    public int startingStage;
     public List<Stage> stagePrefabs;
+    int index;
+
+    public Stage CurrentStage => GetCurrentStage();
+    public Stage NextStage => GetNextStage();
+
+    private void Awake()
+    {
+        index = startingStage;
+    }
+
+    private Stage GetCurrentStage()
+    {
+        return stagePrefabs[index];
+    }
+
+    private Stage GetNextStage()
+    {
+        index = (index + 1) % stagePrefabs.Count;
+        return stagePrefabs[index];
+    }
 }
 
 
@@ -17,14 +40,32 @@ public class StageCollection : MonoBehaviour
 [CustomEditor(typeof(StageCollection))]
 public class StageCollectionEditor : Editor
 {
+    string[] stageNames = new string[0];
+
+    void ResetStageNames()
+    {
+        List<string> names = new List<string>();
+        StageCollection sc = (StageCollection)target;
+        foreach (var stage in sc.stagePrefabs)
+            names.Add(stage.gameObject.name);
+        stageNames = names.ToArray();
+        sc.startingStage = Mathf.Min(sc.startingStage, names.Count - 1);
+    }
+
+    private void OnEnable()
+    {
+        ResetStageNames();
+    }
+
     public override void OnInspectorGUI()
     {
+        StageCollection sc = (StageCollection)target;
         base.OnInspectorGUI();
 
         GUILayout.Space(32);
-
+        sc.startingStage = EditorGUILayout.Popup("Starting stage", sc.startingStage, stageNames);
+        GUILayout.Space(32);
         if (GUILayout.Button("Collect stages")) CollectStages();
-
     }
 
     void CollectStages()
@@ -44,6 +85,7 @@ public class StageCollectionEditor : Editor
         }
 
         sc.stagePrefabs.Sort((s1, s2) => s1.gameObject.name.CompareTo(s2.gameObject.name));
+        ResetStageNames();
         EditorUtility.SetDirty(target);
     }
 } 

@@ -16,7 +16,7 @@ public class UIDefeat : MonoBehaviour
 
     public void Continue()
     {
-        gameplay.RestartGame();
+        gameplay.RestartGame(false);
         StartCoroutine(Hide());
     }
 
