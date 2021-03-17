@@ -31,6 +31,7 @@ public class Gameplay : MonoBehaviour
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
     int nextMeshBlockIndex;
     MeshBlock nextMeshBlock;
+    bool newWaitingForLaunch = false;
     bool waitingForLaunch = false;
     Vector3 nextLaunchPosition;
     bool gameover = false;
@@ -58,7 +59,7 @@ public class Gameplay : MonoBehaviour
     {
         gameover = false;
         victory = false;
-        fireParticles.Clear();
+        if (fireParticles != null) fireParticles.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         availableMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
@@ -113,8 +114,12 @@ public class Gameplay : MonoBehaviour
 
             this.nextMeshBlock = nextMeshBlock;
             nextMeshBlock.MovementMode = false;
-            waitingForLaunch = true;
 
+            waitingForLaunch = true;
+            newWaitingForLaunch = true;
+
+            yield return true;
+            newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
             if (victory) yield break;
 
@@ -188,7 +193,7 @@ public class Gameplay : MonoBehaviour
     {
         if (nextMeshBlock == null || waitingForLaunch == false) return;
 
-        if (nextMeshBlock.MovementMode == false)
+        if (newWaitingForLaunch)
         {
             nextMeshBlock.MovementMode = true;
             nextMeshBlock.GetRigidbody.isKinematic = true;
@@ -208,7 +213,7 @@ public class Gameplay : MonoBehaviour
 
             var pos = ray.GetPoint(distance);
 
-            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 15;
+            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 25;
         }
 
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
@@ -232,8 +237,8 @@ public class Gameplay : MonoBehaviour
     private void Update()
     {
         //UpdateLaunch();
-        //UpdateDrag();
-        UpdateDragTetris();
+        UpdateDrag();
+        //UpdateDragTetris();
         UpdateCheckForVictory();
     }
 
@@ -243,7 +248,7 @@ public class Gameplay : MonoBehaviour
     {
         if (nextMeshBlock == null || waitingForLaunch == false) return;
 
-        if (nextMeshBlock.MovementMode == false)
+        if (newWaitingForLaunch)
         {
             nextMeshBlock.MovementMode = true;
             nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
