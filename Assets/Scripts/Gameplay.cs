@@ -56,9 +56,9 @@ public class Gameplay : MonoBehaviour
         StopAllCoroutines();
 
         if (nextStage)
-            currentStage = stageCollection.CurrentStage;
-        else
             currentStage = stageCollection.NextStage;
+        else
+            currentStage = stageCollection.CurrentStage;
 
         callbackRestart?.Invoke();
         StartCoroutine(CoGameplay());
