@@ -84,7 +84,6 @@ public class StageDesignerEditor : Editor
         if (prefabStage != null)
         {
             EditorUtility.SetDirty(target);
-            Debug.Log("Dirty");
             EditorSceneManager.MarkSceneDirty(prefabStage.scene);
         }
         else
