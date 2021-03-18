@@ -39,6 +39,7 @@ public class Gameplay : MonoBehaviour
 
     Stage currentStage;
 
+
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
