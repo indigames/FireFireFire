@@ -23,7 +23,7 @@ public class Gameplay : MonoBehaviour
     [Space]
     public Transform previewArea;
     public FirestarterArea fireStarterArea;
-    public ParticleSystem fireParticles;
+    public ParticleSystem confettiParticle;
 
     public Camera previewCamera;
 
@@ -68,7 +68,7 @@ public class Gameplay : MonoBehaviour
     {
         gameover = false;
         victory = false;
-        if (fireParticles != null) fireParticles.Clear();
+        confettiParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         availableMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
@@ -162,6 +162,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        confettiParticle.Play();
         gameover = true;
         yield return new WaitForSeconds(1);
         yield return true;

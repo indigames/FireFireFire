@@ -15,13 +15,16 @@ public class WrapMeshInteraction : MonoBehaviour
         public bool snuffed;
     }
 
-    private const float SNUFF_DURATION = 4f; //Default is32f
+    private const float SNUFF_DURATION = 4f; //Default is 3f
     private const float SPREAD_SPEED = 3f; //Default is 3f
     private MeshFilter meshFilter;
     private WrapMesh wrapMesh;
     private List<Vertex> vertices = new List<Vertex>();
     private List<Color> colors;
     private List<int> triangles;
+
+    [System.NonSerialized]
+    public float override_snuff_duration = -1;
 
     public ParticleSystem firePs;
     [System.NonSerialized]
@@ -131,6 +134,8 @@ public class WrapMeshInteraction : MonoBehaviour
         //}
     }
 
+    float SnuffDuration => override_snuff_duration > 0 ? override_snuff_duration : SNUFF_DURATION;
+
     void CheckSpreadVertices()
     {
         foreach (var vertex in vertices) {
@@ -141,7 +146,7 @@ public class WrapMeshInteraction : MonoBehaviour
                 var c = this.colors[vertex.index];
 
                 var alpha_step = Mathf.RoundToInt(c.a / 0.1f);
-                c.a -= deltaTime * (0.5F / SNUFF_DURATION);
+                c.a -= deltaTime * (0.5F / SnuffDuration);
                 if (alpha_step != Mathf.RoundToInt(c.a / 0.1f)) CheckSpreadToOther(vertex.index);
 
                 if (c.a < 0.5f)
@@ -207,7 +212,7 @@ public class WrapMeshInteraction : MonoBehaviour
         {
             position = position + UnityEngine.Random.insideUnitSphere * 0.3f,
             startSize = UnityEngine.Random.Range(0.5f, 4f),
-            startLifetime = SNUFF_DURATION
+            startLifetime = SnuffDuration
         }, 1) ;
 
         CheckSpreadToOther(position);
