@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -70,7 +71,7 @@ public class StageDesignerEditor : Editor
     {
         string path = (string)o_path;
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+        var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, target.transform);
 
         if (spawnAsTarget)
         {
@@ -78,7 +79,16 @@ public class StageDesignerEditor : Editor
             instance.gameObject.AddComponent<StageTarget>();
         }
         else instance.gameObject.AddComponent<StageItem>();
-        instance.transform.parent = target.transform;
+
+        var prefabStage = UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+        if (prefabStage != null)
+        {
+            EditorUtility.SetDirty(target);
+            Debug.Log("Dirty");
+            EditorSceneManager.MarkSceneDirty(prefabStage.scene);
+        }
+        else
+            EditorUtility.SetDirty(target);
     }
 }
 #endif
