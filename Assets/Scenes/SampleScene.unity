@@ -5429,7 +5429,7 @@ ParticleSystem:
       emitter: {fileID: 8106793891209081935}
       type: 0
       properties: 20
-      emitProbability: 0.4
+      emitProbability: 1
   LightsModule:
     enabled: 0
     ratio: 0
@@ -12489,7 +12489,7 @@ Transform:
   m_GameObject: {fileID: 1800070395}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_Children:
   - {fileID: 963254308}
   - {fileID: 1743731412}
@@ -17967,7 +17967,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1.5
       minScalar: 2
       maxCurve:
         serializedVersion: 2
@@ -18136,7 +18136,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.5
+      scalar: 2.5
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
@@ -18452,7 +18452,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 2000
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -19404,7 +19404,7 @@ ParticleSystem:
     tilesY: 6
     animationType: 0
     rowIndex: 0
-    cycles: 0.5
+    cycles: 1
     uvChannelMask: -1
     rowMode: 1
     sprites:
@@ -22660,7 +22660,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_RenderMode: 0
-  m_SortMode: 0
+  m_SortMode: 1
   m_MinParticleSize: 0
   m_MaxParticleSize: 5
   m_CameraVelocityScale: 0
@@ -22709,7 +22709,7 @@ Transform:
   m_GameObject: {fileID: 8234291323260430823}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -1.4, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 963254308}
   m_RootOrder: 0
