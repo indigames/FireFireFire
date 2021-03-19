@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Gameplay : MonoBehaviour
 {
@@ -202,6 +203,7 @@ public class Gameplay : MonoBehaviour
     }
 
     Coroutine coZoomIn = null;
+    bool dragging = false;
     void UpdateDrag()
     {
         if (gameover) return;
@@ -211,6 +213,7 @@ public class Gameplay : MonoBehaviour
         {
             nextMeshBlock.MovementMode = true;
             nextMeshBlock.GetRigidbody.isKinematic = true;
+            dragging = false;
             return;
         }
 
@@ -222,18 +225,22 @@ public class Gameplay : MonoBehaviour
 
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonDown(0))
         {
-            var nextPos = nextMeshBlock.transform.position;
-            nextPos.x = pos.x;
-            nextPos.y = pos.y;
-            nextMeshBlock.transform.position = nextPos;
-            nextMeshBlock.MovementMode = true;
-            coZoomIn = StartCoroutine(CoPopupTransform(nextMeshBlock.transform));
+            if (EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                var nextPos = nextMeshBlock.transform.position;
+                nextPos.x = pos.x;
+                nextPos.y = pos.y;
+                nextMeshBlock.transform.position = nextPos;
+                nextMeshBlock.MovementMode = true;
+                coZoomIn = StartCoroutine(CoPopupTransform(nextMeshBlock.transform));
+                dragging = true;
+            }
         }
 
-        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
+        if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
             nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 25;
 
-        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
+        if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
         {
             if (coZoomIn != null)
             {
@@ -244,6 +251,7 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.GetRigidbody.velocity = Vector3.zero;
             nextMeshBlock.MovementMode = false;
             waitingForLaunch = false;
+            dragging = false;
         }
     }
 
