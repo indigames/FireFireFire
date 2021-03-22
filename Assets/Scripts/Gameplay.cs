@@ -131,6 +131,8 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
+            yield return true;
+            nextMeshBlock.transform.localScale = Vector3.one;
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
             if (victory) yield break;
@@ -262,33 +264,33 @@ public class Gameplay : MonoBehaviour
         }
     }
 
+    float EaseOutElastic(float t)
+    {
+        float b = 0;
+        float c = 1;
+        float d = 1;
+        float s = 1.70158f;
+        float p = 0;
+        float a = c;
+        if (t == 0) return b;
+        if ((t /= d) == 1) return b + c;
+        if (p == 0) p = d * 0.3f;
+        if (a < Mathf.Abs(c))
+        {
+            a = c;
+            s = p / 4;
+        }
+        else s = p / (2 * Mathf.PI) * Mathf.Asin(c / a);
+        return a * Mathf.Pow(2, -10 * t) * Mathf.Sin((t * d - s) * (2 * Mathf.PI) / p) + c + b;
+    }
+
     IEnumerator CoPopupTransform(Transform tr)
     {
-        Func<float, float> easeOutElastic = (t) =>
-        {
-            float b = 0;
-            float c = 1;
-            float d = 1;
-            float s = 1.70158f;
-            float p = 0;
-            float a = c;
-            if (t == 0) return b;
-            if ((t /= d) == 1) return b + c;
-            if (p == 0) p = d * 0.3f;
-            if (a < Mathf.Abs(c))
-            {
-                a = c;
-                s = p / 4;
-            }
-            else s = p / (2 * Mathf.PI) * Mathf.Asin(c / a);
-            return a * Mathf.Pow(2, -10 * t) * Mathf.Sin((t * d - s) * (2 * Mathf.PI) / p) + c + b;
-        };
-
-        tr.localScale = Vector3.zero;
+        tr.localScale = Vector3.one * 0.5f;
         for (var i = 0f; i < 1f; i += Time.deltaTime / 0.3f)
         {
             yield return true;
-            tr.localScale = Vector3.one * (0.5f + 0.5f * easeOutElastic(Mathf.Pow(i, 1.5f)));
+            tr.localScale = Vector3.one * (0.5f + 0.5f * EaseOutElastic(Mathf.Pow(i, 1.5f)));
         }
         tr.localScale = Vector3.one;
         coZoomIn = null;
