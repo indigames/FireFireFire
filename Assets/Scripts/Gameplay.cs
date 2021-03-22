@@ -94,7 +94,7 @@ public class Gameplay : MonoBehaviour
 
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
-        targetMesh.transform.position = areaTarget.position;
+        targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
         stageTarget.gameObject.SetActive(false);
 
         yield return true;
