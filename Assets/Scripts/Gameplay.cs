@@ -181,11 +181,18 @@ public class Gameplay : MonoBehaviour
         callbackDefeat?.Invoke();
     }
 
+    Vector2 InputPosition {
+        get {
+            if (Input.touchCount > 0) return Input.touches[0].position;
+            else return Input.mousePosition;
+        }
+    }
+
     void UpdateLaunch()
     {
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonDown(0))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(InputPosition);
             //RaycastHit hitInfo;
             //if (Physics.Raycast(ray, out hitInfo, 9999, LayerUtil.MASK_WRAP_MESH) && hitInfo.transform != null) return;
 
@@ -217,7 +224,7 @@ public class Gameplay : MonoBehaviour
             return;
         }
 
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        var ray = Camera.main.ScreenPointToRay(InputPosition);
         var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
         float distance;
         plane.Raycast(ray, out distance);
@@ -291,7 +298,7 @@ public class Gameplay : MonoBehaviour
     Vector3 GetCurrentTouchPosition()
     {
         nextMeshBlock.MovementMode = true;
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        var ray = Camera.main.ScreenPointToRay(InputPosition);
         //RaycastHit hitInfo;
         //if (Physics.Raycast(ray, out hitInfo, 9999, LayerUtil.MASK_WRAP_MESH) && hitInfo.transform != null) return;
 
@@ -341,7 +348,7 @@ public class Gameplay : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(InputPosition);
             var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
             float distance;
             plane.Raycast(ray, out distance);
