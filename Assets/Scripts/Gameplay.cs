@@ -100,7 +100,11 @@ public class Gameplay : MonoBehaviour
         yield return true;
         yield return true;
 
-        foreach (var meshBlock in availableMeshBlocks) meshBlock.gameObject.SetActive(false);
+        foreach (var meshBlock in availableMeshBlocks)
+        {
+            meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
+            meshBlock.gameObject.SetActive(false);
+        }
         
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
