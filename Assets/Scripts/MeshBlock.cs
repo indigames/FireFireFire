@@ -67,6 +67,12 @@ public class MeshBlock : MonoBehaviour
         wrapMeshInteraction.Restart();
     }
 
+    public Vector3 GetBoundOffset()
+    {
+        var bound = wrapMesh.GetComponent<MeshRenderer>().bounds;
+        return bound.center - transform.position;
+    }
+
     public bool MovementMode
     {
         set => SetMovementMode(value);

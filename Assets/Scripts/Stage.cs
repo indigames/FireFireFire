@@ -8,6 +8,8 @@ using UnityEditor.SceneManagement;
 
 public class Stage : MonoBehaviour
 {
+    public float verticalOffset = 0;
+
     // Start is called before the first frame update
     void Start()
     {

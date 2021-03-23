@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Gameplay : MonoBehaviour
 {
@@ -93,13 +94,17 @@ public class Gameplay : MonoBehaviour
 
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
-        targetMesh.transform.position = areaTarget.position;
+        targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
         stageTarget.gameObject.SetActive(false);
 
         yield return true;
         yield return true;
 
-        foreach (var meshBlock in availableMeshBlocks) meshBlock.gameObject.SetActive(false);
+        foreach (var meshBlock in availableMeshBlocks)
+        {
+            meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
+            meshBlock.gameObject.SetActive(false);
+        }
         
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
@@ -130,6 +135,8 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
+            yield return true;
+            nextMeshBlock.transform.localScale = Vector3.one;
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
             if (victory) yield break;
@@ -180,11 +187,18 @@ public class Gameplay : MonoBehaviour
         callbackDefeat?.Invoke();
     }
 
+    Vector2 InputPosition {
+        get {
+            if (Input.touchCount > 0) return Input.touches[0].position;
+            else return Input.mousePosition;
+        }
+    }
+
     void UpdateLaunch()
     {
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonDown(0))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(InputPosition);
             //RaycastHit hitInfo;
             //if (Physics.Raycast(ray, out hitInfo, 9999, LayerUtil.MASK_WRAP_MESH) && hitInfo.transform != null) return;
 
@@ -202,6 +216,7 @@ public class Gameplay : MonoBehaviour
     }
 
     Coroutine coZoomIn = null;
+    bool dragging = false;
     void UpdateDrag()
     {
         if (gameover) return;
@@ -211,10 +226,11 @@ public class Gameplay : MonoBehaviour
         {
             nextMeshBlock.MovementMode = true;
             nextMeshBlock.GetRigidbody.isKinematic = true;
+            dragging = false;
             return;
         }
 
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        var ray = Camera.main.ScreenPointToRay(InputPosition);
         var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
         float distance;
         plane.Raycast(ray, out distance);
@@ -222,18 +238,22 @@ public class Gameplay : MonoBehaviour
 
         if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonDown(0))
         {
-            var nextPos = nextMeshBlock.transform.position;
-            nextPos.x = pos.x;
-            nextPos.y = pos.y;
-            nextMeshBlock.transform.position = nextPos;
-            nextMeshBlock.MovementMode = true;
-            coZoomIn = StartCoroutine(CoPopupTransform(nextMeshBlock.transform));
+            if (EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                var nextPos = nextMeshBlock.transform.position;
+                nextPos.x = pos.x;
+                nextPos.y = pos.y;
+                nextMeshBlock.transform.position = nextPos;
+                nextMeshBlock.MovementMode = true;
+                coZoomIn = StartCoroutine(CoPopupTransform(nextMeshBlock.transform));
+                dragging = true;
+            }
         }
 
-        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
+        if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
             nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 25;
 
-        if (nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
+        if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
         {
             if (coZoomIn != null)
             {
@@ -244,36 +264,37 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.GetRigidbody.velocity = Vector3.zero;
             nextMeshBlock.MovementMode = false;
             waitingForLaunch = false;
+            dragging = false;
         }
+    }
+
+    float EaseOutElastic(float t)
+    {
+        float b = 0;
+        float c = 1;
+        float d = 1;
+        float s = 1.70158f;
+        float p = 0;
+        float a = c;
+        if (t == 0) return b;
+        if ((t /= d) == 1) return b + c;
+        if (p == 0) p = d * 0.3f;
+        if (a < Mathf.Abs(c))
+        {
+            a = c;
+            s = p / 4;
+        }
+        else s = p / (2 * Mathf.PI) * Mathf.Asin(c / a);
+        return a * Mathf.Pow(2, -10 * t) * Mathf.Sin((t * d - s) * (2 * Mathf.PI) / p) + c + b;
     }
 
     IEnumerator CoPopupTransform(Transform tr)
     {
-        Func<float, float> easeOutElastic = (t) =>
-        {
-            float b = 0;
-            float c = 1;
-            float d = 1;
-            float s = 1.70158f;
-            float p = 0;
-            float a = c;
-            if (t == 0) return b;
-            if ((t /= d) == 1) return b + c;
-            if (p == 0) p = d * 0.3f;
-            if (a < Mathf.Abs(c))
-            {
-                a = c;
-                s = p / 4;
-            }
-            else s = p / (2 * Mathf.PI) * Mathf.Asin(c / a);
-            return a * Mathf.Pow(2, -10 * t) * Mathf.Sin((t * d - s) * (2 * Mathf.PI) / p) + c + b;
-        };
-
-        tr.localScale = Vector3.zero;
+        tr.localScale = Vector3.one * 0.5f;
         for (var i = 0f; i < 1f; i += Time.deltaTime / 0.3f)
         {
             yield return true;
-            tr.localScale = Vector3.one * (0.5f + 0.5f * easeOutElastic(Mathf.Pow(i, 1.5f)));
+            tr.localScale = Vector3.one * (0.5f + 0.5f * EaseOutElastic(Mathf.Pow(i, 1.5f)));
         }
         tr.localScale = Vector3.one;
         coZoomIn = null;
@@ -283,7 +304,7 @@ public class Gameplay : MonoBehaviour
     Vector3 GetCurrentTouchPosition()
     {
         nextMeshBlock.MovementMode = true;
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        var ray = Camera.main.ScreenPointToRay(InputPosition);
         //RaycastHit hitInfo;
         //if (Physics.Raycast(ray, out hitInfo, 9999, LayerUtil.MASK_WRAP_MESH) && hitInfo.transform != null) return;
 
@@ -333,7 +354,7 @@ public class Gameplay : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(InputPosition);
             var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
             float distance;
             plane.Raycast(ray, out distance);
