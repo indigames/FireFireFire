@@ -315,7 +315,7 @@ Light:
   m_BounceIntensity: 0.55
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 2.1675e-41, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 6e-45, z: 9e-44, w: -20.262604}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -7205,10 +7205,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabFolder: {fileID: 102900000, guid: 3a5c047cddd0eac408285d9a4194f88f,
     type: 3}
-  startingStage: 1
+  startingStage: 4
   stagePrefabs:
   - {fileID: 4684145382587630233, guid: eeddca1a7b3ca7643a008f46e7a612e9, type: 3}
   - {fileID: 4684145382587630233, guid: 4e6f57aafe656be44b4703633366e29c, type: 3}
+  - {fileID: 4684145382587630233, guid: 84591aff6c0275c47836c0d67700c34c, type: 3}
+  - {fileID: 4684145382587630233, guid: 1c1954839a9f3d64fa426fbb811e561a, type: 3}
+  - {fileID: 4684145382587630233, guid: 835c2dc781f39444ea558fd299d124b8, type: 3}
 --- !u!1 &1288910554
 GameObject:
   m_ObjectHideFlags: 0
