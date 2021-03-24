@@ -99,20 +99,27 @@ public class WrapMesh : MonoBehaviour
             mesh.colors = colors;
 
             this.wrapMesh = mesh;
-            this.colliderMesh = mesh;
+            this.colliderMesh = Instantiate(mesh);
+            {
+                var colliderMeshVertices = this.colliderMesh.vertices;
+                for (var j = 0; j < colliderMeshVertices.Length; j++)
+                    colliderMeshVertices[j] *= 0.92f;
+                this.colliderMesh.vertices = colliderMeshVertices;
+            }
 
             //CREATE SIMPLIFIED MESH HERE
-            {
-                var simplifier = new UnityMeshSimplifier.MeshSimplifier();
-                simplifier.Initialize(mesh);
-                var simplifiedVertices = simplifier.Vertices;
-                for (var j = 0; j < simplifiedVertices.Length; j++)
-                    simplifiedVertices[j] *= 0.8f;
-                simplifier.Vertices = simplifiedVertices;
-                simplifier.SimplifyMesh(0.1f);
+            //{
+            //    var simplifier = new UnityMeshSimplifier.MeshSimplifier();
+            //    simplifier.Initialize(mesh);
+            //    var simplifiedVertices = simplifier.Vertices;
+            //    for (var j = 0; j < simplifiedVertices.Length; j++)
+            //        simplifiedVertices[j] *= 0.8f;
+            //    simplifier.Vertices = simplifiedVertices;
+            //    simplifier.SimplifyMesh(0.1f);
 
-                this.colliderMesh = simplifier.ToMesh();
-            }
+            //    this.colliderMesh = simplifier.ToMesh();
+            //}
+
 
             var collider_extents = colliderMesh.bounds.extents;
             var collider_center = colliderMesh.bounds.center;
