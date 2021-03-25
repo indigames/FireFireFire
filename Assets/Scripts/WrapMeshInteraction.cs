@@ -22,6 +22,7 @@ public class WrapMeshInteraction : MonoBehaviour
     private List<Vertex> vertices = new List<Vertex>();
     private List<Color> colors;
     private List<int> triangles;
+    private int[] vertexSnuffOrder;
 
     [System.NonSerialized]
     public float override_snuff_duration = -1;
@@ -33,12 +34,14 @@ public class WrapMeshInteraction : MonoBehaviour
     private int snuffedVerticesCount = 0;
     private bool meshSnuffed = false;
     private bool meshIgnited = false;
+    private float meshSnuffRatio = 0;
 
     [Range(1, 10)]
     public float spreadSpeed = 1f;
 
     public bool MeshSnuffed => meshSnuffed;
     public bool MeshIgnited => meshIgnited;
+    public float MeshSnuffRatio => meshSnuffRatio;
 
     private IEnumerator Start()
     {
@@ -74,6 +77,8 @@ public class WrapMeshInteraction : MonoBehaviour
         foreach (var vertex in vertices)
             for (var i = 0; i < vertex.neighbors.Count; i++)
                 vertex.spreadDurations[i] = vertex.spreadDeltas[i] = (map_vertices[vertex.neighbors[i]].position - vertex.position).sqrMagnitude * SPREAD_RATE;
+
+        vertexSnuffOrder = new int[vertices.Count];
     }
 
     public void Restart()
@@ -100,7 +105,7 @@ public class WrapMeshInteraction : MonoBehaviour
         deltaTime = Time.deltaTime;
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
-        CheckIgniteMouse();
+        //CheckIgniteMouse();
         CheckSpreadVertices();
 
         if (applyingColors)
@@ -112,26 +117,25 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void CheckIgniteMouse()
     {
-        return;
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    RaycastHit hitInfo;
-        //    if (GetComponent<MeshCollider>().Raycast(ray, out hitInfo, 9999)) ;
-        //    else return;
+        if (Input.GetMouseButtonDown(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+            if (GetComponent<MeshCollider>().Raycast(ray, out hitInfo, 9999)) ;
+            else return;
 
-        //    var index = hitInfo.triangleIndex;
-        //    var mesh = meshFilter.mesh;
-        //    var triangles = this.triangles;
-        //    if (index < 0) return;
+            var index = hitInfo.triangleIndex;
+            var mesh = meshFilter.mesh;
+            var triangles = this.triangles;
+            if (index < 0) return;
 
-        //    var i1 = triangles[index * 3];
-        //    var i2 = triangles[index * 3 + 1];
-        //    var i3 = triangles[index * 3 + 2];
-        //    SpreadToVertex(i1);
-        //    SpreadToVertex(i2);
-        //    SpreadToVertex(i3);
-        //}
+            var i1 = triangles[index * 3];
+            var i2 = triangles[index * 3 + 1];
+            var i3 = triangles[index * 3 + 2];
+            SpreadToVertex(i1);
+            SpreadToVertex(i2);
+            SpreadToVertex(i3);
+        }
     }
 
     float SnuffDuration => override_snuff_duration > 0 ? override_snuff_duration : SNUFF_DURATION;
@@ -162,12 +166,13 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void OnVertexSnuff(int index)
     {
+        vertexSnuffOrder[snuffedVerticesCount] = index;
         snuffedVerticesCount += 1;
         CheckSpreadToOther(index);
 
+        meshSnuffRatio = snuffedVerticesCount * 1.0f / meshFilter.mesh.vertexCount;
         if (meshSnuffed == false && snuffedVerticesCount > meshFilter.mesh.vertexCount * 0.95f)
             meshSnuffed = true;
-
     }
 
     void CheckSpreadVertex(Vertex vertex)
@@ -312,6 +317,52 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshTriggerExit(wrapMesh.wrapMeshTrigger);
         //if (mapCollision.ContainsKey(other.gameObject)) mapCollision.Remove(other.gameObject);
+    }
+
+    bool crumbling = false;
+    public bool Crumbling => crumbling;
+
+    public void StartCrumble()
+    {
+        if (Crumbling) return;
+        crumbling = true;
+        if (crumbleParticle == null) return;
+        foreach (var mr in gameObject.GetComponentsInChildren<MeshRenderer>())
+        {
+            if (mr.gameObject == gameObject) continue;
+            mr.enabled = false;
+        }
+        StartCoroutine(CoCrumble());
+    }
+
+    public ParticleSystem crumbleParticle;
+
+    IEnumerator CoCrumble()
+    {
+        crumbleParticle.Stop();
+        yield return true;
+        crumbleParticle.Play();
+
+        var vertices = new List<Vertex>(this.vertices);
+        vertices.Sort((v1, v2) => v1.position.y.CompareTo(v2.position.y));
+
+        var segment_count = Mathf.FloorToInt(vertices.Count / 80);
+        for (var i = 0; i < vertices.Count; i += 1)
+        {
+            var vertex = vertices[i];
+            this.colors[vertex.index] = Color.clear;
+            applyingColors = true;
+
+            if (UnityEngine.Random.value > 0.65f)
+            {
+                var position = vertex.position;
+                position = (Vector3)(transform.localToWorldMatrix * position) + transform.position;
+                position += Vector3.forward * 0.2f;
+                position += Vector3.right * UnityEngine.Random.Range(-0.25f, 0.25f);
+                crumbleParticle.Emit(new ParticleSystem.EmitParams() { position = position }, 1);
+            }
+            if (i % segment_count == 0) yield return true;
+        }
     }
 }
 

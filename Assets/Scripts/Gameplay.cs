@@ -94,6 +94,8 @@ public class Gameplay : MonoBehaviour
 
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
+        targetMesh.override_snuff_duration = 0.7f;
+        targetMesh.spreadSpeed = 4;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
         stageTarget.gameObject.SetActive(false);
 
@@ -171,6 +173,8 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        confettiParticle.Stop();
+        yield return true;
         confettiParticle.Play();
         gameover = true;
         yield return new WaitForSeconds(1);
@@ -332,10 +336,17 @@ public class Gameplay : MonoBehaviour
         UpdateDrag();
         //UpdateDragTetris();
         UpdateCheckForVictory();
+        UpdateVisualTarget();
+    }
+
+    void UpdateVisualTarget()
+    {
+        if (targetMesh == null || targetMesh.Crumbling) return;
+        if (targetMesh.MeshSnuffRatio < 0.66f) return;
+        targetMesh.StartCrumble();
     }
 
     Vector3 recentNextMeshBlockPosition;
-    int nextMeshBlockPauseFrames = 0;
     void UpdateDragTetris()
     {
         if (nextMeshBlock == null || waitingForLaunch == false) return;
@@ -345,7 +356,6 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.MovementMode = true;
             nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
             recentNextMeshBlockPosition = nextMeshBlock.transform.position;
-            nextMeshBlockPauseFrames = 0;
             return;
         }
 
