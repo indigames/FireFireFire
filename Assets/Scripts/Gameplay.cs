@@ -25,6 +25,7 @@ public class Gameplay : MonoBehaviour
     public Transform previewArea;
     public FirestarterArea fireStarterArea;
     public ParticleSystem confettiParticle;
+    public ParticleSystem crumbleParticle;
 
     public Camera previewCamera;
 
@@ -70,6 +71,7 @@ public class Gameplay : MonoBehaviour
         gameover = false;
         victory = false;
         confettiParticle.Clear();
+        crumbleParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         availableMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
