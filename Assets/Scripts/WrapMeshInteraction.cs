@@ -339,9 +339,7 @@ public class WrapMeshInteraction : MonoBehaviour
 
     IEnumerator CoCrumble()
     {
-        crumbleParticle.Stop();
         yield return true;
-        crumbleParticle.Play();
 
         var vertices = new List<Vertex>(this.vertices);
         vertices.Sort((v1, v2) => v1.position.y.CompareTo(v2.position.y));
