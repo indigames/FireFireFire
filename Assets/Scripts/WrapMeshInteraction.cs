@@ -151,7 +151,8 @@ public class WrapMeshInteraction : MonoBehaviour
 
                 var alpha_step = Mathf.RoundToInt(c.a / 0.1f);
                 c.a -= deltaTime * (0.5F / SnuffDuration);
-                if (alpha_step != Mathf.RoundToInt(c.a / 0.1f)) CheckSpreadToOther(vertex.index);
+                var new_alpha_step = Mathf.RoundToInt(c.a / 0.1f);
+                if (alpha_step > 4 && new_alpha_step != alpha_step) CheckSpreadToOther(vertex.index);
 
                 if (c.a < 0.5f)
                 {
@@ -168,7 +169,7 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         vertexSnuffOrder[snuffedVerticesCount] = index;
         snuffedVerticesCount += 1;
-        CheckSpreadToOther(index);
+        //CheckSpreadToOther(index);
 
         meshSnuffRatio = snuffedVerticesCount * 1.0f / meshFilter.mesh.vertexCount;
         if (meshSnuffed == false && snuffedVerticesCount > meshFilter.mesh.vertexCount * 0.95f)
