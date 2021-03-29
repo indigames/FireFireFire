@@ -740,6 +740,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'TARGET: pinata'
       objectReference: {fileID: 0}
+    - target: {fileID: 4198497634918436418, guid: 48746a7a09240de4bbb571b16e2c704d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4198497634918436419, guid: 48746a7a09240de4bbb571b16e2c704d,
         type: 3}
       propertyPath: m_RootOrder

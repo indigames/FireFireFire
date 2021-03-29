@@ -754,6 +754,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'TARGET: meat'
       objectReference: {fileID: 0}
+    - target: {fileID: 4198497634918436418, guid: 3772b8a0367a915448a52cbb3b511fb7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4198497634918436419, guid: 3772b8a0367a915448a52cbb3b511fb7,
         type: 3}
       propertyPath: m_RootOrder
