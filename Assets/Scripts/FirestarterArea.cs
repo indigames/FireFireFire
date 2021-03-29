@@ -4,8 +4,18 @@ using UnityEngine;
 
 public class FirestarterArea : MonoBehaviour
 {
+    public Animator animator;
     // Start is called before the first frame update
     void Start()
+    {
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    private void OnEnable()
     {
         StartCoroutine(CoAutoLit());
     }
@@ -13,6 +23,7 @@ public class FirestarterArea : MonoBehaviour
     public void Restart()
     {
         wrapColliders.Clear();
+        animator.Play("Play", 0, 0);
     }
 
     IEnumerator CoAutoLit()
