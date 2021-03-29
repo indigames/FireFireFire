@@ -39,8 +39,9 @@ public class Gameplay : MonoBehaviour
     bool gameover = false;
     bool victory = false;
 
-    Stage currentStage;
+    GameObject attachmentInstance = null;
 
+    Stage currentStage;
 
     IEnumerator Start()
     {
@@ -76,6 +77,11 @@ public class Gameplay : MonoBehaviour
         availableMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
         fireStarterArea.Restart();
+        if (attachmentInstance != null)
+        {
+            Destroy(attachmentInstance);
+            attachmentInstance = null;
+        }
 
         // collect child transforms from items container
         List<StageItem> stageItems = new List<StageItem>(currentStage.GetComponentsInChildren<StageItem>(true));
@@ -90,8 +96,6 @@ public class Gameplay : MonoBehaviour
             newMeshBlock.gameObject.SetActive(true);
             newMeshBlock.transform.position = areaPreview.position;
             availableMeshBlocks.Add(newMeshBlock);
-
-            stageItem.gameObject.SetActive(false);
         }
 
         // create the target here
@@ -99,10 +103,22 @@ public class Gameplay : MonoBehaviour
         targetMesh.override_snuff_duration = 0.7f;
         targetMesh.spreadSpeed = 4;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
-        stageTarget.gameObject.SetActive(false);
+
+        var attachmentType = AttachmentUtil.GetAttachmentTemplate(stageTarget.attachment);
+        if (attachmentType != null)
+        {
+            this.attachmentInstance = Instantiate(attachmentType, targetMesh.transform);
+            this.attachmentInstance.gameObject.SetActive(false);
+        }
 
         yield return true;
         yield return true;
+
+        if (attachmentInstance != null)
+        {
+            this.attachmentInstance.transform.position = targetMesh.GetComponent<MeshRenderer>().bounds.center + Vector3.forward;
+            this.attachmentInstance.gameObject.SetActive(true);
+        }
 
         crumbleParticle.Clear();
         yield return new WaitForSeconds(1.25f);

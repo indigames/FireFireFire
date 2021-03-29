@@ -334,9 +334,25 @@ public class WrapMeshInteraction : MonoBehaviour
             mr.enabled = false;
         }
         StartCoroutine(CoCrumble());
+        StartCoroutine(CoCrumbleAttachments());
     }
 
     public ParticleSystem crumbleParticle;
+
+    IEnumerator CoCrumbleAttachments()
+    {
+        yield return true;
+
+        var lines = GetComponentsInChildren<LineRenderer>();
+        for (var i = 1f; i > 0f; i -= Time.deltaTime) {
+            foreach (var line in lines)
+                line.widthMultiplier = i;
+            yield return true;
+        }
+
+        foreach (var line in lines)
+            line.widthMultiplier = 0;
+    }
 
     IEnumerator CoCrumble()
     {
