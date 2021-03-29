@@ -104,6 +104,9 @@ public class Gameplay : MonoBehaviour
         yield return true;
         yield return true;
 
+        crumbleParticle.Clear();
+        yield return new WaitForSeconds(1.25f);
+
         foreach (var meshBlock in availableMeshBlocks)
         {
             meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
