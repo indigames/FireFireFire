@@ -43,6 +43,8 @@ public class Gameplay : MonoBehaviour
 
     Stage currentStage;
 
+    public MeshBlock DraggingMeshBlock => dragging && gameover == false ? nextMeshBlock : null;
+
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
@@ -158,7 +160,8 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
-            yield return true;
+            yield return new WaitForSeconds(0.1f);
+            nextMeshBlock.MovementMode = false;
             nextMeshBlock.transform.localScale = Vector3.one;
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
@@ -265,6 +268,7 @@ public class Gameplay : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject() == false)
             {
+                pos = GetSafeSpawnPosition(pos);
                 var nextPos = nextMeshBlock.transform.position;
                 nextPos.x = pos.x;
                 nextPos.y = pos.y;
@@ -287,10 +291,29 @@ public class Gameplay : MonoBehaviour
             }
             nextMeshBlock.transform.localScale = Vector3.one;
             nextMeshBlock.GetRigidbody.velocity = Vector3.zero;
-            nextMeshBlock.MovementMode = false;
             waitingForLaunch = false;
             dragging = false;
         }
+    }
+
+    //prevent spawning overlap
+    bool CheckPositionOverlap(Vector3 position)
+    {
+        var hits = Physics.SphereCastAll(position, 1f, Vector3.forward);
+        HashSet<MeshBlock> blocks = new HashSet<MeshBlock>();
+        foreach (var hit in hits)
+            blocks.Add(hit.collider.GetComponentInParent<MeshBlock>());
+
+        if (blocks.Count > 1) return true;
+        return false;
+    }
+
+    Vector3 GetSafeSpawnPosition(Vector3 position)
+    {
+        if (position.y < 0.5f) position.y = 0.5f;
+        while (CheckPositionOverlap(position))
+            position += Vector3.up * 0.25f;
+        return position;
     }
 
     float EaseOutElastic(float t)

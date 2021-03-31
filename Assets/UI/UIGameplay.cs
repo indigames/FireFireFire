@@ -7,6 +7,7 @@ public class UIGameplay : MonoBehaviour
 {
     public Gameplay gameplay;
 
+    public GameObject grabIcon;
     public Text textRemaining;
 
     // Start is called before the first frame update
@@ -14,6 +15,20 @@ public class UIGameplay : MonoBehaviour
     {
         gameplay.callbackRestart += Restart;
         gameplay.callbackRemainingMeshblock += ResetRemainingCount;
+    }
+
+    private void Update()
+    {
+        if (gameplay.DraggingMeshBlock == null && grabIcon.activeSelf) grabIcon.SetActive(false);
+        if (gameplay.DraggingMeshBlock != null && grabIcon.activeSelf == false) grabIcon.SetActive(true);
+
+        if (gameplay.DraggingMeshBlock != null)
+        {
+            grabIcon.transform.position = gameplay.DraggingMeshBlock.transform.position;
+            var pos = grabIcon.transform.localPosition;
+            pos.z = 0;
+            grabIcon.transform.localPosition = pos;
+        }
     }
 
     void Restart()
