@@ -28,7 +28,7 @@ public class WrapMeshInteraction : MonoBehaviour
     public float override_snuff_duration = -1;
 
     public ParticleSystem firePs;
-    [System.NonSerialized]
+    //[System.NonSerialized]
     public bool canSpreadTo = false;
     public bool spreadByDefault;
     private int snuffedVerticesCount = 0;
@@ -258,16 +258,26 @@ public class WrapMeshInteraction : MonoBehaviour
 
     public void SpreadFromPoint(Vector3 position)
     {
-        if (this.canSpreadTo == false) return;
+        if (this.canSpreadTo == false)
+            return;
 
-        position.z = transform.position.z;
+        position.z += (transform.position.z - position.z) / 5;
         var dist = transform.position - position;
         if (dist.sqrMagnitude <= float.Epsilon) dist = Vector3.forward;
         RaycastHit hitInfo;
 
-        if (GetComponent<Collider>().Raycast(new Ray(position - dist, dist), out hitInfo, 20f) == false
-            && GetComponent<Collider>().Raycast(new Ray(position - Vector3.forward * 10, Vector3.forward), out hitInfo, 20f) == false)
-            return;
+        //HACK - THIS IS STILL NOT ACCURATE BECAUSE SPREAD FROM POINT CAN STILL BE CALLED FROM TRIGGER OVERLAP
+        //THEREFORE NEED GOOD CONTOUR FOR THIS TO WORK
+        if (GetComponent<Collider>().Raycast(new Ray(transform.position - dist * 10, dist), out hitInfo, 20f) == false)
+        {
+            var max_loop_count = 2;
+            while (GetComponent<Collider>().Raycast(new Ray(position - Vector3.forward * 10, Vector3.forward), out hitInfo, 20f) == false)
+            {
+                position += (transform.position - position) / 2;
+                max_loop_count -= 1;
+                if (max_loop_count <= 0) return;
+            }
+        }
 
         var index = hitInfo.triangleIndex;
         var mesh = meshFilter.mesh;
@@ -290,7 +300,7 @@ public class WrapMeshInteraction : MonoBehaviour
 
             var pos = keyval.Value;
             pos.z = position.z;
-            if ((pos - position).sqrMagnitude > 0.5f) continue;
+            if ((pos - position).sqrMagnitude > 0.4f) continue;
 
             //spread to other here
             wrapMeshInteraction.SpreadFromPoint(pos);

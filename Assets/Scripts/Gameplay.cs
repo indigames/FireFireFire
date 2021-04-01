@@ -105,6 +105,8 @@ public class Gameplay : MonoBehaviour
         targetMesh.override_snuff_duration = 0.7f;
         targetMesh.spreadSpeed = 4;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
+        foreach (var collider in targetMesh.GetComponentsInChildren<Collider>())
+            if (collider.isTrigger == false && collider.gameObject != targetMesh.gameObject) Destroy(collider.gameObject);
 
         var attachmentType = AttachmentUtil.GetAttachmentTemplate(stageTarget.attachment);
         if (attachmentType != null)
@@ -378,7 +380,6 @@ public class Gameplay : MonoBehaviour
     {
         //UpdateLaunch();
         UpdateDrag();
-        //UpdateDragTetris();
         UpdateCheckForVictory();
         UpdateVisualTarget();
     }
@@ -391,44 +392,4 @@ public class Gameplay : MonoBehaviour
     }
 
     Vector3 recentNextMeshBlockPosition;
-    void UpdateDragTetris()
-    {
-        if (nextMeshBlock == null || waitingForLaunch == false) return;
-
-        if (newWaitingForLaunch)
-        {
-            nextMeshBlock.MovementMode = true;
-            nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
-            recentNextMeshBlockPosition = nextMeshBlock.transform.position;
-            return;
-        }
-
-        nextMeshBlock.GetRigidbody.velocity = Vector3.down * 6;
-
-
-        if (Input.GetMouseButton(0))
-        {
-            var ray = Camera.main.ScreenPointToRay(InputPosition);
-            var plane = new Plane(Vector3.forward, new Vector3(0, 0, 1));
-            float distance;
-            plane.Raycast(ray, out distance);
-            var pos = ray.GetPoint(distance);
-
-            if (pos.x + 0.2f < recentNextMeshBlockPosition.x) nextMeshBlock.GetRigidbody.velocity += Vector3.left * 5;
-            if (pos.x - 0.2f > recentNextMeshBlockPosition.x) nextMeshBlock.GetRigidbody.velocity += Vector3.right * 5;
-        }
-
-        // CHECK FOR STOPPING CONDITION
-        var ydiff = nextMeshBlock.transform.position.y - recentNextMeshBlockPosition.y;
-        recentNextMeshBlockPosition = nextMeshBlock.transform.position;
-        var ydiff_moving = ydiff < -0.001f;
-
-        if (ydiff_moving == false && nextMeshBlock.SoftCollided) {
-            nextMeshBlock.MovementMode = false;
-            waitingForLaunch = false;
-            return;
-        }
-
-
-    }
 }

@@ -49,8 +49,14 @@ public class WrapMesh : MonoBehaviour
         {
             meshFilter = GetComponent<MeshFilter>();
 
-            var meshFilters = new List<MeshFilter>(targetContainer.GetComponentsInChildren<MeshFilter>());
+            var meshFilters = new List<MeshFilter>(targetContainer.GetComponentsInChildren<MeshFilter>(false));
             meshFilters.Remove(meshFilter); //do not include this mesh filter
+            meshFilters.RemoveAll((m) =>
+            {
+                var renderer = m.GetComponent<MeshRenderer>();
+                return renderer == null || renderer.enabled == false;
+            });
+
             var combineCount = 0;
 
             foreach (var meshFilter in meshFilters)
@@ -132,9 +138,6 @@ public class WrapMesh : MonoBehaviour
             if (existing_trigger_collider != null)
             {
                 var scale = existing_trigger_collider.transform.localScale;
-                scale.x *= 1.4f;
-                scale.y *= 1.4f;
-                scale.z *= 1.4f;
                 existing_trigger_collider.transform.localScale = scale;
                 existing_trigger_collider.transform.SetParent(transform);
                 existing_trigger_collider.gameObject.layer = LayerUtil.LAYER_WRAP_TRIGGER;
@@ -157,7 +160,8 @@ public class WrapMesh : MonoBehaviour
                 trigger_collider.convex = true;
                 trigger_collider.isTrigger = true;
                 trigger_collider.sharedMesh = this.colliderMesh;
-                trigger_collider.transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+                //trigger_collider.transform.localScale = new Vector3(1.7f, 1.7f, 1f);
+                trigger_collider.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
                 this.wrapMeshTrigger = trigger_collider;
             }
         }

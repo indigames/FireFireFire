@@ -34,6 +34,7 @@ public class FirestarterArea : MonoBehaviour
             {
                 #pragma warning disable
                 var collider = wrapMesh.GetComponent<MeshCollider>();
+                if (collider == null) continue;
                 var position = collider.ClosestPoint(transform.position) ;
                 #pragma warning restore
                 position += Vector3.up * 0.1f;
