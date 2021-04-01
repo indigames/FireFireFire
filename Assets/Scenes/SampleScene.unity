@@ -448,6 +448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 351918127}
+  fireParticle: {fileID: 674423878}
 --- !u!33 &351918126
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1310,6 +1311,12 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!198 &674423878 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198679442476388764, guid: f293a2dcc753a4a489fefe7f8f312d69,
+    type: 3}
+  m_PrefabInstance: {fileID: 1959303852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &717215604
 GameObject:
   m_ObjectHideFlags: 0
@@ -11945,7 +11952,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabFolder: {fileID: 102900000, guid: 3a5c047cddd0eac408285d9a4194f88f,
     type: 3}
-  startingStage: 2
+  startingStage: 0
   stagePrefabs:
   - {fileID: 4684145382587630233, guid: eeddca1a7b3ca7643a008f46e7a612e9, type: 3}
   - {fileID: 4684145382587630233, guid: 4e6f57aafe656be44b4703633366e29c, type: 3}
