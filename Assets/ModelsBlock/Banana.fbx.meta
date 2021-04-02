@@ -2,7 +2,10 @@ fileFormatVersion: 2
 guid: 3cb58c867e42359439bf6ca3f80ce455
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 7478958893544636339
+    second: Banana|BananaAction
   externalObjects: {}
   materials:
     materialImportMode: 1
