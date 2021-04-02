@@ -11952,7 +11952,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabFolder: {fileID: 102900000, guid: 3a5c047cddd0eac408285d9a4194f88f,
     type: 3}
-  startingStage: 0
+  startingStage: 2
   stagePrefabs:
   - {fileID: 4684145382587630233, guid: eeddca1a7b3ca7643a008f46e7a612e9, type: 3}
   - {fileID: 4684145382587630233, guid: 4e6f57aafe656be44b4703633366e29c, type: 3}

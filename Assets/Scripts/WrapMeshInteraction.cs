@@ -43,6 +43,9 @@ public class WrapMeshInteraction : MonoBehaviour
     public bool MeshIgnited => meshIgnited;
     public float MeshSnuffRatio => meshSnuffRatio;
 
+    private StageUnderlay underlayModel;
+    public bool HasUnderlayModel => underlayModel != null;
+
     private IEnumerator Start()
     {
         this.meshFilter = GetComponent<MeshFilter>();
@@ -50,6 +53,9 @@ public class WrapMeshInteraction : MonoBehaviour
         yield return true;
         SetupVertices();    
         canSpreadTo = spreadByDefault;
+
+        underlayModel = GetComponentInChildren<StageUnderlay>();
+        if (underlayModel != null) underlayModel.gameObject.SetActive(false);
     }
 
     void SetupVertices()
@@ -341,8 +347,10 @@ public class WrapMeshInteraction : MonoBehaviour
         foreach (var mr in gameObject.GetComponentsInChildren<MeshRenderer>())
         {
             if (mr.gameObject == gameObject) continue;
+            if (mr.GetComponent<StageDecor>()) continue;
             mr.enabled = false;
         }
+        if (HasUnderlayModel) underlayModel.gameObject.SetActive(true);
         StartCoroutine(CoCrumble());
         StartCoroutine(CoCrumbleAttachments());
     }
