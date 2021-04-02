@@ -448,6 +448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 351918127}
+  fireParticle: {fileID: 674423878}
 --- !u!33 &351918126
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1310,6 +1311,12 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!198 &674423878 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198679442476388764, guid: f293a2dcc753a4a489fefe7f8f312d69,
+    type: 3}
+  m_PrefabInstance: {fileID: 1959303852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &717215604
 GameObject:
   m_ObjectHideFlags: 0

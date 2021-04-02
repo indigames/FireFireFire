@@ -56,6 +56,8 @@ public class WrapMesh : MonoBehaviour
                 var renderer = m.GetComponent<MeshRenderer>();
                 return renderer == null || renderer.enabled == false;
             });
+            meshFilters.RemoveAll((m) => m.GetComponent<StageDecor>() != null);
+            meshFilters.RemoveAll((m) => m.GetComponent<StageUnderlay>() != null);
 
             var combineCount = 0;
 

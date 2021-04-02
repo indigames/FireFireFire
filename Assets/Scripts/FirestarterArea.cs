@@ -5,6 +5,8 @@ using UnityEngine;
 public class FirestarterArea : MonoBehaviour
 {
     public Animator animator;
+    public ParticleSystem fireParticle;
+    bool fireEnabled;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,22 +26,30 @@ public class FirestarterArea : MonoBehaviour
     {
         wrapColliders.Clear();
         animator.Play("Play", 0, 0);
+        fireEnabled = true;
+    }
+
+    public void DisableFire()
+    {
+        fireEnabled = false;
+        fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     IEnumerator CoAutoLit()
     {
         while (true)
         {
-            foreach (var wrapMesh in wrapColliders)
-            {
-                #pragma warning disable
-                var collider = wrapMesh.GetComponent<MeshCollider>();
-                if (collider == null) continue;
-                var position = collider.ClosestPoint(transform.position) ;
-                #pragma warning restore
-                position += Vector3.up * 0.1f;
-                collider.GetComponentInParent<WrapMeshInteraction>().SpreadFromPoint(position);
-            }
+            if (fireEnabled)
+                foreach (var wrapMesh in wrapColliders)
+                {
+                    #pragma warning disable
+                    var collider = wrapMesh.GetComponent<MeshCollider>();
+                    if (collider == null) continue;
+                    var position = collider.ClosestPoint(transform.position) ;
+                    #pragma warning restore
+                    position += Vector3.up * 0.1f;
+                    collider.GetComponentInParent<WrapMeshInteraction>().SpreadFromPoint(position);
+                }
             yield return new WaitForSeconds(0.2f);
         }
     }

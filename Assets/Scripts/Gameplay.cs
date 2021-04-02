@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class Gameplay : MonoBehaviour
 {
+    static float SNUFF_FIRESTARTER_DURATION = 3;
+
     public Action callbackRestart;
     public Action<int> callbackRemainingMeshblock;
     public Action callbackVictory;
@@ -71,6 +73,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoGameplay()
     {
+        snuffingFirestarter = false;
         gameover = false;
         victory = false;
         confettiParticle.Clear();
@@ -167,6 +170,8 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.transform.localScale = Vector3.one;
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
+
+            StartCoroutine(CoSnuffFirestarter());
             if (victory) yield break;
 
             //var fromLaunchPosition = nextMeshBlock.transform.position;
@@ -195,6 +200,15 @@ public class Gameplay : MonoBehaviour
 
         //all is snuffed
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
+    }
+
+    bool snuffingFirestarter;
+    IEnumerator CoSnuffFirestarter()
+    {
+        if (snuffingFirestarter) yield break;
+        snuffingFirestarter = true;
+        yield return new WaitForSeconds(SNUFF_FIRESTARTER_DURATION);
+        fireStarterArea.DisableFire();
     }
 
     IEnumerator CoVictory()
