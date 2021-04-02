@@ -7,6 +7,7 @@ public class UIGameplay : MonoBehaviour
 {
     public Gameplay gameplay;
 
+    public GameObject itemPreview;
     public GameObject grabIcon;
     public Text textRemaining;
 
@@ -33,6 +34,15 @@ public class UIGameplay : MonoBehaviour
 
     void Restart()
     {
+        StartCoroutine(DelayPreview());
+    }
+
+    IEnumerator DelayPreview()
+    {
+        itemPreview.SetActive(false);
+        yield return true;
+        yield return true;
+        itemPreview.SetActive(true);
     }
 
     void ResetRemainingCount(int count)

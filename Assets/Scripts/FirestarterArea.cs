@@ -7,6 +7,9 @@ public class FirestarterArea : MonoBehaviour
     public Animator animator;
     public ParticleSystem fireParticle;
     bool fireEnabled;
+
+    public bool FireEnabled => fireEnabled;
+
     // Start is called before the first frame update
     void Start()
     {

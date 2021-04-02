@@ -40,6 +40,7 @@ public class MeshBlock : MonoBehaviour
         baseAngularDrag = rigidBody.angularDrag;
 
         if (HasDefaultCollider() == false) meshCollider.sharedMesh = wrapMesh.colliderMesh;
+        foreach (var decor in meshCollider.GetComponentsInChildren<StageDecor>()) decor.gameObject.SetActive(false);
 
         if (template) gameObject.SetActive(false);
     }

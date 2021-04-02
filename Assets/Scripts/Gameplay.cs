@@ -128,14 +128,16 @@ public class Gameplay : MonoBehaviour
         }
 
         crumbleParticle.Clear();
-        yield return new WaitForSeconds(1.25f);
 
         foreach (var meshBlock in availableMeshBlocks)
         {
             meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
             meshBlock.gameObject.SetActive(false);
         }
-        
+
+        StartCoroutine(CoCheckDefeat());
+        yield return new WaitForSeconds(1.25f);
+
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
             //if (i < availableMeshBlocks.Count - 1) availableMeshBlocks[i + 1].gameObject.SetActive(true);44
@@ -200,6 +202,30 @@ public class Gameplay : MonoBehaviour
 
         //all is snuffed
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
+    }
+
+    IEnumerator CoCheckDefeat()
+    {
+        while (true)
+        {
+            if (fireStarterArea.FireEnabled)
+            {
+                yield return true;
+                continue;
+            }
+
+            if (victory) yield break;
+
+            bool burning = false;
+            foreach (var meshBlock in availableMeshBlocks) if (meshBlock.MeshIgnited && meshBlock.MeshSnuffed == false) burning = true;
+
+            //all is snuffed
+            if (burning == false) break;
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        StopAllCoroutines();
+        StartCoroutine(CoDefeat());
     }
 
     bool snuffingFirestarter;
