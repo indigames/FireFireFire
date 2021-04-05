@@ -221,7 +221,7 @@ public class Gameplay : MonoBehaviour
 
             //all is snuffed
             if (burning == false) break;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
 
         StopAllCoroutines();
@@ -243,7 +243,7 @@ public class Gameplay : MonoBehaviour
         yield return true;
         confettiParticle.Play();
         gameover = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         yield return true;
 
         callbackVictory?.Invoke();
