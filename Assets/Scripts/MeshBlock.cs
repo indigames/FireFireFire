@@ -24,7 +24,7 @@ public class MeshBlock : MonoBehaviour
     float baseMass;
     float baseDrag;
     float baseAngularDrag;
-    bool movementMode = false;
+    public bool movementMode = false;
     bool collided = false;
 
     // Use this for initialization
@@ -147,11 +147,13 @@ public class MeshBlock : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         if (movementMode) return;
-        if (collision_delay > 0)
-        {
-            collision_delay -= Time.fixedDeltaTime;
-            if (collision_delay < 0) collided = true;
-        }
+        collided = true;
+        //if (collision_delay > 0)
+        //{
+        //    collision_delay -= Time.fixedDeltaTime;
+        //    Debug.Log(collision_delay);
+        //    if (collision_delay < 0) collided = true;
+        //}
     }
 
     private void OnTriggerStay(Collider other)

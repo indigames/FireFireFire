@@ -175,6 +175,7 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void OnVertexSnuff(int index)
     {
+        if (snuffedVerticesCount >= vertexSnuffOrder.Length) return;
         vertexSnuffOrder[snuffedVerticesCount] = index;
         snuffedVerticesCount += 1;
         //CheckSpreadToOther(index);
@@ -275,6 +276,7 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         if (this.canSpreadTo == false)
             return;
+
 
         position.z += (transform.position.z - position.z) / 5;
         var dist = transform.position - position;

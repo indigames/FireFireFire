@@ -427,7 +427,7 @@ public class Gameplay : MonoBehaviour
     void UpdateVisualTarget()
     {
         if (targetMesh == null || targetMesh.Crumbling) return;
-        if (targetMesh.MeshSnuffRatio < 0.66f) return;
+        if (targetMesh.MeshSnuffRatio < 0.8f) return;
         targetMesh.StartCrumble();
     }
 
