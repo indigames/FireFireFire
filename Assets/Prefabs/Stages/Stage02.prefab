@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f555abb1554ee214597d79b042f1914d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachment: 0
+  attachment: 1
   spreadSpeed: 3
 --- !u!114 &5532676399530892476
 MonoBehaviour:
