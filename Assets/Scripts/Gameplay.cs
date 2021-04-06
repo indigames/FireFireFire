@@ -18,6 +18,7 @@ public class Gameplay : MonoBehaviour
     [Space]
     public Transform areaTarget;
     public Transform areaPreview;
+    public AudioPool audioSpawn;
 
     [Space]
     public MeshBlock baseMeshBlock;
@@ -239,6 +240,7 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        fireStarterArea.PlayVictory();
         confettiParticle.Stop();
         yield return true;
         confettiParticle.Play();
@@ -252,6 +254,7 @@ public class Gameplay : MonoBehaviour
     IEnumerator CoDefeat()
     {
         gameover = true;
+        fireStarterArea.PlayDefeat();
         yield return true;
 
         callbackDefeat?.Invoke();
@@ -318,6 +321,8 @@ public class Gameplay : MonoBehaviour
                 nextMeshBlock.MovementMode = true;
                 coZoomIn = StartCoroutine(CoPopupTransform(nextMeshBlock.transform));
                 dragging = true;
+
+                audioSpawn.Play();
             }
         }
 

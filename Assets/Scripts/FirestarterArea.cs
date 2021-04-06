@@ -69,4 +69,14 @@ public class FirestarterArea : MonoBehaviour
     {
         wrapColliders.Remove(other);
     }
+
+    public void PlayVictory()
+    {
+        animator.Play("Victory");
+    }
+
+    public void PlayDefeat()
+    {
+        animator.Play("Defeat");
+    }
 }
