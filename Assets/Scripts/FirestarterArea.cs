@@ -7,6 +7,9 @@ public class FirestarterArea : MonoBehaviour
     public Animator animator;
     public ParticleSystem fireParticle;
     bool fireEnabled;
+
+    public bool FireEnabled => fireEnabled;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +48,8 @@ public class FirestarterArea : MonoBehaviour
                     #pragma warning disable
                     var collider = wrapMesh.GetComponent<MeshCollider>();
                     if (collider == null) continue;
-                    var position = collider.ClosestPoint(transform.position) ;
-                    #pragma warning restore
+                    var position = collider.ClosestPoint(transform.position);
+#pragma warning restore
                     position += Vector3.up * 0.1f;
                     collider.GetComponentInParent<WrapMeshInteraction>().SpreadFromPoint(position);
                 }

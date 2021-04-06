@@ -24,7 +24,7 @@ public class MeshBlock : MonoBehaviour
     float baseMass;
     float baseDrag;
     float baseAngularDrag;
-    bool movementMode = false;
+    public bool movementMode = false;
     bool collided = false;
 
     // Use this for initialization
@@ -40,8 +40,10 @@ public class MeshBlock : MonoBehaviour
         baseAngularDrag = rigidBody.angularDrag;
 
         if (HasDefaultCollider() == false) meshCollider.sharedMesh = wrapMesh.colliderMesh;
+        foreach (var decor in meshCollider.GetComponentsInChildren<StageDecor>()) decor.gameObject.SetActive(false);
 
         if (template) gameObject.SetActive(false);
+        GetComponentInChildren<WrapMeshInteraction>().onMeshIgnited += StartShrinkage;
     }
 
     bool HasDefaultCollider()
@@ -71,6 +73,7 @@ public class MeshBlock : MonoBehaviour
         rigidBody.angularDrag = baseAngularDrag;
 
         wrapMeshInteraction.Restart();
+        transform.localScale = Vector3.one;
     }
 
     public Vector3 GetBoundOffset()
@@ -134,21 +137,23 @@ public class MeshBlock : MonoBehaviour
                 wrapMeshInteraction.canSpreadTo = true;
             }
         }
-        if (rigidBody != null && rigidBody.IsSleeping())
-        {
-            rigidBody.isKinematic = true;
-            wrapMeshInteraction.canSpreadTo = true;
-        }
+        //if (rigidBody != null && rigidBody.IsSleeping())
+        //{
+        //    rigidBody.isKinematic = true;
+        //    wrapMeshInteraction.canSpreadTo = true;
+        //}
     }
 
     private void OnCollisionStay(Collision collision)
     {
         if (movementMode) return;
-        if (collision_delay > 0)
-        {
-            collision_delay -= Time.fixedDeltaTime;
-            if (collision_delay < 0) collided = true;
-        }
+        collided = true;
+        //if (collision_delay > 0)
+        //{
+        //    collision_delay -= Time.fixedDeltaTime;
+        //    Debug.Log(collision_delay);
+        //    if (collision_delay < 0) collided = true;
+        //}
     }
 
     private void OnTriggerStay(Collider other)
@@ -190,5 +195,20 @@ public class MeshBlock : MonoBehaviour
         var result = MakeInstanceFromModel(item.transform, parent);
         result.GetComponentInChildren<WrapMeshInteraction>().spreadSpeed = item.spreadSpeed;
         return result;
+    }
+
+    void StartShrinkage()
+    {
+        StartCoroutine(CoShrinkage());
+    }
+
+    IEnumerator CoShrinkage()
+    {
+        yield return new WaitForSeconds(1);
+        for (var i = 0f; i < 1f; i += Time.deltaTime / 3)
+        {
+            transform.localScale = Vector3.one * (1 - 0.1f * i);
+            yield return true;
+        }
     }
 }

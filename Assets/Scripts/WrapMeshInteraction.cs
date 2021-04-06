@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WrapMeshInteraction : MonoBehaviour
 {
+    public System.Action onMeshIgnited, onMeshSnuffed;
+
     class Vertex
     {
         public int index;
@@ -16,7 +18,7 @@ public class WrapMeshInteraction : MonoBehaviour
     }
 
     private const float SNUFF_DURATION = 4f; //Default is 3f
-    private const float SPREAD_SPEED = 3f; //Default is 3f
+    private const float SPREAD_SPEED = 1f; //Default is 3f
     private MeshFilter meshFilter;
     private WrapMesh wrapMesh;
     private List<Vertex> vertices = new List<Vertex>();
@@ -173,13 +175,17 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void OnVertexSnuff(int index)
     {
+        if (snuffedVerticesCount >= vertexSnuffOrder.Length) return;
         vertexSnuffOrder[snuffedVerticesCount] = index;
         snuffedVerticesCount += 1;
         //CheckSpreadToOther(index);
 
         meshSnuffRatio = snuffedVerticesCount * 1.0f / meshFilter.mesh.vertexCount;
         if (meshSnuffed == false && snuffedVerticesCount > meshFilter.mesh.vertexCount * 0.95f)
+        {
             meshSnuffed = true;
+            onMeshSnuffed?.Invoke();
+        }
     }
 
     void CheckSpreadVertex(Vertex vertex)
@@ -208,7 +214,11 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void SpreadToVertex(int index)
     {
-        if (this.meshIgnited == false) this.meshIgnited = true;
+        if (this.meshIgnited == false)
+        {
+            this.meshIgnited = true;
+            onMeshIgnited?.Invoke();
+        }
         var vertex = this.vertices[index];
         if (vertex.spreaded) return;
         vertex.spreaded = true;
@@ -266,6 +276,7 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         if (this.canSpreadTo == false)
             return;
+
 
         position.z += (transform.position.z - position.z) / 5;
         var dist = transform.position - position;

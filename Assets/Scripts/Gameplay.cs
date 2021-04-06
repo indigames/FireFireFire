@@ -128,14 +128,16 @@ public class Gameplay : MonoBehaviour
         }
 
         crumbleParticle.Clear();
-        yield return new WaitForSeconds(1.25f);
 
         foreach (var meshBlock in availableMeshBlocks)
         {
             meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
             meshBlock.gameObject.SetActive(false);
         }
-        
+
+        StartCoroutine(CoCheckDefeat());
+        yield return new WaitForSeconds(1.25f);
+
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
             //if (i < availableMeshBlocks.Count - 1) availableMeshBlocks[i + 1].gameObject.SetActive(true);44
@@ -202,6 +204,30 @@ public class Gameplay : MonoBehaviour
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
     }
 
+    IEnumerator CoCheckDefeat()
+    {
+        while (true)
+        {
+            if (fireStarterArea.FireEnabled)
+            {
+                yield return true;
+                continue;
+            }
+
+            if (victory) yield break;
+
+            bool burning = false;
+            foreach (var meshBlock in availableMeshBlocks) if (meshBlock.MeshIgnited && meshBlock.MeshSnuffed == false) burning = true;
+
+            //all is snuffed
+            if (burning == false) break;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        StopAllCoroutines();
+        StartCoroutine(CoDefeat());
+    }
+
     bool snuffingFirestarter;
     IEnumerator CoSnuffFirestarter()
     {
@@ -217,7 +243,7 @@ public class Gameplay : MonoBehaviour
         yield return true;
         confettiParticle.Play();
         gameover = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         yield return true;
 
         callbackVictory?.Invoke();
@@ -401,7 +427,7 @@ public class Gameplay : MonoBehaviour
     void UpdateVisualTarget()
     {
         if (targetMesh == null || targetMesh.Crumbling) return;
-        if (targetMesh.MeshSnuffRatio < 0.66f) return;
+        if (targetMesh.MeshSnuffRatio < 0.8f) return;
         targetMesh.StartCrumble();
     }
 

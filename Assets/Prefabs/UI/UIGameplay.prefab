@@ -675,6 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplay: {fileID: 0}
+  itemPreview: {fileID: 7683674102606242608}
   grabIcon: {fileID: 6770579408676402504}
   textRemaining: {fileID: 1669524452157077459}
 --- !u!223 &5411552361855676704
@@ -1282,7 +1283,7 @@ GameObject:
   - component: {fileID: 8458842537985460935}
   - component: {fileID: 8960450231851249215}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: ImgPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
