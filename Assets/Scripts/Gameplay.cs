@@ -240,14 +240,17 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        gameover = true;
         fireStarterArea.PlayVictory();
+
+        while (targetMesh.MeshSnuffRatio < 0.9f) yield return true;
+
         confettiParticle.Stop();
         yield return true;
         confettiParticle.Play();
-        gameover = true;
-        yield return new WaitForSeconds(2);
         yield return true;
 
+        yield return new WaitForSeconds(1.5f);
         callbackVictory?.Invoke();
     }
 

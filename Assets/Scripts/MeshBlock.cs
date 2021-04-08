@@ -43,7 +43,9 @@ public class MeshBlock : MonoBehaviour
         foreach (var decor in meshCollider.GetComponentsInChildren<StageDecor>()) decor.gameObject.SetActive(false);
 
         if (template) gameObject.SetActive(false);
-        GetComponentInChildren<WrapMeshInteraction>().onMeshIgnited += StartShrinkage;
+
+        //NO SHRIKNKING FOR NOW
+        //GetComponentInChildren<WrapMeshInteraction>().onMeshIgnited += StartShrinkage;
     }
 
     bool HasDefaultCollider()
