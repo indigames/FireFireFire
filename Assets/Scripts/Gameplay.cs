@@ -94,6 +94,7 @@ public class Gameplay : MonoBehaviour
         StageTarget stageTarget = currentStage.GetComponentInChildren<StageTarget>(true);
 
         // create new meshblocks here
+        var mass = baseMeshBlock.GetRigidbody.mass;
         foreach (var stageItem in stageItems)
         {
             var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem);
@@ -101,6 +102,8 @@ public class Gameplay : MonoBehaviour
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
             newMeshBlock.transform.position = areaPreview.position;
+            newMeshBlock.GetRigidbody.mass = mass;
+            mass *= 0.7f;
             availableMeshBlocks.Add(newMeshBlock);
         }
 
@@ -240,9 +243,12 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoVictory()
     {
+        if (gameover) yield break;
+
         gameover = true;
         fireStarterArea.PlayVictory();
 
+        //WAIT FOR THE BURN TO FINISHES
         while (targetMesh.MeshSnuffRatio < 0.9f) yield return true;
 
         confettiParticle.Stop();
