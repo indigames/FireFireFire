@@ -45,6 +45,8 @@ public class WrapMeshInteraction : MonoBehaviour
     public bool MeshIgnited => meshIgnited;
     public float MeshSnuffRatio => meshSnuffRatio;
 
+    public MeshFilter MeshFilter => meshFilter;
+
     private StageUnderlay underlayModel;
     public bool HasUnderlayModel => underlayModel != null;
 
@@ -277,7 +279,6 @@ public class WrapMeshInteraction : MonoBehaviour
         if (this.canSpreadTo == false)
             return;
 
-
         position.z += (transform.position.z - position.z) / 5;
         var dist = transform.position - position;
         if (dist.sqrMagnitude <= float.Epsilon) dist = Vector3.forward;
@@ -287,7 +288,7 @@ public class WrapMeshInteraction : MonoBehaviour
         //THEREFORE NEED GOOD CONTOUR FOR THIS TO WORK
         if (GetComponent<Collider>().Raycast(new Ray(transform.position - dist * 10, dist), out hitInfo, 20f) == false)
         {
-            var max_loop_count = 2;
+            var max_loop_count = 4;
             while (GetComponent<Collider>().Raycast(new Ray(position - Vector3.forward * 10, Vector3.forward), out hitInfo, 20f) == false)
             {
                 position += (transform.position - position) / 2;
@@ -317,7 +318,7 @@ public class WrapMeshInteraction : MonoBehaviour
 
             var pos = keyval.Value;
             pos.z = position.z;
-            if ((pos - position).sqrMagnitude > 0.4f) continue;
+            if ((pos - position).sqrMagnitude > 0.6f) continue;
 
             //spread to other here
             wrapMeshInteraction.SpreadFromPoint(pos);
@@ -344,7 +345,7 @@ public class WrapMeshInteraction : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         other.gameObject.GetComponent<FirestarterArea>()?.WrapMeshTriggerExit(wrapMesh.wrapMeshTrigger);
-        //if (mapCollision.ContainsKey(other.gameObject)) mapCollision.Remove(other.gameObject);
+        if (mapCollision.ContainsKey(other.gameObject)) mapCollision.Remove(other.gameObject);
     }
 
     bool crumbling = false;
