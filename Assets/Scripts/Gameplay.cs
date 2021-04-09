@@ -110,7 +110,7 @@ public class Gameplay : MonoBehaviour
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
         targetMesh.override_snuff_duration = 0.7f;
-        targetMesh.spreadSpeed = 4;
+        targetMesh.spreadSpeed *= 2;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
         foreach (var collider in targetMesh.GetComponentsInChildren<Collider>())
             if (collider.isTrigger == false && collider.gameObject != targetMesh.gameObject) Destroy(collider.gameObject);
