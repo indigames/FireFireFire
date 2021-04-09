@@ -249,12 +249,14 @@ public class Gameplay : MonoBehaviour
         fireStarterArea.PlayVictory();
 
         //WAIT FOR THE BURN TO FINISHES
-        while (targetMesh.MeshSnuffRatio < 0.9f) yield return true;
+        while (targetMesh.MeshSnuffRatio < 0.6f) yield return true;
 
+        confettiParticle.transform.position = targetMesh.transform.position + Vector3.back * 2;
         confettiParticle.Stop();
         yield return true;
         confettiParticle.Play();
-        yield return true;
+        yield return new WaitForSeconds(1.2f);
+        targetMesh.StartCrumble();
 
         yield return new WaitForSeconds(1.5f);
         callbackVictory?.Invoke();
@@ -440,6 +442,7 @@ public class Gameplay : MonoBehaviour
 
     void UpdateVisualTarget()
     {
+        return;
         if (targetMesh == null || targetMesh.Crumbling) return;
         if (targetMesh.MeshSnuffRatio < 0.8f) return;
         targetMesh.StartCrumble();
