@@ -6,6 +6,9 @@ ModelImporter:
   - first:
       74: 8376122404909302740
     second: bathchair|bathchairAction
+  - first:
+      74: -5056891387481396076
+    second: bathchair|bathchair|bathchair|bathchairAction|bathchair|bathchairAction
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -64,8 +67,8 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
+    normalSmoothAngle: 91
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
