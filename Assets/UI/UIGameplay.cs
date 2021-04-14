@@ -10,6 +10,8 @@ public class UIGameplay : MonoBehaviour
     public GameObject itemPreview;
     public GameObject grabIcon;
     public Text textRemaining;
+    public Text textStage;
+    public string textStageFormat = "Stage {0}";
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,7 @@ public class UIGameplay : MonoBehaviour
 
     void Restart()
     {
+        textStage.text = string.Format(textStageFormat, gameplay.StageNumber);
         StartCoroutine(DelayPreview());
     }
 

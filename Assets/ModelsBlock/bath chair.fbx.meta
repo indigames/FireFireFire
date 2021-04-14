@@ -2,7 +2,10 @@ fileFormatVersion: 2
 guid: 54964de5077d93f42844763386801dad
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 8376122404909302740
+    second: bathchair|bathchairAction
   externalObjects: {}
   materials:
     materialImportMode: 1

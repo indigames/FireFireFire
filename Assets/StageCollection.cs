@@ -17,6 +17,8 @@ public class StageCollection : MonoBehaviour
 
     public Stage CurrentStage => GetCurrentStage();
     public Stage NextStage => GetNextStage();
+    public int StageNumber => StageIndex + 1;
+    public int StageIndex => index;
 
     private void Awake()
     {

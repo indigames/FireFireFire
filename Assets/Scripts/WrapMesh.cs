@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class WrapMeshVertex
@@ -14,7 +15,10 @@ public class WrapMeshVertex
 
 public class WrapMesh : MonoBehaviour
 {
+    public bool peelingMode;
+
     public GameObject targetContainer;
+    public List<Material> burntMaterials;
     [HideInInspector]
     public MeshFilter meshFilter;
     [HideInInspector]
@@ -45,6 +49,9 @@ public class WrapMesh : MonoBehaviour
     {
         gameObject.layer = LayerUtil.LAYER_WRAP_MESH;
 
+        if (burntMaterials.Count > 0 && GetComponent<MeshRenderer>() != null)
+            GetComponent<MeshRenderer>().material = burntMaterials[UnityEngine.Random.Range(0, burntMaterials.Count)];
+
         if (meshFilter == null)
         {
             meshFilter = GetComponent<MeshFilter>();
@@ -67,12 +74,16 @@ public class WrapMesh : MonoBehaviour
             CombineInstance[] combine = new CombineInstance[combineCount];
             int i = 0;
 
+            List<Material> materials = new List<Material>();
+            //List<int> submeshCounts = new List<int>();
+
             foreach (var meshFilter in meshFilters)
             {
+                materials.AddRange(meshFilter.GetComponent<MeshRenderer>().materials);
+
                 for (var submesh = 0; submesh < meshFilter.mesh.subMeshCount; submesh++)
                 {
                     combine[i].mesh = meshFilter.sharedMesh;
-
                     if (meshFilter.sharedMesh.subMeshCount > 1) combine[i].subMeshIndex = submesh;
                     if (meshFilter.gameObject == transform.gameObject)
                         combine[i].transform = transform.parent.worldToLocalMatrix * Matrix4x4.Translate(-meshFilter.transform.localPosition) * meshFilter.transform.localToWorldMatrix;
@@ -80,12 +91,37 @@ public class WrapMesh : MonoBehaviour
                         combine[i].transform = transform.worldToLocalMatrix * meshFilter.transform.localToWorldMatrix;
                     i++;
                 }
+                if (peelingMode) meshFilter.gameObject.SetActive(false);
             }
-            meshFilter.mesh.CombineMeshes(combine);
 
-            //EXTRUDE MESH
+            if (peelingMode) meshFilter.mesh.CombineMeshes(combine, false);
+            else meshFilter.mesh.CombineMeshes(combine, true);
 
             var mesh = meshFilter.mesh;
+
+            //REMAP MATERIALS AND SUBMESHES
+
+            if (peelingMode)
+            {
+                var wrap_material = GetComponent<MeshRenderer>().material;
+                for (var mi = 0; mi < materials.Count; mi++)
+                {
+                    var mat = Instantiate(wrap_material);
+                    mat.mainTexture = materials[mi].mainTexture;
+                    mat.color = materials[mi].color;
+                    materials[mi] = mat;
+                }
+                GetComponent<MeshRenderer>().materials = materials.ToArray();
+            }
+
+            //mesh.subMeshCount = submeshCounts.Count;
+            //for (var submesh = 0; submesh < submeshCounts.Count; submesh++)
+            //{
+            //    var submeshCount = submeshCounts[submesh];
+            //    mesh.SetSubMesh(submesh, new UnityEngine.Rendering.SubMeshDescriptor(submeshIndex, submeshCount));
+            //    submeshIndex += submeshCount;
+            //}
+
             mesh.RecalculateNormals();
             var vertices = mesh.vertices;
             var normals = mesh.normals;
@@ -93,11 +129,14 @@ public class WrapMesh : MonoBehaviour
             var triangles = mesh.triangles;
             var colors = new Color[vertices.Length];
 
+            //EXTRUDE MESH
             for (var vi = 0; vi < vertices.Length; vi++)
             {
                 normals[vi] = normals[vi];
                 vertices[vi] = vertices[vi] + normals[vi].normalized * 0.01f;
-                colors[vi] = Color.clear;
+
+                if (peelingMode) colors[vi] = Color.white;
+                else colors[vi] = Color.clear;
             }
 
             mesh.vertices = vertices;
@@ -265,7 +304,7 @@ public class WrapMesh : MonoBehaviour
         foreach (var vertex in mappedVertices)
             vertex.neighbors = new List<int>(vertex.neighborsSet);
 
-        mesh.uv = uvs;
+        if (peelingMode == false) mesh.uv = uvs;
 
         this.wrapMeshVertices = mappedVertices;
         return mappedVertices;
