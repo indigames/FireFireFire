@@ -28,6 +28,12 @@ public class FirestarterArea : MonoBehaviour
     public void Restart()
     {
         wrapColliders.Clear();
+        animator.Play("Default", 0, 0);
+        fireEnabled = true;
+    }
+
+    public void EnableFire()
+    {
         animator.Play("Play", 0, 0);
         fireEnabled = true;
     }

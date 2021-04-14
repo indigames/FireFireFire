@@ -45,6 +45,7 @@ public class Gameplay : MonoBehaviour
     GameObject attachmentInstance = null;
 
     Stage currentStage;
+    public int StageNumber => stageCollection.StageNumber;
 
     public MeshBlock DraggingMeshBlock => dragging && gameover == false ? nextMeshBlock : null;
 
@@ -140,7 +141,8 @@ public class Gameplay : MonoBehaviour
         }
 
         StartCoroutine(CoCheckDefeat());
-        yield return new WaitForSeconds(1.25f);
+
+        yield return CoWaitForStart();
 
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
@@ -177,7 +179,7 @@ public class Gameplay : MonoBehaviour
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
 
-            StartCoroutine(CoSnuffFirestarter());
+            //StartCoroutine(CoSnuffFirestarter());
             if (victory) yield break;
 
             //var fromLaunchPosition = nextMeshBlock.transform.position;
@@ -206,6 +208,18 @@ public class Gameplay : MonoBehaviour
 
         //all is snuffed
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
+    }
+
+    bool confirmStart;
+    public bool ConfirmStart { set { if (value) confirmStart = true; } }
+    public Action callbackWaitForConfirmStart;
+    IEnumerator CoWaitForStart()
+    {
+        confirmStart = false;
+        callbackWaitForConfirmStart?.Invoke();
+        while (confirmStart == false) yield return true;
+        fireStarterArea.EnableFire();
+        yield return new WaitForSeconds(1.25f);
     }
 
     IEnumerator CoCheckDefeat()
