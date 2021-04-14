@@ -75,6 +75,9 @@ public class Gameplay : MonoBehaviour
 
     IEnumerator CoGameplay()
     {
+        //UI DELAY
+        yield return new WaitForSeconds(0.5f);
+
         snuffingFirestarter = false;
         gameover = false;
         victory = false;

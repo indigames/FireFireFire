@@ -18,6 +18,7 @@ public class WrapMesh : MonoBehaviour
     public bool peelingMode;
 
     public GameObject targetContainer;
+    public List<Material> burntMaterials;
     [HideInInspector]
     public MeshFilter meshFilter;
     [HideInInspector]
@@ -47,6 +48,9 @@ public class WrapMesh : MonoBehaviour
     public void SetupWrapMesh()
     {
         gameObject.layer = LayerUtil.LAYER_WRAP_MESH;
+
+        if (burntMaterials.Count > 0 && GetComponent<MeshRenderer>() != null)
+            GetComponent<MeshRenderer>().material = burntMaterials[UnityEngine.Random.Range(0, burntMaterials.Count)];
 
         if (meshFilter == null)
         {
