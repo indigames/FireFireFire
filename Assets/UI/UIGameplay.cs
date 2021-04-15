@@ -27,10 +27,12 @@ public class UIGameplay : MonoBehaviour
 
         if (gameplay.DraggingMeshBlock != null)
         {
-            grabIcon.transform.position = gameplay.DraggingMeshBlock.transform.position;
-            var pos = grabIcon.transform.localPosition;
-            pos.z = 0;
-            grabIcon.transform.localPosition = pos;
+            var screenPoint = Camera.main.WorldToScreenPoint(gameplay.DraggingMeshBlock.transform.position);
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) grabIcon.transform.parent, screenPoint, Camera.main, out localPoint);
+            //var pos = grabIcon.transform.localPosition;
+            //pos.z = 0;
+            grabIcon.transform.localPosition = localPoint;
         }
     }
 
