@@ -402,7 +402,7 @@ public class WrapMeshInteraction : MonoBehaviour
             {
                 var position = vertex.position;
                 position = (Vector3)(transform.localToWorldMatrix * position) + transform.position;
-                position += Vector3.forward * 0.2f;
+                position -= Vector3.forward * 0.2f;
                 position += Vector3.right * UnityEngine.Random.Range(-0.25f, 0.25f);
                 crumbleParticle.Emit(new ParticleSystem.EmitParams() { position = position }, 1);
             }

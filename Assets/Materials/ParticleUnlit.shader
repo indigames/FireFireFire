@@ -47,7 +47,7 @@ Shader "Custom/Particle Unlit"
     {
         SubShader
         {
-            Tags { "RenderType" = "Transparent" "IgnoreProjector" = "True" "PreviewType" = "Plane" "PerformanceChecks" = "False" }
+            Tags { "RenderType" = "Transparent + 500" "IgnoreProjector" = "True" "PreviewType" = "Plane" "PerformanceChecks" = "False" }
 
             BlendOp[_BlendOp]
             Blend[_SrcBlend][_DstBlend]

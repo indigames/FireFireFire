@@ -23019,7 +23019,7 @@ GameObject:
   - component: {fileID: 1815007870}
   - component: {fileID: 1815007869}
   m_Layer: 0
-  m_Name: stove2
+  m_Name: Stove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
