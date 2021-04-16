@@ -170,6 +170,10 @@ public class MeshBlock : MonoBehaviour
     {
         if (parent == null) parent = transform.parent;
         var result = Instantiate(this, parent);
+
+        var wrap_mesh = result.GetComponentInChildren<WrapMesh>();
+        if (wrap_mesh != null) wrap_mesh.originalTransform = transform;
+
         result.transform.position = position;
         result.template = false;
         result.gameObject.SetActive(true);
@@ -182,6 +186,9 @@ public class MeshBlock : MonoBehaviour
 
         var result = Instantiate(this, parent);
         result.transform.position = target.position;
+
+        var wrap_mesh = result.GetComponentInChildren<WrapMesh>();
+        if (wrap_mesh != null) wrap_mesh.originalTransform = transform;
 
         target = Instantiate(target);
         target.gameObject.SetActive(true);

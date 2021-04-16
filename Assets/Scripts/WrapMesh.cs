@@ -34,9 +34,12 @@ public class WrapMesh : MonoBehaviour
     LayerMask layerMask;
     [System.NonSerialized]
     public MeshCollider wrapMeshTrigger;
+    [System.NonSerialized]
+    public Transform originalTransform;
 
     void Start()
     {
+        SetupWrapMeshMaterials();
         SetupWrapMesh();
 
         GetComponent<MeshFilter>().mesh = wrapMesh;
@@ -45,12 +48,27 @@ public class WrapMesh : MonoBehaviour
         //targetMeshContainer.transform.SetParent(transform);
         MapVertices();
     }
+
+    void SetupWrapMeshMaterials()
+    {
+        if (burntMaterials.Count <= 0) return;
+        var random_mat = burntMaterials[UnityEngine.Random.Range(0, burntMaterials.Count)];
+        GetComponent<MeshRenderer>().material = random_mat;
+
+        //if (originalTransform != null && mapMaterials.ContainsKey(originalTransform))
+        //{
+        //    GetComponent<MeshRenderer>().material = mapMaterials[originalTransform];
+        //    return;
+        //}
+
+        //var random_mat = burntMaterials[UnityEngine.Random.Range(0, burntMaterials.Count)];
+        //GetComponent<MeshRenderer>().material = random_mat;
+        //if (originalTransform != null) mapMaterials[originalTransform] = random_mat;
+    }
+
     public void SetupWrapMesh()
     {
         gameObject.layer = LayerUtil.LAYER_WRAP_MESH;
-
-        if (burntMaterials.Count > 0 && GetComponent<MeshRenderer>() != null)
-            GetComponent<MeshRenderer>().material = burntMaterials[UnityEngine.Random.Range(0, burntMaterials.Count)];
 
         if (meshFilter == null)
         {
@@ -324,6 +342,7 @@ public class WrapMesh : MonoBehaviour
 
         //create new wrapmesh instance
         var result = Instantiate(this, parent);
+        result.originalTransform = target;
         result.transform.position = target.position;
 
         //duplicate target model inside new wrap mesh
@@ -342,4 +361,6 @@ public class WrapMesh : MonoBehaviour
         result.GetComponent<WrapMeshInteraction>().spreadSpeed = target.spreadSpeed;
         return result;
     }
+
+    static Dictionary<Transform, Material> mapMaterials = new Dictionary<Transform, Material>();
 }
