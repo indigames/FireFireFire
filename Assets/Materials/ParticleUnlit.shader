@@ -43,129 +43,129 @@ Shader "Custom/Particle Unlit"
             [HideInInspector] _DistortionStrengthScaled("__distortionstrengthscaled", Float) = 0.0
     }
 
-        Category
+    Category
+    {
+        SubShader
         {
-            SubShader
+            Tags { "RenderType" = "Transparent" "IgnoreProjector" = "True" "PreviewType" = "Plane" "PerformanceChecks" = "False" }
+
+            BlendOp[_BlendOp]
+            Blend[_SrcBlend][_DstBlend]
+            ZWrite[_ZWrite]
+            Cull[_Cull]
+            ColorMask RGB
+
+            GrabPass
             {
-                Tags { "RenderType" = "Opaque" "IgnoreProjector" = "True" "PreviewType" = "Plane" "PerformanceChecks" = "False" }
+                Tags { "LightMode" = "Always" }
+                "_GrabTexture"
+            }
 
-                BlendOp[_BlendOp]
-                Blend[_SrcBlend][_DstBlend]
-                ZWrite[_ZWrite]
-                Cull[_Cull]
-                ColorMask RGB
+            Pass
+            {
+                Name "ShadowCaster"
+                Tags { "LightMode" = "ShadowCaster" }
 
-                GrabPass
-                {
-                    Tags { "LightMode" = "Always" }
-                    "_GrabTexture"
-                }
+                BlendOp Add
+                Blend One Zero
+                ZWrite On
+                Cull Off
 
-                Pass
-                {
-                    Name "ShadowCaster"
-                    Tags { "LightMode" = "ShadowCaster" }
+                CGPROGRAM
+                #pragma target 2.5
 
-                    BlendOp Add
-                    Blend One Zero
-                    ZWrite On
-                    Cull Off
+                #pragma shader_feature_local _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
+                #pragma shader_feature_local _ _COLOROVERLAY_ON _COLORCOLOR_ON _COLORADDSUBDIFF_ON
+                #pragma shader_feature_local _REQUIRE_UV2
+                #pragma multi_compile_shadowcaster
+                #pragma multi_compile_instancing
+                #pragma instancing_options procedural:vertInstancingSetup
 
-                    CGPROGRAM
-                    #pragma target 2.5
+                #pragma vertex vertParticleShadowCaster
+                #pragma fragment fragParticleShadowCaster
 
-                    #pragma shader_feature_local _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
-                    #pragma shader_feature_local _ _COLOROVERLAY_ON _COLORCOLOR_ON _COLORADDSUBDIFF_ON
-                    #pragma shader_feature_local _REQUIRE_UV2
-                    #pragma multi_compile_shadowcaster
-                    #pragma multi_compile_instancing
-                    #pragma instancing_options procedural:vertInstancingSetup
+                #include "UnityStandardParticleShadow.cginc"
+                ENDCG
+            }
 
-                    #pragma vertex vertParticleShadowCaster
-                    #pragma fragment fragParticleShadowCaster
+            Pass
+            {
+                Name "SceneSelectionPass"
+                Tags { "LightMode" = "SceneSelectionPass" }
 
-                    #include "UnityStandardParticleShadow.cginc"
-                    ENDCG
-                }
+                BlendOp Add
+                Blend One Zero
+                ZWrite On
+                Cull Off
 
-                Pass
-                {
-                    Name "SceneSelectionPass"
-                    Tags { "LightMode" = "SceneSelectionPass" }
+                CGPROGRAM
+                #pragma target 2.5
 
-                    BlendOp Add
-                    Blend One Zero
-                    ZWrite On
-                    Cull Off
+                #pragma shader_feature_local _ALPHATEST_ON
+                #pragma shader_feature_local _REQUIRE_UV2
+                #pragma multi_compile_instancing
+                #pragma instancing_options procedural:vertInstancingSetup
 
-                    CGPROGRAM
-                    #pragma target 2.5
+                #pragma vertex vertEditorPass
+                #pragma fragment fragSceneHighlightPass
 
-                    #pragma shader_feature_local _ALPHATEST_ON
-                    #pragma shader_feature_local _REQUIRE_UV2
-                    #pragma multi_compile_instancing
-                    #pragma instancing_options procedural:vertInstancingSetup
+                #include "UnityStandardParticleEditor.cginc"
+                ENDCG
+            }
 
-                    #pragma vertex vertEditorPass
-                    #pragma fragment fragSceneHighlightPass
+            Pass
+            {
+                Name "ScenePickingPass"
+                Tags{ "LightMode" = "Picking" }
 
-                    #include "UnityStandardParticleEditor.cginc"
-                    ENDCG
-                }
+                BlendOp Add
+                Blend One Zero
+                ZWrite On
+                Cull Off
 
-                Pass
-                {
-                    Name "ScenePickingPass"
-                    Tags{ "LightMode" = "Picking" }
+                CGPROGRAM
+                #pragma target 2.5
 
-                    BlendOp Add
-                    Blend One Zero
-                    ZWrite On
-                    Cull Off
+                #pragma shader_feature_local _ALPHATEST_ON
+                #pragma shader_feature_local _REQUIRE_UV2
+                #pragma multi_compile_instancing
+                #pragma instancing_options procedural:vertInstancingSetup
 
-                    CGPROGRAM
-                    #pragma target 2.5
+                #pragma vertex vertEditorPass
+                #pragma fragment fragScenePickingPass
 
-                    #pragma shader_feature_local _ALPHATEST_ON
-                    #pragma shader_feature_local _REQUIRE_UV2
-                    #pragma multi_compile_instancing
-                    #pragma instancing_options procedural:vertInstancingSetup
+                #include "UnityStandardParticleEditor.cginc"
+                ENDCG
+            }
 
-                    #pragma vertex vertEditorPass
-                    #pragma fragment fragScenePickingPass
+            Pass
+            {
+                Tags { "LightMode" = "ForwardBase" }
 
-                    #include "UnityStandardParticleEditor.cginc"
-                    ENDCG
-                }
+                CGPROGRAM
+                #pragma multi_compile __ SOFTPARTICLES_ON
+                #pragma multi_compile_fog
+                #pragma target 2.5
 
-                Pass
-                {
-                    Tags { "LightMode" = "ForwardBase" }
+                #pragma shader_feature_local _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
+                #pragma shader_feature_local _ _COLOROVERLAY_ON _COLORCOLOR_ON _COLORADDSUBDIFF_ON
+                #pragma shader_feature_local _NORMALMAP
+                #pragma shader_feature _EMISSION
+                #pragma shader_feature_local _FADING_ON
+                #pragma shader_feature_local _REQUIRE_UV2
+                #pragma shader_feature_local EFFECT_BUMP
 
-                    CGPROGRAM
-                    #pragma multi_compile __ SOFTPARTICLES_ON
-                    #pragma multi_compile_fog
-                    #pragma target 2.5
+                #pragma vertex vertParticleUnlit
+                #pragma fragment fragParticleUnlit
+                #pragma multi_compile_instancing
+                #pragma instancing_options procedural:vertInstancingSetup
 
-                    #pragma shader_feature_local _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON
-                    #pragma shader_feature_local _ _COLOROVERLAY_ON _COLORCOLOR_ON _COLORADDSUBDIFF_ON
-                    #pragma shader_feature_local _NORMALMAP
-                    #pragma shader_feature _EMISSION
-                    #pragma shader_feature_local _FADING_ON
-                    #pragma shader_feature_local _REQUIRE_UV2
-                    #pragma shader_feature_local EFFECT_BUMP
-
-                    #pragma vertex vertParticleUnlit
-                    #pragma fragment fragParticleUnlit
-                    #pragma multi_compile_instancing
-                    #pragma instancing_options procedural:vertInstancingSetup
-
-                    #include "UnityStandardParticles.cginc"
-                    ENDCG
-                }
+                #include "UnityStandardParticles.cginc"
+                ENDCG
             }
         }
+    }
 
-            Fallback "VertexLit"
-            CustomEditor "StandardParticlesShaderGUI"
+    Fallback "VertexLit"
+    CustomEditor "StandardParticlesShaderGUI"
 }
