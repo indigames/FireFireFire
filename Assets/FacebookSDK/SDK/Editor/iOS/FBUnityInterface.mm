@@ -105,11 +105,6 @@
   [FBUnityUtility sendMessageToUnity:FBUnityMessageName_OnInitComplete userData:userData requestId:0];
 }
 
-- (void)IOSFBEnableProfileUpdatesOnAccessTokenChange:(BOOL)enable
-{
-  [FBSDKProfile enableUpdatesOnAccessTokenChange:enable];
-}
-
 - (void)logInWithPublishPermissions:(int) requestId
                              scope:(const char *)scope
 {
@@ -489,20 +484,6 @@ extern "C" {
     }
     if (profile.linkURL) {
       data[@"linkURL"] = profile.linkURL.absoluteString;
-    }
-    if (profile.friendIDs) {
-      data[@"friendIDs"] = [profile.friendIDs componentsJoinedByString:@","];
-    }
-    if (profile.birthday) {
-      data[@"birthday"] = [NSString stringWithFormat:@"%@", @((time_t)[profile.birthday timeIntervalSince1970])];
-    }
-    if (profile.ageRange) {
-      if (profile.ageRange.min) {
-        data[@"ageMin"] = profile.ageRange.min.stringValue;
-      }
-      if (profile.ageRange.max) {
-        data[@"ageMax"] = profile.ageRange.max.stringValue;
-      }
     }
     try {
       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
