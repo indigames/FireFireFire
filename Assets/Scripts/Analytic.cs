@@ -9,5 +9,6 @@ public class Analytic : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         GameAnalyticsSDK.GameAnalytics.Initialize();
+        Facebook.Unity.FB.Init();
     }
 }

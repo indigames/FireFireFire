@@ -39,6 +39,7 @@ public class UIGameplay : MonoBehaviour
     void Restart()
     {
         textStage.text = string.Format(textStageFormat, gameplay.StageNumber);
+        textRemaining.text = "";
         StartCoroutine(DelayPreview());
     }
 
