@@ -45,36 +45,18 @@ namespace Facebook.Unity.Example
             GUILayout.BeginHorizontal();
 
             GUI.enabled = enabled && FB.IsInitialized;
-            if (this.Button("Classic login"))
+            if (this.Button("Login"))
             {
-                this.CallFBLogin("enabled");
-                this.Status = "Classic login called";
+                this.CallFBLogin();
+                this.Status = "Login called";
             }
+
+            GUI.enabled = FB.IsLoggedIn;
             if (this.Button("Get publish_actions"))
             {
                 this.CallFBLoginForPublish();
                 this.Status = "Login (for publish_actions) called";
             }
-
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            
-            if (this.Button("Limited login"))
-            {
-                this.CallFBLogin("test");
-                this.Status = "Limited login called";
-
-            }
-            if (this.Button("Limited login +friends"))
-            {
-                this.CallFBLogin("test+friends");
-                this.Status = "Limited login +friends called";
-
-            }
-
-
-            GUI.enabled = FB.IsLoggedIn;
-
 
             // Fix GUILayout margin issues
             GUILayout.Label(GUIContent.none, GUILayout.MinWidth(ConsoleBase.MarginFix));
@@ -136,25 +118,9 @@ namespace Facebook.Unity.Example
             GUI.enabled = enabled;
         }
 
-        private void CallFBLogin(string enabled="enabled")
+        private void CallFBLogin()
         {
-            List<string> scopes = new List<string>();
-            scopes.Add("public_profile");
-            if(enabled=="test+friends") 
-            {
-                scopes.Add("user_friends");
-            }
-
-
-            if(enabled=="enabled")
-            {
-                FB.Mobile.LoginWithTrackingPreference(LoginTracking.ENABLED, scopes, "classic_nonce123", this.HandleResult);    
-            }
-            else
-            {
-                FB.Mobile.LoginWithTrackingPreference(LoginTracking.LIMITED, scopes, "limited_nonce123", this.HandleLimitedLoginResult);
-            }
-
+            FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, this.HandleResult);
         }
 
         private void CallFBLoginForPublish()
