@@ -82,7 +82,7 @@ public class StageDesignerEditor : Editor
         }
         else instance.gameObject.AddComponent<StageItem>();
 
-        var prefabStage = UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
+        var prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
         if (prefabStage != null)
         {
             EditorUtility.SetDirty(target);
