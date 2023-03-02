@@ -14,10 +14,13 @@ public class Gameplay : MonoBehaviour
     public Action callbackDefeat;
 
     public StageCollection stageCollection;
+    [Space]
+    public GameObject bonusWoodsPrefab;
 
     [Space]
     public Transform areaTarget;
     public Transform areaPreview;
+    public Transform bonusItemSpawnPos;
     public AudioPool audioSpawn;
 
     [Space]
@@ -29,11 +32,13 @@ public class Gameplay : MonoBehaviour
     public FirestarterArea fireStarterArea;
     public ParticleSystem confettiParticle;
     public ParticleSystem crumbleParticle;
+    public ParticleSystem explosionParticle;
 
     public Camera previewCamera;
 
     WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
+    List<MeshBlock> bonusMeshBlocks = new List<MeshBlock>();
     int nextMeshBlockIndex;
     MeshBlock nextMeshBlock;
     bool newWaitingForLaunch = false;
@@ -57,10 +62,40 @@ public class Gameplay : MonoBehaviour
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
 
-        RestartGame(false);
+        RestartGame(false, false);
     }
+    private void Update()
+    {
+        //UpdateLaunch();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(SpawnBonusWoods());
+        }
+        UpdateDrag();
+        UpdateCheckForVictory();
+        UpdateVisualTarget();
+    }
+    IEnumerator SpawnBonusWoods()
+    {
+        // GameObject bonusWoods = Instantiate(bonusWoodsPrefab, bonusDropPos.position, Quaternion.identity);
+        // bonusWoods.GetComponent<Rigidbody>().AddForce(Vector3.up * 1000);
+        var bonusItems = bonusWoodsPrefab.GetComponentsInChildren<StageItem>(true);
+        var mass = baseMeshBlock.GetRigidbody.mass;
+        foreach (var bonusItem in bonusItems)
+        {
+            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(bonusItem);
+            newMeshBlock.template = false;
+            newMeshBlock.gameObject.SetActive(true);
+            newMeshBlock.transform.position = bonusItemSpawnPos.position;
+            newMeshBlock.GetRigidbody.mass = mass;
+            mass *= 0.7f;
+            newMeshBlock.GetRigidbody.isKinematic = false; //set to be kinematic by default
+            bonusMeshBlocks.Add(newMeshBlock);
+            yield return new WaitForSeconds(0.25f);
+        }
 
-    public void RestartGame(bool nextStage)
+    }
+    public void RestartGame(bool nextStage, bool isAdWatched)
     {
         StopAllCoroutines();
 
@@ -70,10 +105,10 @@ public class Gameplay : MonoBehaviour
             currentStage = stageCollection.CurrentStage;
 
         callbackRestart?.Invoke();
-        StartCoroutine(CoGameplay());
+        StartCoroutine(CoGameplay(isAdWatched));
     }
 
-    IEnumerator CoGameplay()
+    IEnumerator CoGameplay(bool isAdWatched)
     {
         //UI DELAY
         yield return new WaitForSeconds(0.5f);
@@ -83,8 +118,11 @@ public class Gameplay : MonoBehaviour
         victory = false;
         confettiParticle.Clear();
         crumbleParticle.Clear();
+        explosionParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
+        foreach (var bonusBlock in bonusMeshBlocks) Destroy(bonusBlock.gameObject);
         availableMeshBlocks.Clear();
+        bonusMeshBlocks.Clear();
         if (targetMesh != null) Destroy(targetMesh.gameObject);
         fireStarterArea.Restart();
         if (attachmentInstance != null)
@@ -146,6 +184,8 @@ public class Gameplay : MonoBehaviour
         StartCoroutine(CoCheckDefeat());
 
         yield return CoWaitForStart();
+        if (isAdWatched)
+            yield return SpawnBonusWoods();
 
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
@@ -263,8 +303,12 @@ public class Gameplay : MonoBehaviour
         if (gameover) yield break;
 
         gameover = true;
+        explosionParticle.transform.position = targetMesh.transform.position;
+        explosionParticle.Stop();
+        yield return true;
+        explosionParticle.Play();
         fireStarterArea.PlayVictory();
-
+        
         //WAIT FOR THE BURN TO FINISHES
         while (targetMesh.MeshSnuffRatio < 0.6f) yield return true;
 
@@ -288,8 +332,10 @@ public class Gameplay : MonoBehaviour
         callbackDefeat?.Invoke();
     }
 
-    Vector2 InputPosition {
-        get {
+    Vector2 InputPosition
+    {
+        get
+        {
             if (Input.touchCount > 0) return Input.touches[0].position;
             else return Input.mousePosition;
         }
@@ -449,13 +495,7 @@ public class Gameplay : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        //UpdateLaunch();
-        UpdateDrag();
-        UpdateCheckForVictory();
-        UpdateVisualTarget();
-    }
+
 
     void UpdateVisualTarget()
     {
