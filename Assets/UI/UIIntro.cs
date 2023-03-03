@@ -6,6 +6,8 @@ public class UIIntro : MonoBehaviour
 {
     public Gameplay gameplay;
     public Animator animator;
+    public VoidEventChannel gameStartEvent;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -30,6 +32,7 @@ public class UIIntro : MonoBehaviour
     {
         yield return new WaitForSeconds(0.25f);
         gameplay.ConfirmStart = true;
+        gameStartEvent?.RaiseEvent();
         yield return new WaitForSeconds(1);
         gameObject.SetActive(false);
     }

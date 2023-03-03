@@ -303,12 +303,13 @@ public class Gameplay : MonoBehaviour
         if (gameover) yield break;
 
         gameover = true;
-        explosionParticle.transform.position = targetMesh.transform.position;
+        var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position ;
+        explosionParticle.transform.position = explodePos;
         explosionParticle.Stop();
         yield return true;
         explosionParticle.Play();
         fireStarterArea.PlayVictory();
-        
+
         //WAIT FOR THE BURN TO FINISHES
         while (targetMesh.MeshSnuffRatio < 0.6f) yield return true;
 

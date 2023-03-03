@@ -18,7 +18,7 @@ public class PreTitleManager : MonoBehaviour
         if(KantanGameBox.IsGameGetDataFinish()){
             //Read save data
             PlayerInfo.FromJSON(KantanGameBox.ReadGameData());
-            SceneManager.LoadScene("TitleScene");
+            SceneManager.LoadScene("Gameplay");
         }
     }
 }

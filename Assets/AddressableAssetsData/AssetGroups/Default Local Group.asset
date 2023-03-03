@@ -25,8 +25,12 @@ MonoBehaviour:
     m_Address: Assets/Data
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 590cb1d69574fde44b4eb2fba87de34b
-    m_Address: Assets/Scenes/Gameplay.unity
+  - m_GUID: ade5ac166e5e6c14cb0956d503b6507a
+    m_Address: Assets/Scenes/PreTitleScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 22003bc2ae23bee40ac1b59a4daf01bb
+    m_Address: Assets/Scenes/Manager/Manager.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

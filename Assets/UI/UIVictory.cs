@@ -7,9 +7,10 @@ public class UIVictory : MonoBehaviour
     public Gameplay gameplay;
     public Animator anim;
     public GameObject nextBtn;
-    public GameObject adBtn;
+    // public GameObject adBtn;
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
+        public IntEventChannel gameEndEvent;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +42,10 @@ public class UIVictory : MonoBehaviour
         gameplay.RestartGame(true, isSuccess);
         StartCoroutine(Hide());
     }
-
+    public void SendGameEndEvent(int score)
+    {
+        gameEndEvent?.RaiseEvent(score);
+    }
     IEnumerator Hide()
     {
         yield return true;
