@@ -114,7 +114,7 @@ public class Gameplay : MonoBehaviour
         victory = false;
         confettiParticle.Clear();
         crumbleParticle.Clear();
-        explosionParticle.Clear();
+        // explosionParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         foreach (var bonusBlock in bonusMeshBlocks) Destroy(bonusBlock.gameObject);
         availableMeshBlocks.Clear();
@@ -296,7 +296,7 @@ public class Gameplay : MonoBehaviour
         gameover = true;
         var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
         explosionParticle.transform.position = explodePos;
-        explosionParticle.Stop();
+        // explosionParticle.Stop();
         yield return true;
         explosionParticle.Play();
         fireStarterArea.PlayVictory();

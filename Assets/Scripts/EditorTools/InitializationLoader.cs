@@ -20,27 +20,27 @@ public class InitializationLoader : MonoBehaviour
     private LoadEventChannelSO _requestLoadSceneEventChannel;
     private bool isStartGame = false;
 
-    private void Awake()
-    {
-        LoadManagerScene();
-    }
-    // private void Start() {
-    //     KantanGameBox.GameGetData();
-    // }
-    // void Update()
+    // private void Awake()
     // {
-    //     //Wait until save data acquisition is complete
-    //     if (KantanGameBox.IsGameGetDataFinish())
-    //     {
-    //         //Read save data
-    //         PlayerInfo.FromJSON(KantanGameBox.ReadGameData());
-    //         if (!isStartGame)
-    //         {
-    //             LoadManagerScene();Debug.Log("Start Game");
-    //             isStartGame = true;
-    //         }
-    //     }
+    //     LoadManagerScene();
     // }
+    private void Start() {
+        KantanGameBox.GameGetData();
+    }
+    void Update()
+    {
+        //Wait until save data acquisition is complete
+        if (KantanGameBox.IsGameGetDataFinish())
+        {
+            //Read save data
+            PlayerInfo.FromJSON(KantanGameBox.ReadGameData());
+            if (!isStartGame)
+            {
+                LoadManagerScene();Debug.Log("Start Game");
+                isStartGame = true;
+            }
+        }
+    }
     #region Class
 
     /// <summary>
