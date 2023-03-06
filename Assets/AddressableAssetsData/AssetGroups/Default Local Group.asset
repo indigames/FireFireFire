@@ -37,10 +37,6 @@ MonoBehaviour:
     m_Address: Assets/Data/OnProgressBootScene.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 74619502ada89714c92b616949d009c3
-    m_Address: Assets/Scenes/SampleScene.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 6421a5a06ae9f7a47a57b67f35c73b5a
     m_Address: Assets/EffectExamples/Fire & Explosion Effects/Materials/Explosion.mat
     m_ReadOnly: 0
