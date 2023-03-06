@@ -44,6 +44,7 @@ public class UIVictory : MonoBehaviour
     }
     public void SendGameEndEvent(int score)
     {
+        Debug.Log("SendGameEndEvent");
         gameEndEvent?.RaiseEvent(score);
     }
     IEnumerator Hide()

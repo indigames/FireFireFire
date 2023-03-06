@@ -67,10 +67,6 @@ public class Gameplay : MonoBehaviour
     private void Update()
     {
         //UpdateLaunch();
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(SpawnBonusWoods());
-        }
         UpdateDrag();
         UpdateCheckForVictory();
         UpdateVisualTarget();
@@ -130,11 +126,9 @@ public class Gameplay : MonoBehaviour
             Destroy(attachmentInstance);
             attachmentInstance = null;
         }
-
         // collect child transforms from items container
         List<StageItem> stageItems = new List<StageItem>(currentStage.GetComponentsInChildren<StageItem>(true));
         StageTarget stageTarget = currentStage.GetComponentInChildren<StageTarget>(true);
-
         // create new meshblocks here
         var mass = baseMeshBlock.GetRigidbody.mass;
         foreach (var stageItem in stageItems)
@@ -148,7 +142,7 @@ public class Gameplay : MonoBehaviour
             mass *= 0.7f;
             availableMeshBlocks.Add(newMeshBlock);
         }
-
+        
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
         targetMesh.override_snuff_duration = 0.7f;
@@ -174,7 +168,6 @@ public class Gameplay : MonoBehaviour
         }
 
         crumbleParticle.Clear();
-
         foreach (var meshBlock in availableMeshBlocks)
         {
             meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
@@ -237,7 +230,6 @@ public class Gameplay : MonoBehaviour
 
             if (victory) yield break;
         }
-
         yield return new WaitForSeconds(3);
 
         bool allSnuffed = false;
@@ -248,7 +240,6 @@ public class Gameplay : MonoBehaviour
             yield return true;
             yield return true;
         }
-
         //all is snuffed
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
     }
@@ -303,7 +294,7 @@ public class Gameplay : MonoBehaviour
         if (gameover) yield break;
 
         gameover = true;
-        var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position ;
+        var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
         explosionParticle.transform.position = explodePos;
         explosionParticle.Stop();
         yield return true;

@@ -257,7 +257,7 @@ MonoBehaviour:
   gameStartEvent: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1, type: 2}
   gameStateEvent: {fileID: 11400000, guid: 077922c7f2d4b9a4e939da5717452c44, type: 2}
   adModeEvent: {fileID: 11400000, guid: de539952085ea564fb1747f5cde51038, type: 2}
-  playerScoreEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
+  gameEndEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
 --- !u!4 &1023961221
 Transform:
   m_ObjectHideFlags: 0

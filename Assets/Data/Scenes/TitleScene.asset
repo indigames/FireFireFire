@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TitleScene
   m_EditorClassIdentifier: 
   scene:
-    m_AssetGUID: 590cb1d69574fde44b4eb2fba87de34b
+    m_AssetGUID: 74619502ada89714c92b616949d009c3
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  sceneType: 0
-  UnloadPreviousScene: 1
+  sceneType: 3
+  UnloadPreviousScene: 0

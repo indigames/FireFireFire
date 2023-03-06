@@ -7432,6 +7432,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EditorInitializer
       objectReference: {fileID: 0}
+    - target: {fileID: 6758605324119452949, guid: dcf087b238433a14fbb2a5cbddd6f610,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dcf087b238433a14fbb2a5cbddd6f610, type: 3}
 --- !u!224 &994316639 stripped
