@@ -121,7 +121,7 @@ public class WrapMeshInteraction : MonoBehaviour
         if (applyingColors)
         {
             applyingColors = false;
-            this.meshFilter.mesh.SetColors(colors);
+            // this.meshFilter.mesh.SetColors(colors);
         }
     }
 

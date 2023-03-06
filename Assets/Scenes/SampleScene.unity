@@ -13053,12 +13053,12 @@ MonoBehaviour:
     type: 3}
   startingStage: 0
   stagePrefabs:
+  - {fileID: 4684145382587630233, guid: 835c2dc781f39444ea558fd299d124b8, type: 3}
+  - {fileID: 4684145382587630233, guid: 56d41394a767a134c8388a0e7affc84d, type: 3}
   - {fileID: 4684145382587630233, guid: eeddca1a7b3ca7643a008f46e7a612e9, type: 3}
   - {fileID: 4684145382587630233, guid: 4e6f57aafe656be44b4703633366e29c, type: 3}
   - {fileID: 4684145382587630233, guid: 84591aff6c0275c47836c0d67700c34c, type: 3}
   - {fileID: 4684145382587630233, guid: 1c1954839a9f3d64fa426fbb811e561a, type: 3}
-  - {fileID: 4684145382587630233, guid: 835c2dc781f39444ea558fd299d124b8, type: 3}
-  - {fileID: 4684145382587630233, guid: 56d41394a767a134c8388a0e7affc84d, type: 3}
 --- !u!114 &1288064094
 MonoBehaviour:
   m_ObjectHideFlags: 0
