@@ -41,6 +41,10 @@ MonoBehaviour:
     m_Address: Assets/EffectExamples/Fire & Explosion Effects/Materials/Explosion.mat
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 74619502ada89714c92b616949d009c3
+    m_Address: Assets/Scenes/SampleScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 92f96cee8211f864da7cf626fff65f5f, type: 2}
   m_SchemaSet:

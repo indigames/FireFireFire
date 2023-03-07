@@ -64,6 +64,10 @@ public class Gameplay : MonoBehaviour
 
         RestartGame(false, false);
     }
+    private void Awake()
+    {
+        explosionParticle.Play();
+    }
     private void Update()
     {
         //UpdateLaunch();
@@ -114,7 +118,7 @@ public class Gameplay : MonoBehaviour
         victory = false;
         confettiParticle.Clear();
         crumbleParticle.Clear();
-        // explosionParticle.Clear();
+        explosionParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         foreach (var bonusBlock in bonusMeshBlocks) Destroy(bonusBlock.gameObject);
         availableMeshBlocks.Clear();
@@ -142,7 +146,7 @@ public class Gameplay : MonoBehaviour
             mass *= 0.7f;
             availableMeshBlocks.Add(newMeshBlock);
         }
-        
+
         // create the target here
         targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
         targetMesh.override_snuff_duration = 0.7f;
@@ -294,11 +298,11 @@ public class Gameplay : MonoBehaviour
         if (gameover) yield break;
 
         gameover = true;
-        // var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
-        // explosionParticle.transform.position = explodePos;
-        // explosionParticle.Stop();
+        explosionParticle.Stop();
+        var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
+        explosionParticle.transform.position = explodePos;
         yield return true;
-        // explosionParticle.Play();
+        explosionParticle.Play();
         fireStarterArea.PlayVictory();
 
         //WAIT FOR THE BURN TO FINISHES
