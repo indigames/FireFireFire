@@ -1510,6 +1510,21 @@ PrefabInstance:
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
+    - target: {fileID: 4191809505079972403, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191809505079972403, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4191809505079972403, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowVictoryAds
+      objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676707, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: m_Name
@@ -2484,22 +2499,22 @@ PrefabInstance:
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999962
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.00011481853
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.00038818206
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.0027323489
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
@@ -2514,23 +2529,45 @@ PrefabInstance:
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -0.013
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -0.045
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 0.313
       objectReference: {fileID: 0}
     - target: {fileID: 6099173416961833425, guid: 220433e564c456d48897c41a7f0719c2,
         type: 3}
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
+    - target: {fileID: 6099173416961833425, guid: 220433e564c456d48897c41a7f0719c2,
+        type: 3}
+      propertyPath: ShowLostAdsEnvent
+      value: 
+      objectReference: {fileID: 11400000, guid: ffa8cc55bc4348641bad73a4af077379,
+        type: 2}
+    - target: {fileID: 6099173416961833425, guid: 220433e564c456d48897c41a7f0719c2,
+        type: 3}
+      propertyPath: OnShowRewardAdsEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e099e801be25f944a2ae69ef2980e74,
+        type: 2}
+    - target: {fileID: 9060136664178149831, guid: 220433e564c456d48897c41a7f0719c2,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060136664178149831, guid: 220433e564c456d48897c41a7f0719c2,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowLostAds
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 220433e564c456d48897c41a7f0719c2, type: 3}
 --- !u!224 &942935521 stripped
@@ -29879,6 +29916,12 @@ PrefabInstance:
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
+    - target: {fileID: 9095351805945783214, guid: b8fc1db03a9a2ff4abeb5f0cbdcd8743,
+        type: 3}
+      propertyPath: gameStartEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8fc1db03a9a2ff4abeb5f0cbdcd8743, type: 3}
 --- !u!33 &2264438488541319651

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static KantanManager;
 
 public class UIVictory : MonoBehaviour
 {
@@ -10,24 +11,35 @@ public class UIVictory : MonoBehaviour
     // public GameObject adBtn;
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
-        public IntEventChannel gameEndEvent;
+    public IntEventChannel gameEndEvent;
+    AdMode adMode = AdMode.NoAd;
     // Start is called before the first frame update
     void Start()
     {
         gameplay.callbackVictory += () => gameObject.SetActive(true);
         gameObject.SetActive(false);
+
     }
     private void OnEnable()
     {
-        if (OnShowRewardAdsEvent != null) OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
         nextBtn.SetActive(false);
         StartCoroutine(Show());
+        if (OnShowRewardAdsEvent != null)
+            OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
     }
     private void OnDisable()
     {
         if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised -= OnShowRewardAds;
     }
+    // private void Update()
+    // {
+    //     if (adMode == AdMode.NoAd)
+    //     {
+    //         KantanGameBox.ShowRewardAd();
+    //         adMode = AdMode.ShowAd;
+    //     }
+    // }
     public void Continue()
     {
         gameplay.RestartGame(true, false);
@@ -39,7 +51,14 @@ public class UIVictory : MonoBehaviour
     }
     public void OnShowRewardAds(bool isSuccess)
     {
-        gameplay.RestartGame(true, isSuccess);
+        gameplay.RestartGame(true, true);
+        SendGameEndEvent(1);
+        StartCoroutine(Hide());
+    }
+    
+    public void OnAdsFail()
+    {
+        gameplay.RestartGame(true, false);
         StartCoroutine(Hide());
     }
     public void SendGameEndEvent(int score)

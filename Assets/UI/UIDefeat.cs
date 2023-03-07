@@ -8,6 +8,8 @@ public class UIDefeat : MonoBehaviour
     public Animator anim;
     public GameObject retryBtn;
     public GameObject adBtn;
+    public VoidEventChannel ShowLostAdsEnvent;
+    public BoolEventChannel OnShowRewardAdsEvent;
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +21,25 @@ public class UIDefeat : MonoBehaviour
     {
         retryBtn.SetActive(false);
         StartCoroutine(Show());
+          if (OnShowRewardAdsEvent != null)
+            OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
+    }
+    private void OnDisable() {
+         if (OnShowRewardAdsEvent != null)
+            OnShowRewardAdsEvent.OnEventRaised -= OnShowRewardAds;
     }
     public void Continue()
     {
         gameplay.RestartGame(false, false);
         StartCoroutine(Hide());
     }
+    public void ShowLostAds()
+    {
+        ShowLostAdsEnvent?.RaiseEvent();
+    }
     public void OnShowRewardAds(bool isSuccess)
     {
-        gameplay.RestartGame(false, isSuccess);
+        gameplay.RestartGame(false, true);
         StartCoroutine(Hide());
     }
     IEnumerator Hide()

@@ -33,7 +33,8 @@ public class KantanManager : MonoBehaviour
     [SerializeField] private GameState gameState;
     [SerializeField] private AdMode adMode;
 
-    [Header("List of Event Channels")] [SerializeField]
+    [Header("List of Event Channels")]
+    [SerializeField]
     private VoidEventChannel gameStartEvent;
 
     [SerializeField] private GameStateEventChannel gameStateEvent;
@@ -43,14 +44,16 @@ public class KantanManager : MonoBehaviour
     /// If your game dont use score, you can delete this.
     /// </summary>
     [SerializeField] private IntEventChannel gameEndEvent;
-
+    [SerializeField] private VoidEventChannel OnRequestShowAdsEvent;
+    [SerializeField] private BoolEventChannel OnShowAdsRewardEvent;
+    private float delayTime = 0.5f;
     private float _clearTimer;
     private static int score = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        KantanGameBox.GameGetData();
+
         titleState = TitleState.WaitStartButton;
     }
 
@@ -58,14 +61,18 @@ public class KantanManager : MonoBehaviour
     {
         if (gameStartEvent != null) gameStartEvent.OnEventRaised += OnGameStart;
         if (gameStateEvent != null) gameStateEvent.OnEventRaised += OnGameState;
-        if (adModeEvent != null) adModeEvent.OnEventRaised += OnAdMode;
+        // if (adModeEvent != null) adModeEvent.OnEventRaised += OnAdMode;
         if (gameEndEvent != null) gameEndEvent.OnEventRaised += OnGameEnd;
+        if (OnRequestShowAdsEvent != null) OnRequestShowAdsEvent.OnEventRaised += OnShowRewardAdsRequest;
+
     }
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         if (gameStartEvent != null) gameStartEvent.OnEventRaised -= OnGameStart;
         if (gameStateEvent != null) gameStateEvent.OnEventRaised -= OnGameState;
-        if (adModeEvent != null) adModeEvent.OnEventRaised -= OnAdMode;
+        // if (adModeEvent != null) adModeEvent.OnEventRaised -= OnAdMode;
         if (gameEndEvent != null) gameEndEvent.OnEventRaised -= OnGameEnd;
+        if (OnRequestShowAdsEvent != null) OnRequestShowAdsEvent.OnEventRaised -= OnShowRewardAdsRequest;
     }
 
     private void OnGameEnd(int _score)
@@ -99,6 +106,16 @@ public class KantanManager : MonoBehaviour
             }
         }
     }
+    public void OnShowRewardAdsRequest()
+    {
+        if (adMode == AdMode.NoAd)
+        {
+            delayTime = 0.5f;
+            KantanGameBox.ShowRewardAd();
+            adMode = AdMode.ShowAd;
+            // adModeEvent.RaiseEvent(AdMode.ShowAd);
+        }
+    }
 
     private void OnAdMode(AdMode _adMode)
     {
@@ -126,6 +143,7 @@ public class KantanManager : MonoBehaviour
     {
         KantanGameBox.GameStart();
         titleState = TitleState.WaitGameStart;
+        adMode = AdMode.NoAd;
         KantanGameBox.IsGameStartFinish();
     }
 
@@ -153,6 +171,24 @@ public class KantanManager : MonoBehaviour
                     gameStateEvent.RaiseEvent(GameState.EndCheck);
                 }
             }
+        }
+        if (adMode == AdMode.ShowAd)
+        {
+            delayTime -= Time.deltaTime;
+            if (delayTime > 0) return;
+            if (KantanGameBox.IsShowRewardAdFinish())
+            {
+                    OnShowAdsRewardEvent.RaiseEvent(true);
+                    Debug.Log("Show ads success");
+            }
+            else
+            {
+
+                    OnShowAdsRewardEvent.RaiseEvent(false);
+                    Debug.Log("Show ads fail");
+            }
+            adMode = AdMode.EndAd;
+            adModeEvent.RaiseEvent(AdMode.EndAd);
         }
     }
 
