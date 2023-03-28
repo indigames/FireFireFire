@@ -35,6 +35,9 @@ public class Gameplay : MonoBehaviour
     public ParticleSystem explosionParticle;
 
     public Camera previewCamera;
+    // public List<Stage> ScoreAchivableStages;
+    public VoidEventChannel OnGameEndEvent;
+    public IntEventChannel OnSendScoreEvent;
 
     WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
@@ -63,6 +66,14 @@ public class Gameplay : MonoBehaviour
         baseMeshBlock.gameObject.SetActive(false);
 
         RestartGame(false, false);
+    }
+    private void OnEnable()
+    {
+        OnGameEndEvent.OnEventRaised += OnGameEnd;
+    }
+    private void OnDisable()
+    {
+        OnGameEndEvent.OnEventRaised -= OnGameEnd;
     }
     private void Awake()
     {
@@ -93,7 +104,12 @@ public class Gameplay : MonoBehaviour
             bonusMeshBlocks.Add(newMeshBlock);
             yield return new WaitForSeconds(0.25f);
         }
-
+    }
+    void OnGameEnd()
+    {
+        // if (ScoreAchivableStages.Contains(stageCollection.CurrentStage))
+        // {
+        OnSendScoreEvent.RaiseEvent(1);
     }
     public void RestartGame(bool nextStage, bool isAdWatched)
     {
@@ -181,6 +197,7 @@ public class Gameplay : MonoBehaviour
         StartCoroutine(CoCheckDefeat());
 
         yield return CoWaitForStart();
+
         if (isAdWatched)
             yield return SpawnBonusWoods();
 
@@ -256,6 +273,11 @@ public class Gameplay : MonoBehaviour
         confirmStart = false;
         callbackWaitForConfirmStart?.Invoke();
         while (confirmStart == false) yield return true;
+        StartCoroutine(CheckResponse(() => KantanGameBox.IsGameStartFinish(),
+                              () =>
+                              {
+                                  Debug.Log($"[KantanGameBox] GameStartFinish");
+                              }));
         fireStarterArea.EnableFire();
         yield return new WaitForSeconds(1.25f);
     }
@@ -323,6 +345,7 @@ public class Gameplay : MonoBehaviour
     {
         gameover = true;
         fireStarterArea.PlayDefeat();
+        OnSendScoreEvent.RaiseEvent(0);
         yield return true;
 
         callbackDefeat?.Invoke();
@@ -489,6 +512,11 @@ public class Gameplay : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(CoVictory());
         }
+    }
+    private IEnumerator CheckResponse(Func<bool> condition, Action callback)
+    {
+        while (!condition()) yield return true;
+        callback();
     }
 
 

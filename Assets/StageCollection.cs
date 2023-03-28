@@ -32,7 +32,9 @@ public class StageCollection : MonoBehaviour
 
     private Stage GetNextStage()
     {
-        index = (index + 1) % stagePrefabs.Count;
+        var currentIndex = index;
+        while (index == currentIndex) index = Random.Range(0, stagePrefabs.Count - 1);
+        // index = (index + 1) % stagePrefabs.Count;
         return stagePrefabs[index];
     }
 }
@@ -90,6 +92,6 @@ public class StageCollectionEditor : Editor
         ResetStageNames();
         EditorUtility.SetDirty(target);
     }
-} 
+}
 
 #endif

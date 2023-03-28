@@ -11,7 +11,7 @@ public class UIVictory : MonoBehaviour
     // public GameObject adBtn;
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
-    public IntEventChannel gameEndEvent;
+    public VoidEventChannel gameEndEvent;
     AdMode adMode = AdMode.NoAd;
     // Start is called before the first frame update
     void Start()
@@ -51,8 +51,8 @@ public class UIVictory : MonoBehaviour
     }
     public void OnShowRewardAds(bool isSuccess)
     {
+        SendGameEndEvent();
         gameplay.RestartGame(true, true);
-        SendGameEndEvent(1);
         StartCoroutine(Hide());
     }
     
@@ -61,10 +61,9 @@ public class UIVictory : MonoBehaviour
         gameplay.RestartGame(true, false);
         StartCoroutine(Hide());
     }
-    public void SendGameEndEvent(int score)
+    public void SendGameEndEvent()
     {
-        Debug.Log("SendGameEndEvent");
-        gameEndEvent?.RaiseEvent(score);
+        gameEndEvent.RaiseEvent();
     }
     IEnumerator Hide()
     {

@@ -108,15 +108,18 @@ public class KantanManager : MonoBehaviour
     }
     public void OnShowRewardAdsRequest()
     {
-        if (adMode == AdMode.NoAd)
-        {
-            delayTime = 0.5f;
-            KantanGameBox.ShowRewardAd();
-            adMode = AdMode.ShowAd;
-            // adModeEvent.RaiseEvent(AdMode.ShowAd);
-        }
+        KantanGameBox.ShowRewardAd();
+        StartCoroutine(CheckResponse(() => KantanGameBox.IsShowRewardAdFinish(),
+            () =>
+            {
+                OnShowAdsRewardEvent.RaiseEvent(KantanGameBox.IsRewardAdSuccess());
+            }));
     }
-
+    private IEnumerator CheckResponse(Func<bool> condition, Action callback)
+    {
+        while (!condition()) yield return null;
+        callback();
+    }
     private void OnAdMode(AdMode _adMode)
     {
         if (_adMode == AdMode.NoAd)
@@ -172,24 +175,24 @@ public class KantanManager : MonoBehaviour
                 }
             }
         }
-        if (adMode == AdMode.ShowAd)
-        {
-            delayTime -= Time.deltaTime;
-            if (delayTime > 0) return;
-            if (KantanGameBox.IsShowRewardAdFinish())
-            {
-                    OnShowAdsRewardEvent.RaiseEvent(true);
-                    Debug.Log("Show ads success");
-            }
-            else
-            {
+        // if (adMode == AdMode.ShowAd)
+        // {
+        //     delayTime -= Time.deltaTime;
+        //     if (delayTime > 0) return;
+        //     if (KantanGameBox.IsShowRewardAdFinish())
+        //     {
+        //         OnShowAdsRewardEvent.RaiseEvent(true);
+        //         Debug.Log("Show ads success");
+        //     }
+        //     else
+        //     {
 
-                    OnShowAdsRewardEvent.RaiseEvent(false);
-                    Debug.Log("Show ads fail");
-            }
-            adMode = AdMode.EndAd;
-            adModeEvent.RaiseEvent(AdMode.EndAd);
-        }
+        //         OnShowAdsRewardEvent.RaiseEvent(false);
+        //         Debug.Log("Show ads fail");
+        //     }
+        //     adMode = AdMode.EndAd;
+        //     adModeEvent.RaiseEvent(AdMode.EndAd);
+        // }
     }
 
     private void UpdateScore()

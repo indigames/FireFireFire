@@ -34,7 +34,6 @@ public class LoadingSceneUi : MonoBehaviour
     private void UpdateProgressBar(float progress)
     {
         loadingPercent.text = ((int)progress * 100).ToString() + " %";
-        Debug.Log($"Progress: {progress * 100}");
         loadingBar.normalizedValue = progress;
     }
 
