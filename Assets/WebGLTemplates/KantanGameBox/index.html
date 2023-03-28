@@ -6,46 +6,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Unity WebGL Player |
             {{{ PRODUCT_NAME }}}</title>
-        <link rel="shortcut icon" href="TemplateData/favicon.ico">
+        <link rel="shortcut icon" href="thumbnail.png">
         <link rel="stylesheet" href="TemplateData/style.css">
+        <script src="https://ad-img.gesoten.com/app/js/gamebox.iframe.js?v=1.5"></script>
+        <script src="Build/docs.loader.js"></script>
     </head>
 
     <body>
-        <script src="https://ad-img.gesoten.com/app/js/gamebox.iframe.js?v=1.5"></script>
         <div id="unity-container" class="unity-desktop">
-            <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
-            <div id="unity-loading-bar"></div>
-            <div id="unity-warning"></div>
+            <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1" style="position: relative; width: 100%; height: 100%"></canvas>
+<!--            <div id="unity-loading-bar"></div>-->
+<!--            <div id="unity-warning"></div>-->
         </div>
         <script>
             var container = document.querySelector("#unity-container");
             var canvas = document.querySelector("#unity-canvas");
-            var loadingBar = document.querySelector("#unity-loading-bar");
-            var warningBanner = document.querySelector("#unity-warning");
-            // Shows a temporary message banner/ribbon for a few seconds, or a permanent
-            // error message on top of the canvas if type=='error'. If type=='warning', a
-            // yellow highlight color is used. Modify or remove this function to customize
-            // the visually presented way that non-critical warnings and error messages are
-            // presented to the user.
-            function unityShowBanner(msg, type) {
-                function updateBannerVisibility() {
-                    warningBanner.style.display = warningBanner.children.length ? 'block': 'none';
-                }
-                var div = document.createElement('div');
-                div.innerHTML = msg;
-                warningBanner.appendChild(div);
-                if (type == 'error') 
-                    div.style = 'background: red; padding: 10px;';
-                else {
-                    if (type == 'warning') 
-                        div.style = 'background: yellow; padding: 10px;';
-                    setTimeout(function () {
-                        warningBanner.removeChild(div);
-                        updateBannerVisibility();
-                    }, 5000);
-                }
-                updateBannerVisibility();
-            }
+            
             var buildUrl = "Build";
             var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
             var config = {
@@ -64,7 +40,6 @@
                 companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
                 productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
                 productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
-                showBanner: unityShowBanner,
             };
             // By default Unity keeps WebGL canvas render target size matched with the DOM
             // size of the canvas element (scaled by window.devicePixelRatio) Set this to
@@ -84,16 +59,19 @@
                 canvas.className = "unity-mobile";
                 // To lower canvas resolution on mobile devices to gain some performance,
                 // uncomment the following line: config.devicePixelRatio = 1;
+
+                canvas.style.width = "100%";
+                canvas.style.height = "100%";
             } else {
                 // Desktop style: Render the game canvas in a window that can be maximized to
                 // fullscreen:
-                canvas.style.width = "{{{ WIDTH }}}px";
+                canvas.style.width = "{{{ WIDTH }}}.5px";
                 canvas.style.height = "{{{ HEIGHT }}}px";
             }
 #if BACKGROUND_FILENAME
             canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
 #endif
-            loadingBar.style.display = "block";
+            // loadingBar.style.display = "block";
             var script = document.createElement("script");
             script.src = loaderUrl;
             
@@ -161,7 +139,6 @@
                 }).then((unityInstance) => {
                     console.log("ready-js");
                     unityInstance.SendMessage("KantanGameBox", "Ready");
-                    loadingBar.style.display = "none";
                     window.unityInstance = unityInstance;
                 }).catch((message) => {
                     alert(message);
