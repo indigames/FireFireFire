@@ -52,7 +52,7 @@ public class UIVictory : MonoBehaviour
     public void OnShowRewardAds(bool isSuccess)
     {
         SendGameEndEvent();
-        gameplay.RestartGame(true, true);
+        gameplay.RestartGame(true, isSuccess);
         StartCoroutine(Hide());
     }
     

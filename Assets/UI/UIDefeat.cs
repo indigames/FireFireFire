@@ -39,7 +39,7 @@ public class UIDefeat : MonoBehaviour
     }
     public void OnShowRewardAds(bool isSuccess)
     {
-        gameplay.RestartGame(false, true);
+        gameplay.RestartGame(false, isSuccess);
         StartCoroutine(Hide());
     }
     IEnumerator Hide()
