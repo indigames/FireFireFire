@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657642, g: 0.49641156, b: 0.5748181, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657755, g: 0.4964127, b: 0.57481825, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1505,6 +1505,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5478539384197013600}
     m_Modifications:
+    - target: {fileID: 3294606744675976701, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 156.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 3294606744675976701, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 55.04631
+      objectReference: {fileID: 0}
     - target: {fileID: 3711399527549164148, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: gameplay
@@ -13130,6 +13140,7 @@ MonoBehaviour:
   previewCamera: {fileID: 926787806}
   OnGameEndEvent: {fileID: 11400000, guid: 299fae8730ce0bc4a83c127d243349de, type: 2}
   OnSendScoreEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
+  CurrentStageScore: 0
 --- !u!114 &1288064093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29921,6 +29932,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3392190547306168842, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 24.960007
+      objectReference: {fileID: 0}
+    - target: {fileID: 3392190547306168842, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -18.720001
+      objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676707, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
       propertyPath: m_Name
@@ -30053,8 +30074,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6416528849484916542, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 22.151993
+      objectReference: {fileID: 0}
+    - target: {fileID: 6416528849484916542, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -83
+      objectReference: {fileID: 0}
+    - target: {fileID: 8383280421199444057, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 37.440002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8477996042218781789, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -31.199997
+      objectReference: {fileID: 0}
+    - target: {fileID: 8477996042218781789, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -40.559998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d512687f564e597489eb32297f233d9e, type: 3}
@@ -30134,7 +30175,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1080, y: 2340}
+  m_ReferenceResolution: {x: 337, y: 600}
   m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3

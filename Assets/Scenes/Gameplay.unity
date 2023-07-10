@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657642, g: 0.49641156, b: 0.5748181, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657755, g: 0.4964127, b: 0.57481825, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1463,15 +1463,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5478539384197013600}
     m_Modifications:
+    - target: {fileID: 2052535989004665831, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3711399527549164148, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
+    - target: {fileID: 4598175868933243511, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4919294345751134990, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_Name
+      value: ImgAllBurned
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676704, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_OverrideSorting
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676707, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: m_Name
       value: UIVictory
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676707, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
@@ -1517,6 +1542,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
@@ -1576,6 +1616,26 @@ PrefabInstance:
     - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411552361855676711, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061358610074758720, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8623741982172668953, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9004589872798995021, guid: 8da87b6c90e6fe74bb60c2618ce87a55,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -13218,6 +13278,8 @@ MonoBehaviour:
   crumbleParticle: {fileID: 1970152933}
   explosionParticle: {fileID: 612389507}
   previewCamera: {fileID: 926787806}
+  OnGameEndEvent: {fileID: 11400000, guid: 299fae8730ce0bc4a83c127d243349de, type: 2}
+  OnSendScoreEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
 --- !u!114 &1288064093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29898,7 +29960,7 @@ PrefabInstance:
     - target: {fileID: 5411552361855676707, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676711, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
@@ -30120,7 +30182,7 @@ Canvas:
   m_GameObject: {fileID: 5478539384197013604}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 534669904}
   m_PlaneDistance: 2
   m_PixelPerfect: 0

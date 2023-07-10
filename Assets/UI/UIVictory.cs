@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static KantanManager;
 
 public class UIVictory : MonoBehaviour
@@ -9,6 +10,9 @@ public class UIVictory : MonoBehaviour
     public Animator anim;
     public GameObject nextBtn;
     // public GameObject adBtn;
+    public Text txtScore;
+    
+
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
     public VoidEventChannel gameEndEvent;
@@ -72,7 +76,8 @@ public class UIVictory : MonoBehaviour
     }
     IEnumerator Show()
     {
-        yield return new WaitForSeconds(4);
+        txtScore.text = "Score: " + gameplay.CurrentStageScore;
+        yield return null;
         nextBtn.SetActive(true);
     }
 }

@@ -57,6 +57,8 @@ public class Gameplay : MonoBehaviour
 
     public MeshBlock DraggingMeshBlock => dragging && gameover == false ? nextMeshBlock : null;
 
+    public int CurrentStageScore;
+
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
