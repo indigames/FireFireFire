@@ -37,7 +37,9 @@ public class Gameplay : MonoBehaviour
     public Camera previewCamera;
     // public List<Stage> ScoreAchivableStages;
     public VoidEventChannel OnGameEndEvent;
+
     public IntEventChannel OnSendScoreEvent;
+    public IntEventChannel OnScoreAddedEvent;
 
     WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
@@ -72,10 +74,12 @@ public class Gameplay : MonoBehaviour
     private void OnEnable()
     {
         OnGameEndEvent.OnEventRaised += OnGameEnd;
+        OnScoreAddedEvent.OnEventRaised += OnScoreAddReceived;
     }
     private void OnDisable()
     {
         OnGameEndEvent.OnEventRaised -= OnGameEnd;
+        OnScoreAddedEvent.OnEventRaised -= OnScoreAddReceived;
     }
     private void Awake()
     {
@@ -148,14 +152,13 @@ public class Gameplay : MonoBehaviour
             Destroy(attachmentInstance);
             attachmentInstance = null;
         }
-        // collect child transforms from items container
-        List<StageItem> stageItems = new List<StageItem>(currentStage.GetComponentsInChildren<StageItem>(true));
-        StageTarget stageTarget = currentStage.GetComponentInChildren<StageTarget>(true);
+ 
         // create new meshblocks here
         var mass = baseMeshBlock.GetRigidbody.mass;
-        foreach (var stageItem in stageItems)
+        foreach (var stageItem in currentStage.stageItems)
         {
             var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem);
+            Debug.Log("init 1");
             newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
@@ -166,19 +169,19 @@ public class Gameplay : MonoBehaviour
         }
 
         // create the target here
-        targetMesh = baseWrapMesh.MakeInstanceFromModel(stageTarget).GetComponent<WrapMeshInteraction>();
+        targetMesh = baseWrapMesh.MakeInstanceFromModel(currentStage.stageTarget).GetComponent<WrapMeshInteraction>();
         targetMesh.override_snuff_duration = 0.7f;
         targetMesh.spreadSpeed *= 2;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
         foreach (var collider in targetMesh.GetComponentsInChildren<Collider>())
             if (collider.isTrigger == false && collider.gameObject != targetMesh.gameObject) Destroy(collider.gameObject);
 
-        var attachmentType = AttachmentUtil.GetAttachmentTemplate(stageTarget.attachment);
+        var attachmentType = AttachmentUtil.GetAttachmentTemplate(currentStage.stageTarget.attachment);
         if (attachmentType != null)
         {
             this.attachmentInstance = Instantiate(attachmentType, targetMesh.transform);
             this.attachmentInstance.gameObject.SetActive(false);
-        }
+        } 
 
         yield return true;
         yield return true;
@@ -265,6 +268,13 @@ public class Gameplay : MonoBehaviour
         }
         //all is snuffed
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
+    }
+
+    private void OnScoreAddReceived(int score)
+    {
+        CurrentStageScore += score;
+        Debug.Log("Score: " + CurrentStageScore);
+        //TOdo: RaiseTO UI
     }
 
     bool confirmStart;

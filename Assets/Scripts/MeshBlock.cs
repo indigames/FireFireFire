@@ -13,6 +13,11 @@ public class MeshBlock : MonoBehaviour
     public WrapMesh wrapMesh;
     public WrapMeshInteraction wrapMeshInteraction;
 
+    private StageItem stageItem;
+
+    private VoidEventChannel OnObjectBurnedEvent;
+    public IntEventChannel OnScoreAddedEvent;
+
     public bool template = true;
     [Range(0, 1)]
     public float drag_rate = 0.25f;
@@ -46,6 +51,23 @@ public class MeshBlock : MonoBehaviour
 
         //NO SHRIKNKING FOR NOW
         //GetComponentInChildren<WrapMeshInteraction>().onMeshIgnited += StartShrinkage;
+
+    }
+
+    void OnEnable()
+    {
+        if (!OnObjectBurnedEvent)
+        {
+
+        OnObjectBurnedEvent = new();
+        wrapMeshInteraction.OnObjectBurnedAction = OnObjectBurnedEvent;
+        }
+        OnObjectBurnedEvent.OnEventRaised += OnObjectBurnedReceived;
+    }
+
+    void OnDisable()
+    {
+        OnObjectBurnedEvent.OnEventRaised -= OnObjectBurnedReceived;
     }
 
     bool HasDefaultCollider()
@@ -99,7 +121,8 @@ public class MeshBlock : MonoBehaviour
             rigidBody.isKinematic = false;
             rigidBody.mass = 0.0001f;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
-        } else
+        }
+        else
         {
             rigidBody.mass = baseMass;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionZ;
@@ -180,7 +203,8 @@ public class MeshBlock : MonoBehaviour
         return result;
     }
 
-    public MeshBlock MakeInstanceFromModel(Transform target, Transform parent = null) {
+    public MeshBlock MakeInstanceFromModel(Transform target, Transform parent = null)
+    {
         gameObject.name = target.name;
         if (parent == null) parent = transform.parent;
 
@@ -202,8 +226,17 @@ public class MeshBlock : MonoBehaviour
     public MeshBlock MakeInstanceFromModel(StageItem item, Transform parent = null)
     {
         var result = MakeInstanceFromModel(item.transform, parent);
-        result.GetComponentInChildren<WrapMeshInteraction>().spreadSpeed = item.spreadSpeed;
+
+        result.wrapMeshInteraction.spreadSpeed = item.spreadSpeed;
+        result.stageItem = item;
+
+
         return result;
+    }
+
+    private void OnObjectBurnedReceived()
+    {
+        OnScoreAddedEvent.RaiseEvent(stageItem.info.GetScore());
     }
 
     void StartShrinkage()

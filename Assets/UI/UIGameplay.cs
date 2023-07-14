@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,11 +8,50 @@ public class UIGameplay : MonoBehaviour
 {
     public Gameplay gameplay;
 
+    [Space]
     public GameObject itemPreview;
     public GameObject grabIcon;
     public Text textRemaining;
     public Text textStage;
     public string textStageFormat = "Stage {0}";
+
+    [SerializeField] private Text _txtScore;
+    [SerializeField] private float SCORE_UPDATE_DURATION = 0.2f;
+
+    [Header("Event")]
+    [SerializeField] private IntEventChannel OnScoreChangeEvent;
+
+    private float _currentScore;
+
+    void OnEnable()
+    {
+        OnScoreChangeEvent.OnEventRaised += OnScoreChange;
+    }
+    void OnDisable()
+    {
+
+        OnScoreChangeEvent.OnEventRaised -= OnScoreChange;
+    }
+
+    private void OnScoreChange(int value)
+    {
+        StartCoroutine(IncreaseScore(value));
+    }
+
+    private IEnumerator IncreaseScore(float addedScore)
+    {
+        float elapsed = 0;
+        while (elapsed <= SCORE_UPDATE_DURATION)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float timeRatio = elapsed / SCORE_UPDATE_DURATION;
+            float tmpScore = (int)(addedScore * timeRatio) + _currentScore;
+            _txtScore.text = tmpScore.ToString();
+            yield return null;
+        }
+        _currentScore += addedScore;
+        _txtScore.text = _currentScore.ToString("##");
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +69,7 @@ public class UIGameplay : MonoBehaviour
         {
             var screenPoint = Camera.main.WorldToScreenPoint(gameplay.DraggingMeshBlock.transform.position);
             Vector2 localPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) grabIcon.transform.parent, screenPoint, Camera.main, out localPoint);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)grabIcon.transform.parent, screenPoint, Camera.main, out localPoint);
             //var pos = grabIcon.transform.localPosition;
             //pos.z = 0;
             grabIcon.transform.localPosition = localPoint;
@@ -67,7 +107,7 @@ public class UIGameplay : MonoBehaviour
 
     public void RestartGame()
     {
-        gameplay.RestartGame(false,false);
+        gameplay.RestartGame(false, false);
     }
 
 }

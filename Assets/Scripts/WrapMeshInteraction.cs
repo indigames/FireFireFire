@@ -46,7 +46,8 @@ public class WrapMeshInteraction : MonoBehaviour
     public float MeshSnuffRatio => meshSnuffRatio;
 
     public MeshFilter MeshFilter => meshFilter;
-
+    public bool IsBurned;
+    public VoidEventChannel OnObjectBurnedAction;
     private StageUnderlay underlayModel;
     public bool HasUnderlayModel => underlayModel != null;
 
@@ -55,7 +56,7 @@ public class WrapMeshInteraction : MonoBehaviour
         this.meshFilter = GetComponent<MeshFilter>();
         this.wrapMesh = GetComponent<WrapMesh>();
         yield return true;
-        SetupVertices();    
+        SetupVertices();
         canSpreadTo = spreadByDefault;
 
         underlayModel = GetComponentInChildren<StageUnderlay>();
@@ -97,6 +98,8 @@ public class WrapMeshInteraction : MonoBehaviour
         applyingColors = true;
         canSpreadTo = false;
         mapCollision.Clear();
+
+        OnObjectBurnedAction = null;
 
         foreach (var vertex in vertices)
         {
@@ -152,7 +155,8 @@ public class WrapMeshInteraction : MonoBehaviour
 
     void CheckSpreadVertices()
     {
-        foreach (var vertex in vertices) {
+        foreach (var vertex in vertices)
+        {
             if (vertex.spreaded && vertex.snuffed == false) CheckSpreadVertex(vertex);
 
             if (vertex.snuffed && this.colors[vertex.index].a > 0.5f + float.Epsilon * 2)
@@ -207,7 +211,7 @@ public class WrapMeshInteraction : MonoBehaviour
             if (vertex.spreadDeltas[i] < 0) continue;
             vertex.spreadDeltas[i] -= deltaTime * SPREAD_SPEED * spreadSpeed;
 
-            var ratio =  1 - vertex.spreadDeltas[i] / vertex.spreadDurations[i];
+            var ratio = 1 - vertex.spreadDeltas[i] / vertex.spreadDurations[i];
             if (ratio > 1) ratio = 1;
             if (ratio > this.colors[vertex.neighbors[i]].a) this.colors[vertex.neighbors[i]] = new Color(1, 1, 1, ratio);
             if (vertex.spreadDeltas[i] < 0) SpreadToVertex(vertex.neighbors[i]);
@@ -228,7 +232,7 @@ public class WrapMeshInteraction : MonoBehaviour
         applyingColors = true;
 
         var position = this.vertices[index].position;
-        position = (Vector3) (transform.localToWorldMatrix * position) + transform.position;
+        position = (Vector3)(transform.localToWorldMatrix * position) + transform.position;
 
         var size = Mathf.Pow(UnityEngine.Random.value, 3) * 10f;
 
@@ -237,7 +241,7 @@ public class WrapMeshInteraction : MonoBehaviour
             position = position + UnityEngine.Random.insideUnitSphere * 0.3f,
             startSize = UnityEngine.Random.Range(0.5f, 4f),
             startLifetime = SnuffDuration
-        }, 1) ;
+        }, 1);
 
         CheckSpreadToOther(position);
     }
@@ -278,6 +282,12 @@ public class WrapMeshInteraction : MonoBehaviour
     {
         if (this.canSpreadTo == false)
             return;
+
+        if (!this.IsBurned)
+        {
+            OnObjectBurnedAction?.RaiseEvent();
+            this.IsBurned = true;
+        }
 
         position.z += (transform.position.z - position.z) / 5;
         var dist = transform.position - position;
@@ -374,7 +384,8 @@ public class WrapMeshInteraction : MonoBehaviour
         yield return true;
 
         var lines = GetComponentsInChildren<LineRenderer>();
-        for (var i = 1f; i > 0f; i -= Time.deltaTime) {
+        for (var i = 1f; i > 0f; i -= Time.deltaTime)
+        {
             foreach (var line in lines)
                 line.widthMultiplier = i;
             yield return true;

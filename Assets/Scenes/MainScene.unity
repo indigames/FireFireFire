@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wrapMesh: {fileID: 1091334395}
   wrapMeshInteraction: {fileID: 1091334394}
+  OnScoreAddedEvent: {fileID: 11400000, guid: 64ec65f2f005db24fafce7f1d456c997, type: 2}
   template: 1
   drag_rate: 0
   movementMode: 0
@@ -2284,6 +2285,8 @@ MonoBehaviour:
   canSpreadTo: 0
   spreadByDefault: 1
   spreadSpeed: 4
+  IsBurned: 0
+  OnObjectBurnedAction: {fileID: 0}
   crumbleParticle: {fileID: 1970152933}
 --- !u!114 &896245053
 MonoBehaviour:
@@ -7907,6 +7910,8 @@ MonoBehaviour:
   canSpreadTo: 0
   spreadByDefault: 0
   spreadSpeed: 4.97
+  IsBurned: 0
+  OnObjectBurnedAction: {fileID: 0}
   crumbleParticle: {fileID: 0}
 --- !u!114 &1091334395
 MonoBehaviour:
@@ -13140,6 +13145,7 @@ MonoBehaviour:
   previewCamera: {fileID: 926787806}
   OnGameEndEvent: {fileID: 11400000, guid: 299fae8730ce0bc4a83c127d243349de, type: 2}
   OnSendScoreEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
+  OnScoreAddedEvent: {fileID: 11400000, guid: 64ec65f2f005db24fafce7f1d456c997, type: 2}
   CurrentStageScore: 0
 --- !u!114 &1288064093
 MonoBehaviour:
@@ -18812,6 +18818,8 @@ MonoBehaviour:
   canSpreadTo: 0
   spreadByDefault: 1
   spreadSpeed: 4
+  IsBurned: 0
+  OnObjectBurnedAction: {fileID: 0}
   crumbleParticle: {fileID: 1970152933}
 --- !u!114 &1770925310
 MonoBehaviour:
