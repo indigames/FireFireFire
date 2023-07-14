@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spreadSpeed: 2
-  _score: 20
+  info: {fileID: 8446692122013534766}
 --- !u!114 &8446692122013534766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58223143331d04144914c389ec302135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _score: 20
+  _score: 5
 --- !u!1001 &8738121085731456602
 PrefabInstance:
   m_ObjectHideFlags: 0

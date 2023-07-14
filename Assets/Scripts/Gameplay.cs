@@ -41,6 +41,8 @@ public class Gameplay : MonoBehaviour
     public IntEventChannel OnSendScoreEvent;
     public IntEventChannel OnScoreAddedEvent;
 
+    public VoidEventChannel OnStageTargetBurnedEvent;
+
     WrapMeshInteraction targetMesh;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
     List<MeshBlock> bonusMeshBlocks = new List<MeshBlock>();
@@ -75,11 +77,13 @@ public class Gameplay : MonoBehaviour
     {
         OnGameEndEvent.OnEventRaised += OnGameEnd;
         OnScoreAddedEvent.OnEventRaised += OnScoreAddReceived;
+        OnStageTargetBurnedEvent.OnEventRaised += OnStageTargetBurned;
     }
     private void OnDisable()
     {
         OnGameEndEvent.OnEventRaised -= OnGameEnd;
         OnScoreAddedEvent.OnEventRaised -= OnScoreAddReceived;
+        OnStageTargetBurnedEvent.OnEventRaised -= OnStageTargetBurned;
     }
     private void Awake()
     {
@@ -152,7 +156,7 @@ public class Gameplay : MonoBehaviour
             Destroy(attachmentInstance);
             attachmentInstance = null;
         }
- 
+
         // create new meshblocks here
         var mass = baseMeshBlock.GetRigidbody.mass;
         foreach (var stageItem in currentStage.stageItems)
@@ -173,6 +177,7 @@ public class Gameplay : MonoBehaviour
         targetMesh.override_snuff_duration = 0.7f;
         targetMesh.spreadSpeed *= 2;
         targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
+        targetMesh.OnObjectBurnedAction = OnStageTargetBurnedEvent;
         foreach (var collider in targetMesh.GetComponentsInChildren<Collider>())
             if (collider.isTrigger == false && collider.gameObject != targetMesh.gameObject) Destroy(collider.gameObject);
 
@@ -181,7 +186,7 @@ public class Gameplay : MonoBehaviour
         {
             this.attachmentInstance = Instantiate(attachmentType, targetMesh.transform);
             this.attachmentInstance.gameObject.SetActive(false);
-        } 
+        }
 
         yield return true;
         yield return true;
@@ -270,11 +275,16 @@ public class Gameplay : MonoBehaviour
         if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
     }
 
+    public void OnStageTargetBurned()
+    {
+        int addedScore = currentStage.stageTarget.info.GetScore();
+        OnScoreAddedEvent.RaiseEvent(addedScore);
+    }
+
     private void OnScoreAddReceived(int score)
     {
         CurrentStageScore += score;
         Debug.Log("Score: " + CurrentStageScore);
-        //TOdo: RaiseTO UI
     }
 
     bool confirmStart;
