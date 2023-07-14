@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f6c579e20558b46be74af3ee0de0b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spreadSpeed: 3
+  spreadSpeed: 2
   info: {fileID: -1696371187992992332}
 --- !u!114 &-1696371187992992332
 MonoBehaviour:
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58223143331d04144914c389ec302135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _score: 0
+  _score: 30
 --- !u!1 &4802587604471527007
 GameObject:
   m_ObjectHideFlags: 0

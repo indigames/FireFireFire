@@ -41,6 +41,8 @@ public class Gameplay : MonoBehaviour
     public IntEventChannel OnSendScoreEvent;
     public IntEventChannel OnScoreAddedEvent;
 
+    public IntEventChannel OnUIScoreAddedEvent;
+
     public VoidEventChannel OnStageTargetBurnedEvent;
 
     WrapMeshInteraction targetMesh;
@@ -124,6 +126,7 @@ public class Gameplay : MonoBehaviour
     public void RestartGame(bool nextStage, bool isAdWatched)
     {
         StopAllCoroutines();
+        CurrentStageScore = 0;
 
         if (nextStage)
             currentStage = stageCollection.NextStage;
@@ -284,7 +287,7 @@ public class Gameplay : MonoBehaviour
     private void OnScoreAddReceived(int score)
     {
         CurrentStageScore += score;
-        Debug.Log("Score: " + CurrentStageScore);
+        OnUIScoreAddedEvent.RaiseEvent(CurrentStageScore);
     }
 
     bool confirmStart;

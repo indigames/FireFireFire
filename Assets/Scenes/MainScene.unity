@@ -13146,6 +13146,8 @@ MonoBehaviour:
   OnGameEndEvent: {fileID: 11400000, guid: 299fae8730ce0bc4a83c127d243349de, type: 2}
   OnSendScoreEvent: {fileID: 11400000, guid: 382b9eec8d7902c47898726aef546b89, type: 2}
   OnScoreAddedEvent: {fileID: 11400000, guid: 64ec65f2f005db24fafce7f1d456c997, type: 2}
+  OnUIScoreAddedEvent: {fileID: 11400000, guid: 6f4f423ab73aa7e40b6d9f319a7c4b52,
+    type: 2}
   OnStageTargetBurnedEvent: {fileID: 11400000, guid: c3652a05500837c4bbf17f9fe544d04d,
     type: 2}
   CurrentStageScore: 0
@@ -29932,6 +29934,12 @@ PrefabInstance:
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
+    - target: {fileID: 3105510507382185109, guid: d512687f564e597489eb32297f233d9e,
+        type: 3}
+      propertyPath: OnScoreChangeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 6f4f423ab73aa7e40b6d9f319a7c4b52,
+        type: 2}
     - target: {fileID: 3392190547306168842, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
       propertyPath: m_LocalPosition.x

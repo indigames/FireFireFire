@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 3805691363114600077}
   - component: {fileID: 8428927817389701375}
   m_Layer: 0
-  m_Name: branch3
+  m_Name: Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f6c579e20558b46be74af3ee0de0b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spreadSpeed: 3
+  spreadSpeed: 2
   info: {fileID: 8428927817389701375}
 --- !u!114 &8428927817389701375
 MonoBehaviour:
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58223143331d04144914c389ec302135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _score: 0
+  _score: 10
 --- !u!1 &7830744142726547392
 GameObject:
   m_ObjectHideFlags: 0

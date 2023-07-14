@@ -21,7 +21,7 @@ public class UIGameplay : MonoBehaviour
     [Header("Event")]
     [SerializeField] private IntEventChannel OnScoreChangeEvent;
 
-    private float _currentScore;
+    private float _lastScore;
 
     void OnEnable()
     {
@@ -38,19 +38,20 @@ public class UIGameplay : MonoBehaviour
         StartCoroutine(IncreaseScore(value));
     }
 
-    private IEnumerator IncreaseScore(float addedScore)
+    private IEnumerator IncreaseScore(float currentScore)
     {
         float elapsed = 0;
+        float addedScore = currentScore - _lastScore;
         while (elapsed <= SCORE_UPDATE_DURATION)
         {
             elapsed += Time.unscaledDeltaTime;
             float timeRatio = elapsed / SCORE_UPDATE_DURATION;
-            float tmpScore = (int)(addedScore * timeRatio) + _currentScore;
+            float tmpScore = (int)(addedScore * timeRatio) + _lastScore;
             _txtScore.text = tmpScore.ToString();
             yield return null;
         }
-        _currentScore += addedScore;
-        _txtScore.text = _currentScore.ToString("##");
+        _lastScore = currentScore;
+        _txtScore.text = _lastScore.ToString("##");
     }
 
     // Start is called before the first frame update
@@ -80,6 +81,7 @@ public class UIGameplay : MonoBehaviour
     {
         textStage.text = string.Format(textStageFormat, gameplay.StageNumber);
         textRemaining.text = "";
+        _lastScore = 0;
         StartCoroutine(DelayPreview());
     }
 

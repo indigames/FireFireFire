@@ -204,7 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4198497634918436419}
   - component: {fileID: 7616893974132426223}
-  - component: {fileID: -3676393357683829934}
+  - component: {fileID: 1314353508873356456}
   m_Layer: 0
   m_Name: pinata
   m_TagString: Untagged
@@ -245,8 +245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58223143331d04144914c389ec302135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _score: 0
---- !u!114 &-3676393357683829934
+  _score: 70
+--- !u!114 &1314353508873356456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,10 +255,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4198497634918436418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f6c579e20558b46be74af3ee0de0b5, type: 3}
+  m_Script: {fileID: 11500000, guid: f555abb1554ee214597d79b042f1914d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spreadSpeed: 3
+  attachment: 1
+  spreadSpeed: 5
   info: {fileID: 7616893974132426223}
 --- !u!1 &4430542740265573666
 GameObject:
