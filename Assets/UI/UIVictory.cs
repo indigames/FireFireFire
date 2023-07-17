@@ -45,8 +45,8 @@ public class UIVictory : MonoBehaviour
     //     }
     // }
     public void Continue()
-    {
-        gameplay.RestartGame(true, false);
+    {      
+        SendGameEndEvent();
         StartCoroutine(Hide());
     }
     public void ShowVictoryAds()
@@ -56,13 +56,11 @@ public class UIVictory : MonoBehaviour
     public void OnShowRewardAds(bool isSuccess)
     {
         SendGameEndEvent();
-        gameplay.RestartGame(true, isSuccess);
         StartCoroutine(Hide());
     }
     
     public void OnAdsFail()
     {
-        gameplay.RestartGame(true, false);
         StartCoroutine(Hide());
     }
     public void SendGameEndEvent()

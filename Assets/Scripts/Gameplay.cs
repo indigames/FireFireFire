@@ -38,6 +38,8 @@ public class Gameplay : MonoBehaviour
     // public List<Stage> ScoreAchivableStages;
     public VoidEventChannel OnGameEndEvent;
 
+    public StageEventChannel OnStageSelectEvent;
+
     public IntEventChannel OnSendScoreEvent;
     public IntEventChannel OnScoreAddedEvent;
 
@@ -72,21 +74,28 @@ public class Gameplay : MonoBehaviour
 
         yield return true;
         baseMeshBlock.gameObject.SetActive(false);
-
-        RestartGame(false, false);
     }
     private void OnEnable()
     {
         OnGameEndEvent.OnEventRaised += OnGameEnd;
         OnScoreAddedEvent.OnEventRaised += OnScoreAddReceived;
         OnStageTargetBurnedEvent.OnEventRaised += OnStageTargetBurned;
+        OnStageSelectEvent.OnEventRaised += OnStageSelectReceived;
     }
     private void OnDisable()
     {
         OnGameEndEvent.OnEventRaised -= OnGameEnd;
         OnScoreAddedEvent.OnEventRaised -= OnScoreAddReceived;
         OnStageTargetBurnedEvent.OnEventRaised -= OnStageTargetBurned;
+
+        OnStageSelectEvent.OnEventRaised -= OnStageSelectReceived;
     }
+
+    private void OnStageSelectReceived(Stage stage)
+    {
+        RestartGame(false, stage);
+    }
+
     private void Awake()
     {
         explosionParticle.Play();
@@ -119,19 +128,18 @@ public class Gameplay : MonoBehaviour
     }
     void OnGameEnd()
     {
-        // if (ScoreAchivableStages.Contains(stageCollection.CurrentStage))
-        // {
-        OnSendScoreEvent.RaiseEvent(1);
+        OnSendScoreEvent.RaiseEvent(CurrentStageScore);
     }
-    public void RestartGame(bool nextStage, bool isAdWatched)
+
+    public void RestartGame(bool isAdWatched, Stage nextStage = null)
     {
         StopAllCoroutines();
         CurrentStageScore = 0;
 
         if (nextStage)
-            currentStage = stageCollection.NextStage;
-        else
-            currentStage = stageCollection.CurrentStage;
+        {
+            currentStage = nextStage;
+        }
 
         callbackRestart?.Invoke();
         StartCoroutine(CoGameplay(isAdWatched));
@@ -165,7 +173,6 @@ public class Gameplay : MonoBehaviour
         foreach (var stageItem in currentStage.stageItems)
         {
             var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem);
-            Debug.Log("init 1");
             newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);

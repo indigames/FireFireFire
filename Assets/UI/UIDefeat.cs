@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIDefeat : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class UIDefeat : MonoBehaviour
     public Animator anim;
     public GameObject retryBtn;
     public GameObject adBtn;
+    public Text txtScore;
     public VoidEventChannel ShowLostAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
 
@@ -21,16 +23,16 @@ public class UIDefeat : MonoBehaviour
     {
         retryBtn.SetActive(false);
         StartCoroutine(Show());
-          if (OnShowRewardAdsEvent != null)
+        if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
     }
-    private void OnDisable() {
-         if (OnShowRewardAdsEvent != null)
+    private void OnDisable()
+    {
+        if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised -= OnShowRewardAds;
     }
     public void Continue()
     {
-        gameplay.RestartGame(false, false);
         StartCoroutine(Hide());
     }
     public void ShowLostAds()
@@ -39,7 +41,6 @@ public class UIDefeat : MonoBehaviour
     }
     public void OnShowRewardAds(bool isSuccess)
     {
-        gameplay.RestartGame(false, isSuccess);
         StartCoroutine(Hide());
     }
     IEnumerator Hide()
@@ -49,7 +50,8 @@ public class UIDefeat : MonoBehaviour
     }
     IEnumerator Show()
     {
-        yield return new WaitForSeconds(4);
+        txtScore.text = "Score: " + gameplay.CurrentStageScore;
+        yield return null;
         retryBtn.SetActive(true);
     }
 }

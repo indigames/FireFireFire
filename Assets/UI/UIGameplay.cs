@@ -106,10 +106,4 @@ public class UIGameplay : MonoBehaviour
         //else
         //    textRemaining.text = "No item remaning";
     }
-
-    public void RestartGame()
-    {
-        gameplay.RestartGame(false, false);
-    }
-
 }

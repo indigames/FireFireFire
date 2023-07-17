@@ -77,9 +77,7 @@ public class KantanManager : MonoBehaviour
 
     private void OnGameEnd(int _score)
     {
-        Debug.Log($"SendScore: {_score}");
         KantanGameBox.GameEnd(_score);
-        // SetScore(_score);
     }
 
     private void OnGameState(GameState _gameState)
