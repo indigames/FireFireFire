@@ -12,6 +12,8 @@ public class Stage : MonoBehaviour
     public int IDNumber;
     public float verticalOffset = 0;
 
+    public Vector2Int ItemUseMinMax;
+
     public List<StageItem> stageItems = new();
     public StageTarget stageTarget;
 

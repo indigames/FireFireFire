@@ -169,15 +169,24 @@ public class Gameplay : MonoBehaviour
 
         // create new meshblocks here
         var mass = baseMeshBlock.GetRigidbody.mass;
-        foreach (var stageItem in currentStage.stageItems)
+
+        // Todo: add Random 
+        int totalItemUsing = UnityEngine.Random.Range(currentStage.ItemUseMinMax.x, currentStage.ItemUseMinMax.y + 1);
+        List<StageItem> totalItems = new(currentStage.stageItems);
+
+        for (int i = 0; i < totalItemUsing; i++)
         {
-            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(stageItem);
+            StageItem currentItem = totalItems[UnityEngine.Random.Range(0, totalItems.Count)];
+            totalItems.Remove(currentItem);
+
+            var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(currentItem);
             newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
             newMeshBlock.transform.position = areaPreview.position;
             newMeshBlock.GetRigidbody.mass = mass;
             mass *= 0.7f;
+
             availableMeshBlocks.Add(newMeshBlock);
         }
 

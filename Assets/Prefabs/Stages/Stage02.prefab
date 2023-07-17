@@ -67,6 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IDNumber: 2
   verticalOffset: 0
+  ItemUseMinMax: {x: 10, y: 15}
   stageItems:
   - {fileID: 3058134484300250786}
   - {fileID: 6948562724905712469}
