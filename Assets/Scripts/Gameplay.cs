@@ -60,8 +60,7 @@ public class Gameplay : MonoBehaviour
 
     GameObject attachmentInstance = null;
 
-    Stage currentStage;
-    public int StageNumber => stageCollection.StageNumber;
+    public Stage currentStage;
 
     public MeshBlock DraggingMeshBlock => dragging && gameover == false ? nextMeshBlock : null;
 

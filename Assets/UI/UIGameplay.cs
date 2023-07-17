@@ -79,7 +79,7 @@ public class UIGameplay : MonoBehaviour
 
     void Restart()
     {
-        textStage.text = string.Format(textStageFormat, gameplay.StageNumber);
+        textStage.text = string.Format(textStageFormat, gameplay.currentStage.IDNumber);
         textRemaining.text = "";
         _lastScore = 0;
         StartCoroutine(DelayPreview());

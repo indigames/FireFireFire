@@ -9,6 +9,7 @@ using UnityEditor.SceneManagement;
 
 public class Stage : MonoBehaviour
 {
+    public int IDNumber;
     public float verticalOffset = 0;
 
     public List<StageItem> stageItems = new();

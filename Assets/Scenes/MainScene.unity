@@ -13181,6 +13181,7 @@ MonoBehaviour:
     type: 2}
   OnStageTargetBurnedEvent: {fileID: 11400000, guid: c3652a05500837c4bbf17f9fe544d04d,
     type: 2}
+  currentStage: {fileID: 0}
   CurrentStageScore: 0
 --- !u!114 &1288064093
 MonoBehaviour:
@@ -35779,7 +35780,7 @@ PrefabInstance:
     - target: {fileID: 1091022824420131249, guid: 9dcbcd860283467448cf100d5527cd65,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1091022824420131253, guid: 9dcbcd860283467448cf100d5527cd65,
         type: 3}
