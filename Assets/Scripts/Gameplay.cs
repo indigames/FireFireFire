@@ -169,8 +169,7 @@ public class Gameplay : MonoBehaviour
 
         // create new meshblocks here
         var mass = baseMeshBlock.GetRigidbody.mass;
-
-        // Todo: add Random 
+ 
         int totalItemUsing = UnityEngine.Random.Range(currentStage.ItemUseMinMax.x, currentStage.ItemUseMinMax.y + 1);
         List<StageItem> totalItems = new(currentStage.stageItems);
 
