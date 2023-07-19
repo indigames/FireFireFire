@@ -59,8 +59,15 @@ public class MeshBlock : MonoBehaviour
         if (!OnObjectBurnedEvent)
         {
 
-        OnObjectBurnedEvent = new();
-        wrapMeshInteraction.OnObjectBurnedAction = OnObjectBurnedEvent;
+            OnObjectBurnedEvent = new();
+            wrapMeshInteraction.OnObjectBurnedAction = OnObjectBurnedEvent;
+            var dogPlaySound = this.GetComponentInChildren<DogPlaySound>();
+            if (dogPlaySound)
+            {
+                dogPlaySound.gameObject.SetActive(false);
+                dogPlaySound.OnObjectBurn = OnObjectBurnedEvent;
+                dogPlaySound.gameObject.SetActive(true);
+            }
         }
         OnObjectBurnedEvent.OnEventRaised += OnObjectBurnedReceived;
     }
@@ -229,6 +236,7 @@ public class MeshBlock : MonoBehaviour
 
         result.wrapMeshInteraction.spreadSpeed = item.spreadSpeed;
         result.stageItem = item;
+
 
 
         return result;
