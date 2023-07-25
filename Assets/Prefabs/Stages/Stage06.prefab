@@ -89,6 +89,7 @@ MonoBehaviour:
   - {fileID: 7157499091198359611}
   - {fileID: 7863630650891032026}
   - {fileID: 2624189052657159953}
+  StageObstacles: []
   stageTarget: {fileID: 3521636929151394709}
 --- !u!1 &6469270344735060190
 GameObject:

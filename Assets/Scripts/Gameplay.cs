@@ -19,6 +19,7 @@ public class Gameplay : MonoBehaviour
 
     [Space]
     public Transform areaTarget;
+    public Transform areaObstacle;
     public Transform areaPreview;
     public Transform bonusItemSpawnPos;
     public AudioPool audioSpawn;
@@ -187,6 +188,14 @@ public class Gameplay : MonoBehaviour
             mass *= 0.7f;
 
             availableMeshBlocks.Add(newMeshBlock);
+        }
+
+        // crete the obstacle here
+        List<StageObstacle> stageObstacles = (currentStage.StageObstacles);
+        foreach (var item in stageObstacles)
+        {
+            StageObstacle stageObstacle = Instantiate(item);
+            stageObstacle.transform.SetParent(areaObstacle);
         }
 
         // create the target here

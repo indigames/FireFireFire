@@ -200,6 +200,7 @@ MonoBehaviour:
   - {fileID: 3071143572257954777}
   - {fileID: 7716126429201469102}
   - {fileID: 7409995522527721124}
+  StageObstacles: []
   stageTarget: {fileID: 5250411537794031038}
 --- !u!1001 &901587517841571
 PrefabInstance:

@@ -15,6 +15,7 @@ public class Stage : MonoBehaviour
     public Vector2Int ItemUseMinMax;
 
     public List<StageItem> stageItems = new();
+    public List<StageObstacle> StageObstacles = new();
     public StageTarget stageTarget;
 
 #if UNITY_EDITOR
@@ -25,7 +26,13 @@ public class Stage : MonoBehaviour
         {
             this.stageItems.Clear();
             this.stageItems.AddRange(stageItems);
-            Debug.Log("Validate");
+        }
+
+        List<StageObstacle> stageObstacles = this.transform.GetComponentsInChildren<StageObstacle>().ToList();
+        if (StageObstacles.Count != stageObstacles.Count)
+        {
+            this.StageObstacles.Clear();
+            this.StageObstacles.AddRange(stageObstacles);
         }
 
         StageTarget stageTarget = this.transform.GetComponentInChildren<StageTarget>();
@@ -34,6 +41,8 @@ public class Stage : MonoBehaviour
             this.stageTarget = stageTarget;
         }
         UnityEditor.EditorUtility.SetDirty(this);
+
+
     }
 #endif
 }
@@ -45,11 +54,13 @@ public class StageDesignerEditor : Editor
 {
     static string BLOCK_PREFAB_FOLDER = "Assets/Prefabs/Blocks";
     static string TARGET_PREFAB_FOLDER = "Assets/Prefabs/Targets";
+    static string OBSTACLE_PREFAB_FOLDER = "Assets/Prefabs/Obstacles";
 
     new Stage target => (Stage)base.target;
     GenericMenu blockMenu = null;
     GenericMenu targetMenu = null;
-    bool spawnAsTarget = false;
+    GenericMenu obstacleMenu = null;
+    ObjectType objectType;
 
     private void OnEnable()
     {
@@ -78,6 +89,19 @@ public class StageDesignerEditor : Editor
                 targetMenu.AddItem(new GUIContent(file_name), false, SpawnPrefab, asset_path);
             }
         }
+
+        if (obstacleMenu == null)
+        {
+            obstacleMenu = new GenericMenu();
+            var structures = new List<string>();
+            var prefabs = AssetDatabase.FindAssets("t:Prefab", new string[] { OBSTACLE_PREFAB_FOLDER });
+            foreach (var guid in prefabs)
+            {
+                var asset_path = AssetDatabase.GUIDToAssetPath(guid);
+                var file_name = AssetDatabase.LoadAssetAtPath<GameObject>(asset_path).name;
+                obstacleMenu.AddItem(new GUIContent(file_name), false, SpawnPrefab, asset_path);
+            }
+        }
     }
 
     public override void OnInspectorGUI()
@@ -88,15 +112,20 @@ public class StageDesignerEditor : Editor
 
         if (GUILayout.Button("Item", EditorStyles.miniButton))
         {
-            spawnAsTarget = false;
+            objectType = ObjectType.Block;
             blockMenu.ShowAsContext();
         }
         if (GUILayout.Button("Target", EditorStyles.miniButton))
         {
-            spawnAsTarget = true;
+            objectType = ObjectType.Target;
             targetMenu.ShowAsContext();
         }
 
+        if (GUILayout.Button("Obstacle", EditorStyles.miniButton))
+        {
+            objectType = ObjectType.Obstacle;
+            obstacleMenu.ShowAsContext();
+        }
     }
 
     private void SpawnPrefab(object o_path)
@@ -106,20 +135,30 @@ public class StageDesignerEditor : Editor
         var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, target.transform);
         StageItemInfo info = instance.gameObject.GetComponent<StageItemInfo>();
 
-        if (spawnAsTarget)
+        if (objectType == ObjectType.Target)
         {
             instance.gameObject.name = "TARGET: " + instance.gameObject.name;
             StageTarget addedTarget = instance.gameObject.GetComponent<StageTarget>();
             target.stageTarget = addedTarget;
             addedTarget.info = info;
         }
-        else
+
+        if (objectType == ObjectType.Block)
         {
             StageItem addedComponent = instance.gameObject.GetComponent<StageItem>();
             if (!addedComponent) addedComponent = instance.AddComponent<StageItem>();
             addedComponent.info = info;
             target.stageItems.Add(addedComponent);
         }
+
+        if (objectType == ObjectType.Obstacle)
+        {
+            StageObstacle addedComponent = instance.gameObject.GetComponent<StageObstacle>();
+            if (!addedComponent) addedComponent = instance.AddComponent<StageObstacle>();
+            target.StageObstacles.Add(addedComponent);
+        }
+
+
         var prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
         if (prefabStage != null)
         {
@@ -129,5 +168,12 @@ public class StageDesignerEditor : Editor
         else
             EditorUtility.SetDirty(target);
     }
+}
+
+public enum ObjectType
+{
+    Block,
+    Target,
+    Obstacle
 }
 #endif
