@@ -315,6 +315,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58e14aef00b1e3e4caa2f429416da745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshCollider: {fileID: 112625755}
+  rigidBody: {fileID: 112625754}
   wrapMesh: {fileID: 1091334395}
   wrapMeshInteraction: {fileID: 1091334394}
   OnScoreAddedEvent: {fileID: 11400000, guid: 64ec65f2f005db24fafce7f1d456c997, type: 2}
@@ -2312,6 +2314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 705207da708cd544996307721432f732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFilter: {fileID: 896245051}
+  wrapMesh: {fileID: 896245053}
   firePs: {fileID: 1822523182}
   canSpreadTo: 0
   spreadByDefault: 1
@@ -2334,7 +2338,9 @@ MonoBehaviour:
   peelingMode: 1
   targetContainer: {fileID: 896245046}
   burntMaterials: []
-  meshFilter: {fileID: 0}
+  meshFilter: {fileID: 896245051}
+  meshRenderer: {fileID: 896245049}
+  wrapMeshInteraction: {fileID: 896245052}
   wrapMeshVertices: []
   wrapMesh: {fileID: 0}
   colliderMesh: {fileID: 0}
@@ -7936,6 +7942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 705207da708cd544996307721432f732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFilter: {fileID: 1091334393}
+  wrapMesh: {fileID: 1091334395}
   firePs: {fileID: 1060503887}
   canSpreadTo: 0
   spreadByDefault: 0
@@ -7963,7 +7971,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f4af00ebe8510a64aa1cb9cacf136627, type: 2}
   - {fileID: 2100000, guid: 7ba3ac7a2fe4ff249b0b23acb10ee4df, type: 2}
   - {fileID: 2100000, guid: 93b34500e87549e4bbcd587a9c39f5ef, type: 2}
-  meshFilter: {fileID: 0}
+  meshFilter: {fileID: 1091334393}
+  meshRenderer: {fileID: 1091334391}
+  wrapMeshInteraction: {fileID: 1091334394}
   wrapMeshVertices: []
   wrapMesh: {fileID: 0}
   colliderMesh: {fileID: 0}
@@ -13981,6 +13991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 705207da708cd544996307721432f732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshFilter: {fileID: 1770925308}
+  wrapMesh: {fileID: 1770925310}
   firePs: {fileID: 568577692}
   canSpreadTo: 0
   spreadByDefault: 1
@@ -14008,7 +14020,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1ff35cbb0f7dcd24a8a91add0311e1f8, type: 2}
   - {fileID: 2100000, guid: a7ada34185f24434f9985c277e7043ad, type: 2}
   - {fileID: 2100000, guid: 354331875f90dfc44ae8fc583831a3ef, type: 2}
-  meshFilter: {fileID: 0}
+  meshFilter: {fileID: 1770925308}
+  meshRenderer: {fileID: 1770925306}
+  wrapMeshInteraction: {fileID: 1770925309}
   wrapMeshVertices: []
   wrapMesh: {fileID: 0}
   colliderMesh: {fileID: 0}

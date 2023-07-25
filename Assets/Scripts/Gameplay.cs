@@ -47,7 +47,7 @@ public class Gameplay : MonoBehaviour
 
     public VoidEventChannel OnStageTargetBurnedEvent;
 
-    WrapMeshInteraction targetMesh;
+    WrapMeshInteraction targetWarpMeshInteraction;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
     List<MeshBlock> bonusMeshBlocks = new List<MeshBlock>();
     int nextMeshBlockIndex;
@@ -111,16 +111,16 @@ public class Gameplay : MonoBehaviour
         // GameObject bonusWoods = Instantiate(bonusWoodsPrefab, bonusDropPos.position, Quaternion.identity);
         // bonusWoods.GetComponent<Rigidbody>().AddForce(Vector3.up * 1000);
         var bonusItems = bonusWoodsPrefab.GetComponentsInChildren<StageItem>(true);
-        var mass = baseMeshBlock.GetRigidbody.mass;
+        var mass = baseMeshBlock.rigidBody.mass;
         foreach (var bonusItem in bonusItems)
         {
             var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(bonusItem);
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
             newMeshBlock.transform.position = bonusItemSpawnPos.position;
-            newMeshBlock.GetRigidbody.mass = mass;
+            newMeshBlock.rigidBody.mass = mass;
             mass *= 0.7f;
-            newMeshBlock.GetRigidbody.isKinematic = false; //set to be kinematic by default
+            newMeshBlock.rigidBody.isKinematic = false; //set to be kinematic by default
             bonusMeshBlocks.Add(newMeshBlock);
             yield return new WaitForSeconds(0.25f);
         }
@@ -159,7 +159,7 @@ public class Gameplay : MonoBehaviour
         foreach (var bonusBlock in bonusMeshBlocks) Destroy(bonusBlock.gameObject);
         availableMeshBlocks.Clear();
         bonusMeshBlocks.Clear();
-        if (targetMesh != null) Destroy(targetMesh.gameObject);
+        if (targetWarpMeshInteraction != null) Destroy(targetWarpMeshInteraction.gameObject);
         fireStarterArea.Restart();
         if (attachmentInstance != null)
         {
@@ -168,8 +168,8 @@ public class Gameplay : MonoBehaviour
         }
 
         // create new meshblocks here
-        var mass = baseMeshBlock.GetRigidbody.mass;
- 
+        var mass = baseMeshBlock.rigidBody.mass;
+
         int totalItemUsing = UnityEngine.Random.Range(currentStage.ItemUseMinMax.x, currentStage.ItemUseMinMax.y + 1);
         List<StageItem> totalItems = new(currentStage.stageItems);
 
@@ -179,29 +179,31 @@ public class Gameplay : MonoBehaviour
             totalItems.Remove(currentItem);
 
             var newMeshBlock = baseMeshBlock.MakeInstanceFromModel(currentItem);
-            newMeshBlock.GetRigidbody.isKinematic = true; //set to be kinematic by default
+            newMeshBlock.rigidBody.isKinematic = true; //set to be kinematic by default
             newMeshBlock.template = false;
             newMeshBlock.gameObject.SetActive(true);
             newMeshBlock.transform.position = areaPreview.position;
-            newMeshBlock.GetRigidbody.mass = mass;
+            newMeshBlock.rigidBody.mass = mass;
             mass *= 0.7f;
 
             availableMeshBlocks.Add(newMeshBlock);
         }
 
         // create the target here
-        targetMesh = baseWrapMesh.MakeInstanceFromModel(currentStage.stageTarget).GetComponent<WrapMeshInteraction>();
-        targetMesh.override_snuff_duration = 0.7f;
-        targetMesh.spreadSpeed *= 2;
-        targetMesh.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
-        targetMesh.OnObjectBurnedAction = OnStageTargetBurnedEvent;
-        foreach (var collider in targetMesh.GetComponentsInChildren<Collider>())
-            if (collider.isTrigger == false && collider.gameObject != targetMesh.gameObject) Destroy(collider.gameObject);
+        WrapMesh targetWrapMesh = baseWrapMesh.MakeInstanceFromModel(currentStage.stageTarget);
+        targetWarpMeshInteraction = targetWrapMesh.wrapMeshInteraction;
+        targetWarpMeshInteraction.override_snuff_duration = 0.7f;
+        targetWarpMeshInteraction.spreadSpeed *= 2;
+        targetWarpMeshInteraction.transform.position = areaTarget.position + Vector3.up * currentStage.verticalOffset;
+        targetWarpMeshInteraction.OnObjectBurnedAction = OnStageTargetBurnedEvent;
+        targetWarpMeshInteraction.SetUp();
+        foreach (var collider in targetWarpMeshInteraction.GetComponentsInChildren<Collider>())
+            if (collider.isTrigger == false && collider.gameObject != targetWarpMeshInteraction.gameObject) Destroy(collider.gameObject);
 
         var attachmentType = AttachmentUtil.GetAttachmentTemplate(currentStage.stageTarget.attachment);
         if (attachmentType != null)
         {
-            this.attachmentInstance = Instantiate(attachmentType, targetMesh.transform);
+            this.attachmentInstance = Instantiate(attachmentType, targetWarpMeshInteraction.transform);
             this.attachmentInstance.gameObject.SetActive(false);
         }
 
@@ -210,7 +212,7 @@ public class Gameplay : MonoBehaviour
 
         if (attachmentInstance != null)
         {
-            this.attachmentInstance.transform.position = targetMesh.GetComponent<MeshRenderer>().bounds.center + Vector3.forward;
+            this.attachmentInstance.transform.position = targetWarpMeshInteraction.GetComponent<MeshRenderer>().bounds.center + Vector3.forward;
             this.attachmentInstance.gameObject.SetActive(true);
         }
 
@@ -234,7 +236,7 @@ public class Gameplay : MonoBehaviour
 
             var nextMeshBlock = availableMeshBlocks[i];
             nextMeshBlock.MovementMode = true;
-            nextMeshBlock.GetRigidbody.isKinematic = true;
+            nextMeshBlock.rigidBody.isKinematic = true;
             nextMeshBlock.gameObject.SetActive(true);
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i);
@@ -273,7 +275,7 @@ public class Gameplay : MonoBehaviour
             //    yield return true;
             //}
             //nextMeshBlock.transform.position = nextLaunchPosition;
-            nextMeshBlock.GetRigidbody.isKinematic = false;
+            nextMeshBlock.rigidBody.isKinematic = false;
             nextMeshBlock.ResetStatus();
 
             if (victory) yield break;
@@ -289,7 +291,7 @@ public class Gameplay : MonoBehaviour
             yield return true;
         }
         //all is snuffed
-        if (targetMesh.MeshIgnited == false) StartCoroutine(CoDefeat());
+        if (targetWarpMeshInteraction.MeshIgnited == false) StartCoroutine(CoDefeat());
     }
 
     public void OnStageTargetBurned()
@@ -360,21 +362,21 @@ public class Gameplay : MonoBehaviour
 
         gameover = true;
         explosionParticle.Stop();
-        var explodePos = targetMesh.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
+        var explodePos = targetWarpMeshInteraction.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
         explosionParticle.transform.position = explodePos;
         yield return true;
         explosionParticle.Play();
         fireStarterArea.PlayVictory();
 
         //WAIT FOR THE BURN TO FINISHES
-        while (targetMesh.MeshSnuffRatio < 0.6f) yield return true;
+        while (targetWarpMeshInteraction.MeshSnuffRatio < 0.6f) yield return true;
 
-        confettiParticle.transform.position = targetMesh.transform.position + Vector3.back * 2;
+        confettiParticle.transform.position = targetWarpMeshInteraction.transform.position + Vector3.back * 2;
         confettiParticle.Stop();
         yield return true;
         confettiParticle.Play();
         yield return new WaitForSeconds(1.2f);
-        targetMesh.StartCrumble();
+        targetWarpMeshInteraction.StartCrumble();
 
         yield return new WaitForSeconds(1.5f);
         callbackVictory?.Invoke();
@@ -430,7 +432,7 @@ public class Gameplay : MonoBehaviour
         if (newWaitingForLaunch)
         {
             nextMeshBlock.MovementMode = true;
-            nextMeshBlock.GetRigidbody.isKinematic = true;
+            nextMeshBlock.rigidBody.isKinematic = true;
             dragging = false;
             return;
         }
@@ -459,7 +461,7 @@ public class Gameplay : MonoBehaviour
         }
 
         if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButton(0))
-            nextMeshBlock.GetRigidbody.velocity = (pos - nextMeshBlock.transform.position).normalized * 25;
+            nextMeshBlock.rigidBody.velocity = (pos - nextMeshBlock.transform.position).normalized * 25;
 
         if (dragging && nextMeshBlock != null && waitingForLaunch && Input.GetMouseButtonUp(0))
         {
@@ -469,7 +471,7 @@ public class Gameplay : MonoBehaviour
                 coZoomIn = null;
             }
             nextMeshBlock.transform.localScale = Vector3.one;
-            nextMeshBlock.GetRigidbody.velocity = Vector3.zero;
+            nextMeshBlock.rigidBody.velocity = Vector3.zero;
             waitingForLaunch = false;
             dragging = false;
         }
@@ -545,7 +547,7 @@ public class Gameplay : MonoBehaviour
 
     void UpdateCheckForVictory()
     {
-        if (targetMesh != null && targetMesh.MeshIgnited && victory == false)
+        if (targetWarpMeshInteraction != null && targetWarpMeshInteraction.MeshIgnited && victory == false)
         {
             victory = true;
             StopAllCoroutines();
@@ -563,9 +565,9 @@ public class Gameplay : MonoBehaviour
     void UpdateVisualTarget()
     {
         return;
-        if (targetMesh == null || targetMesh.Crumbling) return;
-        if (targetMesh.MeshSnuffRatio < 0.8f) return;
-        targetMesh.StartCrumble();
+        if (targetWarpMeshInteraction == null || targetWarpMeshInteraction.Crumbling) return;
+        if (targetWarpMeshInteraction.MeshSnuffRatio < 0.8f) return;
+        targetWarpMeshInteraction.StartCrumble();
     }
 
     Vector3 recentNextMeshBlockPosition;

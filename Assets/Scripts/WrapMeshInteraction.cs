@@ -19,8 +19,8 @@ public class WrapMeshInteraction : MonoBehaviour
 
     private const float SNUFF_DURATION = 4f; //Default is 3f
     private const float SPREAD_SPEED = 1f; //Default is 3f
-    private MeshFilter meshFilter;
-    private WrapMesh wrapMesh;
+    public MeshFilter meshFilter;
+    public WrapMesh wrapMesh;
     private List<Vertex> vertices = new List<Vertex>();
     private List<Color> colors;
     private List<int> triangles;
@@ -44,18 +44,13 @@ public class WrapMeshInteraction : MonoBehaviour
     public bool MeshSnuffed => meshSnuffed;
     public bool MeshIgnited => meshIgnited;
     public float MeshSnuffRatio => meshSnuffRatio;
-
-    public MeshFilter MeshFilter => meshFilter;
     public bool IsBurned;
     public VoidEventChannel OnObjectBurnedAction;
     private StageUnderlay underlayModel;
     public bool HasUnderlayModel => underlayModel != null;
 
-    private IEnumerator Start()
+    public void SetUp()
     {
-        this.meshFilter = GetComponent<MeshFilter>();
-        this.wrapMesh = GetComponent<WrapMesh>();
-        yield return true;
         SetupVertices();
         canSpreadTo = spreadByDefault;
 
@@ -112,9 +107,13 @@ public class WrapMeshInteraction : MonoBehaviour
 
     bool applyingColors = false;
     float deltaTime = 0;
+    bool isTurnOffMesh = false;
     private void Update()
     {
-        if (this.canSpreadTo == false) return;
+        if (this.canSpreadTo == false)
+        {
+            return;
+        }
         deltaTime = Time.deltaTime;
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
@@ -125,7 +124,20 @@ public class WrapMeshInteraction : MonoBehaviour
         {
             applyingColors = false;
             this.meshFilter.mesh.SetColors(colors);
+        }else
+        {
+            if (!isTurnOffMesh && IsBurned && IsSpreaded)
+            {
+                isTurnOffMesh = true;
+                List<MeshRenderer> meshRenderers = wrapMesh.childMeshFilter.GetMeshRenderers();
+                foreach (var item in meshRenderers)
+                {
+                    item.enabled = false;
+                }
+            }
         }
+
+
     }
 
     void CheckIgniteMouse()
@@ -152,7 +164,7 @@ public class WrapMeshInteraction : MonoBehaviour
     }
 
     float SnuffDuration => override_snuff_duration > 0 ? override_snuff_duration : SNUFF_DURATION;
-
+    bool IsSpreaded = false;
     void CheckSpreadVertices()
     {
         foreach (var vertex in vertices)
@@ -175,6 +187,7 @@ public class WrapMeshInteraction : MonoBehaviour
                 }
                 this.colors[vertex.index] = c;
                 applyingColors = true;
+                IsSpreaded = true;
             }
         }
     }
@@ -283,10 +296,10 @@ public class WrapMeshInteraction : MonoBehaviour
         if (this.canSpreadTo == false)
             return;
 
-        if (!this.IsBurned)
+        if (!IsBurned)
         {
             OnObjectBurnedAction?.RaiseEvent();
-            this.IsBurned = true;
+            IsBurned = true;
         }
 
         position.z += (transform.position.z - position.z) / 5;

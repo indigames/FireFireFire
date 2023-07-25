@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshCollider), typeof(Rigidbody))]
@@ -8,50 +9,47 @@ public class MeshBlock : MonoBehaviour
     const float AUTO_SLEEP_DURATION = 5f;
     const float BURN_DELAY_DURATION = 0.5f;
 
-    MeshCollider meshCollider;
-    Rigidbody rigidBody;
+    [Header("Root")]
+    public MeshCollider meshCollider;
+    public Rigidbody rigidBody;
     public WrapMesh wrapMesh;
     public WrapMeshInteraction wrapMeshInteraction;
+    [Space]
 
-    private StageItem stageItem;
 
-    private VoidEventChannel OnObjectBurnedEvent;
+    [Header("Events")]
     public IntEventChannel OnScoreAddedEvent;
+
+    [Header("Setting")]
 
     public bool template = true;
     [Range(0, 1)]
     public float drag_rate = 0.25f;
-    float duration = AUTO_SLEEP_DURATION;
-    float burndelay = BURN_DELAY_DURATION;
-    float collision_delay = COLLISION_TRESHOLD;
-
-    public Rigidbody GetRigidbody => GetComponent<Rigidbody>();
-    float baseMass;
-    float baseDrag;
-    float baseAngularDrag;
     public bool movementMode = false;
-    bool collided = false;
+
+    private StageItem stageItem;
+
+    private VoidEventChannel OnObjectBurnedEvent;
+
+    private float duration = AUTO_SLEEP_DURATION;
+    private float burndelay = BURN_DELAY_DURATION;
+    private float collision_delay = COLLISION_TRESHOLD;
+
+    private float baseMass;
+    private float baseDrag;
+    private float baseAngularDrag;
+    private bool collided = false;
 
     // Use this for initialization
-    IEnumerator Start()
+    void Start()
     {
-        meshCollider = GetComponent<MeshCollider>();
-        rigidBody = GetComponent<Rigidbody>();
-
-        yield return true;
-
         baseMass = rigidBody.mass;
         baseDrag = rigidBody.drag;
         baseAngularDrag = rigidBody.angularDrag;
 
         if (HasDefaultCollider() == false) meshCollider.sharedMesh = wrapMesh.colliderMesh;
-        foreach (var decor in meshCollider.GetComponentsInChildren<StageDecor>()) decor.gameObject.SetActive(false);
 
         if (template) gameObject.SetActive(false);
-
-        //NO SHRIKNKING FOR NOW
-        //GetComponentInChildren<WrapMeshInteraction>().onMeshIgnited += StartShrinkage;
-
     }
 
     void OnEnable()
@@ -59,9 +57,10 @@ public class MeshBlock : MonoBehaviour
         if (!OnObjectBurnedEvent)
         {
 
-        OnObjectBurnedEvent = new();
-        wrapMeshInteraction.OnObjectBurnedAction = OnObjectBurnedEvent;
+            OnObjectBurnedEvent = new();
+            wrapMeshInteraction.OnObjectBurnedAction = OnObjectBurnedEvent;
         }
+
         OnObjectBurnedEvent.OnEventRaised += OnObjectBurnedReceived;
     }
 
@@ -102,7 +101,7 @@ public class MeshBlock : MonoBehaviour
 
     public Vector3 GetBoundOffset()
     {
-        var bound = wrapMesh.GetComponent<MeshRenderer>().bounds;
+        var bound = wrapMesh.meshRenderer.bounds;
         return bound.center - transform.position;
     }
 
@@ -160,6 +159,7 @@ public class MeshBlock : MonoBehaviour
             {
                 rigidBody.isKinematic = true;
                 wrapMeshInteraction.canSpreadTo = true;
+
             }
         }
         //if (rigidBody != null && rigidBody.IsSleeping())
@@ -194,8 +194,8 @@ public class MeshBlock : MonoBehaviour
         if (parent == null) parent = transform.parent;
         var result = Instantiate(this, parent);
 
-        var wrap_mesh = result.GetComponentInChildren<WrapMesh>();
-        if (wrap_mesh != null) wrap_mesh.originalTransform = transform;
+
+        if (result.wrapMesh != null) result.wrapMesh.originalTransform = transform;
 
         result.transform.position = position;
         result.template = false;
@@ -203,33 +203,28 @@ public class MeshBlock : MonoBehaviour
         return result;
     }
 
-    public MeshBlock MakeInstanceFromModel(Transform target, Transform parent = null)
+    public MeshBlock MakeInstanceFromModel(StageItem item, Transform parent = null)
     {
+        Transform target = item.transform;
+
         gameObject.name = target.name;
         if (parent == null) parent = transform.parent;
 
         var result = Instantiate(this, parent);
         result.transform.position = target.position;
-
-        var wrap_mesh = result.GetComponentInChildren<WrapMesh>();
-        if (wrap_mesh != null) wrap_mesh.originalTransform = transform;
-
-        target = Instantiate(target);
-        target.gameObject.SetActive(true);
-        target.SetParent(result.transform);
-
         result.template = false;
         result.gameObject.SetActive(true);
-        return result;
-    }
-
-    public MeshBlock MakeInstanceFromModel(StageItem item, Transform parent = null)
-    {
-        var result = MakeInstanceFromModel(item.transform, parent);
-
         result.wrapMeshInteraction.spreadSpeed = item.spreadSpeed;
-        result.stageItem = item;
 
+        if (result.wrapMesh != null) result.wrapMesh.originalTransform = transform;
+
+        StageItem stageItem = Instantiate(item);
+        stageItem.gameObject.gameObject.SetActive(true);
+        stageItem.transform.SetParent(result.transform);
+
+        result.stageItem = stageItem;
+        result.wrapMesh.SetUp(stageItem);
+        result.wrapMeshInteraction.SetUp();
 
         return result;
     }
