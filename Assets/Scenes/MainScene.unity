@@ -281,7 +281,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112625752}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 100
   m_Drag: 0.5
   m_AngularDrag: 2
   m_UseGravity: 1
@@ -1152,7 +1152,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.4, g: 0.6313726, b: 0.9254902, a: 0}
+  m_BackGroundColor: {r: 0.4, g: 0.6313726, b: 0.9254902, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -25248,7 +25248,7 @@ PrefabInstance:
     - target: {fileID: 5021917818127823644, guid: 912e8642cb34f41428a79a2db0fbd460,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 168.50002
+      value: 168.5
       objectReference: {fileID: 0}
     - target: {fileID: 5021917818127823644, guid: 912e8642cb34f41428a79a2db0fbd460,
         type: 3}
@@ -25489,7 +25489,7 @@ PrefabInstance:
     - target: {fileID: 8116407473558849047, guid: 912e8642cb34f41428a79a2db0fbd460,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 168.50002
+      value: 168.5
       objectReference: {fileID: 0}
     - target: {fileID: 8116407473558849047, guid: 912e8642cb34f41428a79a2db0fbd460,
         type: 3}
@@ -25554,7 +25554,7 @@ PrefabInstance:
     - target: {fileID: 3392190547306168842, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -18.720001
+      value: -18.71997
       objectReference: {fileID: 0}
     - target: {fileID: 5411552361855676707, guid: d512687f564e597489eb32297f233d9e,
         type: 3}
