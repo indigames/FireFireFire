@@ -27,7 +27,7 @@ public class MeshBlock : MonoBehaviour
     public float drag_rate = 0.25f;
     public bool movementMode = false;
 
-    private StageItem stageItem;
+    public StageItem stageItem;
 
     private VoidEventChannel OnObjectBurnedEvent;
 

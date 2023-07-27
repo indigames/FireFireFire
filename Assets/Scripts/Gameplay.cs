@@ -52,7 +52,6 @@ public class Gameplay : MonoBehaviour
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
     List<StageObstacle> availableObstacle = new List<StageObstacle>();
     List<MeshBlock> bonusMeshBlocks = new List<MeshBlock>();
-    int nextMeshBlockIndex;
     MeshBlock nextMeshBlock;
     bool newWaitingForLaunch = false;
     bool waitingForLaunch = false;
@@ -67,6 +66,8 @@ public class Gameplay : MonoBehaviour
     public MeshBlock DraggingMeshBlock => dragging && gameover == false ? nextMeshBlock : null;
 
     public int CurrentStageScore;
+    public int RemainingBurnableObjectScore;
+    public int RemainingBurnableObjectCount;
 
     IEnumerator Start()
     {
@@ -129,13 +130,15 @@ public class Gameplay : MonoBehaviour
     }
     void OnGameEnd()
     {
-        OnSendScoreEvent.RaiseEvent(CurrentStageScore);
+        OnSendScoreEvent.RaiseEvent(CurrentStageScore + RemainingBurnableObjectScore);
     }
 
     public void RestartGame(bool isAdWatched, Stage nextStage = null)
     {
         StopAllCoroutines();
         CurrentStageScore = 0;
+        RemainingBurnableObjectCount = 0;
+        RemainingBurnableObjectScore = 0;
 
         if (nextStage)
         {
@@ -202,7 +205,7 @@ public class Gameplay : MonoBehaviour
         {
             StageObstacle stageObstacle = Instantiate(item);
             stageObstacle.transform.SetParent(areaObstacle);
-            
+
 
             availableObstacle.Add(stageObstacle);
         }
@@ -397,8 +400,29 @@ public class Gameplay : MonoBehaviour
         targetWarpMeshInteraction.StartCrumble();
 
         yield return new WaitForSeconds(1.5f);
+        CalculateRemainingBurnableScore();
         callbackVictory?.Invoke();
     }
+
+
+    public void CalculateRemainingBurnableScore()
+    {
+        bool isCountingRemainingMeshBlocks = false;
+        foreach (var item in availableMeshBlocks)
+        {
+            if (!isCountingRemainingMeshBlocks && nextMeshBlock == item)
+            {
+                isCountingRemainingMeshBlocks = true;
+            }
+
+            if (isCountingRemainingMeshBlocks)
+            {
+                RemainingBurnableObjectScore += item.stageItem.info.GetUnusedScore();
+                RemainingBurnableObjectCount++;
+            }
+        }
+    }
+
 
     IEnumerator CoDefeat()
     {

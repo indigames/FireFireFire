@@ -667,6 +667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _score: 18
+  _unusedScore: 50
 --- !u!1 &5745067416765257915
 GameObject:
   m_ObjectHideFlags: 0

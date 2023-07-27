@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _score: 50
+  _unusedScore: 0
 --- !u!114 &3717817473329897112
 MonoBehaviour:
   m_ObjectHideFlags: 0

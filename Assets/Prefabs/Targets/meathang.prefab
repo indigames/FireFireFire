@@ -71,6 +71,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _score: 150
+  _unusedScore: 0
 --- !u!1001 &156008518942297657
 PrefabInstance:
   m_ObjectHideFlags: 0

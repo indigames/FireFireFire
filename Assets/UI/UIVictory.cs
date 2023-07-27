@@ -11,7 +11,10 @@ public class UIVictory : MonoBehaviour
     public GameObject nextBtn;
     // public GameObject adBtn;
     public Text txtScore;
-    
+
+    public Text txtRemainingBlockCount;
+    public Text txtRemainingBlockBonusScore;
+
 
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
@@ -45,7 +48,7 @@ public class UIVictory : MonoBehaviour
     //     }
     // }
     public void Continue()
-    {      
+    {
         SendGameEndEvent();
         StartCoroutine(Hide());
     }
@@ -58,7 +61,7 @@ public class UIVictory : MonoBehaviour
         SendGameEndEvent();
         StartCoroutine(Hide());
     }
-    
+
     public void OnAdsFail()
     {
         StartCoroutine(Hide());
@@ -74,7 +77,10 @@ public class UIVictory : MonoBehaviour
     }
     IEnumerator Show()
     {
-        txtScore.text = "Score: " + gameplay.CurrentStageScore;
+        txtScore.text = "Score: " + (gameplay.CurrentStageScore + gameplay.RemainingBurnableObjectScore);
+        txtRemainingBlockBonusScore.text = "+" + gameplay.RemainingBurnableObjectScore.ToString();
+        txtRemainingBlockCount.text = gameplay.RemainingBurnableObjectCount.ToString();
+
         yield return null;
         nextBtn.SetActive(true);
     }
