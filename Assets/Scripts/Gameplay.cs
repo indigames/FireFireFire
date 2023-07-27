@@ -50,6 +50,7 @@ public class Gameplay : MonoBehaviour
 
     WrapMeshInteraction targetWarpMeshInteraction;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
+    List<StageObstacle> availableObstacle = new List<StageObstacle>();
     List<MeshBlock> bonusMeshBlocks = new List<MeshBlock>();
     int nextMeshBlockIndex;
     MeshBlock nextMeshBlock;
@@ -158,8 +159,13 @@ public class Gameplay : MonoBehaviour
         explosionParticle.Clear();
         foreach (var block in availableMeshBlocks) Destroy(block.gameObject);
         foreach (var bonusBlock in bonusMeshBlocks) Destroy(bonusBlock.gameObject);
+        foreach (var obstacle in availableObstacle)
+        {
+            Destroy(obstacle.gameObject);
+        }
         availableMeshBlocks.Clear();
         bonusMeshBlocks.Clear();
+        availableObstacle.Clear();
         if (targetWarpMeshInteraction != null) Destroy(targetWarpMeshInteraction.gameObject);
         fireStarterArea.Restart();
         if (attachmentInstance != null)
@@ -196,6 +202,9 @@ public class Gameplay : MonoBehaviour
         {
             StageObstacle stageObstacle = Instantiate(item);
             stageObstacle.transform.SetParent(areaObstacle);
+            
+
+            availableObstacle.Add(stageObstacle);
         }
 
         // create the target here
