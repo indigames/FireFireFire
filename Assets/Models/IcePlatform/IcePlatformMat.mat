@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material
+  m_Name: IcePlatformMat
   m_Shader: {fileID: 4800000, guid: 139633224cf45b147b9418a1c83dd8b1, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

@@ -23,14 +23,14 @@ Shader "Unlit/IcePlatform"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float3 normal : NORMAL;
+                float3 normal : NORMAL0;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float3 objNormal: NORMAL;
+                float3 objNormal: NORMAL0;
             };
 
             sampler2D _MainTex;
@@ -43,7 +43,7 @@ Shader "Unlit/IcePlatform"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.objNormal = v.normal;
+                o.objNormal = UnityObjectToWorldNormal(v.normal);
                 return o;
             }
 
@@ -51,7 +51,7 @@ Shader "Unlit/IcePlatform"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                fixed snowPatterm = saturate(i.objNormal.z + _SnowOffset.xxx);
+                fixed snowPatterm = saturate(i.objNormal.y + _SnowOffset.xxx);
                 col = lerp(col,(_SnowColor * snowPatterm), snowPatterm);
                 return col;
             }
