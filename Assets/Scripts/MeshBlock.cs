@@ -248,4 +248,12 @@ public class MeshBlock : MonoBehaviour
             yield return true;
         }
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.transform.CompareTag("StickyObstacle"))
+        {
+            rigidBody.isKinematic = true;
+        }
+    }
 }
