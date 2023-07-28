@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ea9c0f6d339be4645888bf15c9b202c4
+guid: d623f9991d72c734985b52c9a4ebff57
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: backpack
-    second: {fileID: 2100000, guid: 7fb442e4c3032cc4d8b2263e9795348e, type: 2}
+      name: Material.001
+    second: {fileID: 2100000, guid: 9720b515cc66d644eab7e41712b3b4c7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -74,8 +74,8 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 1
-    tangentImportMode: 2
+    normalImportMode: 0
+    tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
