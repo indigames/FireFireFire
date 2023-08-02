@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Shootable
   - StickyObstacle
+  - block
   layers:
   - Default
   - TransparentFX

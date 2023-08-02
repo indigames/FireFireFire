@@ -17,15 +17,15 @@ public abstract class ActivePlatform : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        if (OnGameStartEvent) OnGameStartEvent.OnEventRaised += OnObjectStart;
+        if (OnGameStartEvent) OnGameStartEvent.OnEventRaised += OnObjectActive;
     }
 
     protected virtual void OnDisable()
     {
-        if (OnGameStartEvent) OnGameStartEvent.OnEventRaised -= OnObjectStart;
+        if (OnGameStartEvent) OnGameStartEvent.OnEventRaised -= OnObjectActive;
     }
 
-    protected virtual void OnObjectStart()
+    protected virtual void OnObjectActive()
     {
         StartCoroutine(CoActive());
     }
