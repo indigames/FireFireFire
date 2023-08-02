@@ -7,7 +7,8 @@ public class TriggerPlatformEntry : MonoBehaviour
 {
     public Action OnTriggerActive;
     public Action OnTriggerDeActive;
-    [SerializeField] private string triggerTag;
+    [SerializeField] private string _triggerTag;
+    [SerializeField] private MeshRenderer _meshRenderer;
 
     private HashSet<Transform> _ignoreGameObject;
 
@@ -22,22 +23,29 @@ public class TriggerPlatformEntry : MonoBehaviour
         OnTriggerDeActive = null;
     }
 
+    private bool isTriggered;
     public void ShowTrigger()
     {
-        this.gameObject.SetActive(true);
+        isTriggered = false;
+        _meshRenderer.enabled = true;
     }
 
     public void HideTrigger()
     {
-        this.gameObject.SetActive(false);
+        isTriggered = true;
+        _meshRenderer.enabled = false;
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(triggerTag) && !_ignoreGameObject.Contains(other.transform.parent))
+        if (other.CompareTag(_triggerTag))
         {
+            Debug.Log(isTriggered);
+            if (!_ignoreGameObject.Contains(other.transform.parent) && !isTriggered)
+            {
+                HideTrigger();
+                OnTriggerActive?.Invoke();
+            }
             _ignoreGameObject.Add(other.transform.parent);
-            HideTrigger();
-            OnTriggerActive?.Invoke();
         }
     }
 }
