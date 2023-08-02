@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StickyPlatformMat
+  m_Name: RolatingPlatform
   m_Shader: {fileID: 4800000, guid: 139633224cf45b147b9418a1c83dd8b1, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -78,5 +78,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SnowColor: {r: 1, g: 0.23921567, b: 0.50101423, a: 1}
+    - _SnowColor: {r: 0.30876318, g: 1, b: 0.23921567, a: 1}
   m_BuildTextureStacks: []
