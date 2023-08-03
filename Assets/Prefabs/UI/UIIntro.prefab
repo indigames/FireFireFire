@@ -116,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameplay: {fileID: 0}
   animator: {fileID: 9056495622478548721}
-  gameStartEvent: {fileID: 0}
+  gameStartEvent: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1, type: 2}
 --- !u!1 &118695096781484337
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +182,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!225 &4477467460820288977
 CanvasGroup:
   m_ObjectHideFlags: 0

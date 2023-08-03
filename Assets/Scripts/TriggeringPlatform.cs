@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerPlatform : ActivePlatform
+public class TriggeringPlatform : ActivePlatform
 {
     [Header("Settings")]
     [SerializeField] private float _deActiveTime;
@@ -30,6 +30,7 @@ public class TriggerPlatform : ActivePlatform
     {
         _endActiveTime = Time.time + _deActiveTime;
         SetActiveGameObjects(false);
+
         yield return null;
         while (Time.time < _endActiveTime)
         {

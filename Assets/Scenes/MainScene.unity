@@ -24996,12 +24996,6 @@ PrefabInstance:
       propertyPath: gameplay
       value: 
       objectReference: {fileID: 1288064092}
-    - target: {fileID: 9095351805945783214, guid: b8fc1db03a9a2ff4abeb5f0cbdcd8743,
-        type: 3}
-      propertyPath: gameStartEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8fc1db03a9a2ff4abeb5f0cbdcd8743, type: 3}
 --- !u!33 &2264438488541319651

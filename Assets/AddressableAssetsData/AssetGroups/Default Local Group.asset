@@ -42,7 +42,15 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 74619502ada89714c92b616949d009c3
-    m_Address: Assets/Scenes/SampleScene.unity
+    m_Address: Assets/Scenes/MainScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1606e5908be70574ab61560dcfd37311
+    m_Address: Assets/Prefabs/Obstacles/SwitchTrigger.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 7201d8c75da17aa4b8a29452e5b5f11c
+    m_Address: Assets/Prefabs/Obstacles/MovingPlatform.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
