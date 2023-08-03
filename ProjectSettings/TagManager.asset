@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Shootable
+  - BurnBlock
   - StickyObstacle
-  - block
+  - Shootable
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 765965107872122336}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 6885221570715087591}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

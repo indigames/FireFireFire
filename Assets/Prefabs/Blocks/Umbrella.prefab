@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 4860884733252827142, guid: e65311c720c8dbf44bb1d10f1d0f909b,
         type: 3}
       propertyPath: m_TagString
-      value: block
+      value: BurnBlock
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -8474878589080243706, guid: e65311c720c8dbf44bb1d10f1d0f909b, type: 3}

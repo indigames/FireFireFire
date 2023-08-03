@@ -7,7 +7,7 @@ public class TriggerPlatformEntry : MonoBehaviour
 {
     public Action OnTriggerActive;
     public Action OnTriggerDeActive;
-    [SerializeField] private string _triggerTag;
+    [SerializeField] private string _triggerTag = "";
     [SerializeField] private MeshRenderer _meshRenderer;
 
     private HashSet<Transform> _ignoreGameObject;
@@ -23,7 +23,7 @@ public class TriggerPlatformEntry : MonoBehaviour
         OnTriggerDeActive = null;
     }
 
-    private bool isTriggered;
+    private bool isTriggered = false;
     public void ShowTrigger()
     {
         isTriggered = false;
@@ -37,9 +37,8 @@ public class TriggerPlatformEntry : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(_triggerTag))
+        if (other.transform.CompareTag("BurnBlock"))
         {
-            Debug.Log(isTriggered);
             if (!_ignoreGameObject.Contains(other.transform.parent) && !isTriggered)
             {
                 HideTrigger();

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2085164138700088816}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 7734005216313738558}
   m_Layer: 0
   m_Name: Capsule (2)
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 2263729229966320480}
   m_Layer: 0
   m_Name: Capsule (3)
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 4728811066459914213}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -353,7 +353,7 @@ GameObject:
   - component: {fileID: 926622689050672411}
   m_Layer: 0
   m_Name: Capsule (1)
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

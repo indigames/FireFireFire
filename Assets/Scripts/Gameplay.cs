@@ -606,7 +606,6 @@ public class Gameplay : MonoBehaviour
 
     void UpdateVisualTarget()
     {
-        return;
         if (targetWarpMeshInteraction == null || targetWarpMeshInteraction.Crumbling) return;
         if (targetWarpMeshInteraction.MeshSnuffRatio < 0.8f) return;
         targetWarpMeshInteraction.StartCrumble();

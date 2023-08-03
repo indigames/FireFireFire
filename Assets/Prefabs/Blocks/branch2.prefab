@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9178179193055837396}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 7083094679240846866}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 7773850120475871650}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 7623324972425057815}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: block
+  m_TagString: BurnBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

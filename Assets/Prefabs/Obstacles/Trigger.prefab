@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ef78d86a453e54ea988718614a891e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerTag: block
+  _triggerTag: BurnBlock
   _meshRenderer: {fileID: 4384574746093472699}
 --- !u!33 &626764888827511733
 MeshFilter:
