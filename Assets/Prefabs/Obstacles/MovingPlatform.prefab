@@ -58,9 +58,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa8dfe2a6a743654fa7d492a139a0200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 10
-  _moveTime: 10
   OnGameStartEvent: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1, type: 2}
+  _moveSpeed: 10
+  _moveTime: 900
   _startMovePos: {x: -5, y: 0, z: 0}
   _endMovePos: {x: 5, y: 0, z: 0}
   _finishMoveOffset: 0.2
