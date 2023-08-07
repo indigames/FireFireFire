@@ -9,6 +9,7 @@ public class FirestarterArea : MonoBehaviour
     bool fireEnabled;
 
     public bool FireEnabled => fireEnabled;
+    public float DisableAfter;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +37,7 @@ public class FirestarterArea : MonoBehaviour
     {
         animator.Play("Play", 0, 0);
         fireEnabled = true;
+        _FireDurationLeft = Time.time + DisableAfter;
     }
 
     public void DisableFire()
@@ -44,14 +46,25 @@ public class FirestarterArea : MonoBehaviour
         fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
+    private float _FireDurationLeft;
     IEnumerator CoAutoLit()
     {
         while (true)
         {
             if (fireEnabled)
+            {
+
+                if (Time.time > _FireDurationLeft)
+                {
+                    fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                    yield return null;
+                    continue;
+                }
+                _FireDurationLeft -= Time.deltaTime;
+
                 foreach (var wrapMesh in wrapColliders)
                 {
-                    #pragma warning disable
+#pragma warning disable
                     var collider = wrapMesh.GetComponent<MeshCollider>();
                     if (collider == null) continue;
                     var position = collider.ClosestPoint(transform.position);
@@ -59,6 +72,8 @@ public class FirestarterArea : MonoBehaviour
                     position += Vector3.up * 0.1f;
                     collider.GetComponentInParent<WrapMeshInteraction>().SpreadFromPoint(position);
                 }
+
+            }
             yield return new WaitForSeconds(0.2f);
         }
     }

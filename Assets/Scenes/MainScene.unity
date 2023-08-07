@@ -959,6 +959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 351918127}
   fireParticle: {fileID: 674423878}
+  DisableAfter: 10
 --- !u!33 &351918126
 MeshFilter:
   m_ObjectHideFlags: 0
