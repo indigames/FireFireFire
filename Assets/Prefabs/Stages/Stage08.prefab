@@ -4628,7 +4628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnGameStartEvent: {fileID: 11400000, guid: 8ebc0fad34d871e4a91ec1cb8c158db1, type: 2}
   _moveSpeed: 10
-  _moveTime: 10
+  _moveTime: 900
   _startMovePos: {x: -2.5, y: 0, z: 0}
   _endMovePos: {x: 5, y: 0, z: 0}
   _finishMoveOffset: 0.2
