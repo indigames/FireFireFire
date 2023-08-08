@@ -7,7 +7,11 @@ public class TriggeringPlatform : ActivePlatform
     [Header("Settings")]
     [SerializeField] private float _deActiveTime;
     [SerializeField] private TriggerPlatformEntry triggerPlatformEntry;
-    [SerializeField] private GameObject[] activeGameObjects;
+    [SerializeField] private MeshRenderer[] activeGameObjects;
+    [SerializeField] private Collider[] colliders;
+
+    [SerializeField] private Material GameObjectMatOn;
+    [SerializeField] private Material GameObjectMatOff;
 
     protected override void OnObjectActive()
     {
@@ -44,7 +48,19 @@ public class TriggeringPlatform : ActivePlatform
     {
         foreach (var item in activeGameObjects)
         {
-            item.SetActive(value);
+            if (value)
+            {
+                item.material = GameObjectMatOn;
+            }
+            else
+            {
+                item.material = GameObjectMatOff;
+            }
+        }
+
+        foreach (var item in colliders)
+        {
+            item.enabled = value;
         }
     }
 }
