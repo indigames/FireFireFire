@@ -7,6 +7,12 @@ public class TriggeringPlatform : ActivePlatform
     [Header("Settings")]
     [SerializeField] private float _deActiveTime;
     [SerializeField] private TriggerPlatformEntry triggerPlatformEntry;
+
+    [Space]
+    [SerializeField] private GameObject ImageCountDown;
+    [SerializeField] private TextMesh txtCountDown;
+
+    [Space]
     [SerializeField] private MeshRenderer[] activeGameObjects;
     [SerializeField] private Collider[] colliders;
 
@@ -34,13 +40,15 @@ public class TriggeringPlatform : ActivePlatform
     {
         _endActiveTime = Time.time + _deActiveTime;
         SetActiveGameObjects(false);
-
+        ImageCountDown.SetActive(true);
         yield return null;
         while (Time.time < _endActiveTime)
         {
+            txtCountDown.text = Mathf.FloorToInt(_endActiveTime - Time.time).ToString(); ;
             yield return null;
         }
         triggerPlatformEntry.OnTriggerDeActive?.Invoke();
+        ImageCountDown.SetActive(false);
         SetActiveGameObjects(true);
     }
 

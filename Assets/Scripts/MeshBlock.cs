@@ -6,7 +6,7 @@ using UnityEngine;
 public class MeshBlock : MonoBehaviour
 {
     const float COLLISION_TRESHOLD = 0.5f;
-    const float AUTO_SLEEP_DURATION = 5f;
+    const float AUTO_SLEEP_DURATION = 10f;
     const float BURN_DELAY_DURATION = 0.5f;
 
     [Header("Root")]
