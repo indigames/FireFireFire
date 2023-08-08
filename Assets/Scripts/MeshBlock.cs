@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -187,6 +187,15 @@ public class MeshBlock : MonoBehaviour
         //{
         //    Debug.Log(other);
         //}
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Respawn"))
+        {
+           wrapMeshInteraction.ForceStopFire();
+            this.gameObject.SetActive(false);
+        }
     }
 
     public MeshBlock MakeInstance(Vector3 position, Transform parent = null)

@@ -433,6 +433,10 @@ public class WrapMeshInteraction : MonoBehaviour
             if (i % segment_count == 0) yield return true;
         }
     }
+
+    public void ForceStopFire(){
+        meshSnuffed = true;
+    }
 }
 
 public static class WrapMeshInteractionUtil
