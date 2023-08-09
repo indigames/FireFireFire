@@ -428,7 +428,7 @@ public class Gameplay : MonoBehaviour
     {
         gameover = true;
         fireStarterArea.PlayDefeat();
-        OnSendScoreEvent.RaiseEvent(0);
+        OnSendScoreEvent.RaiseEvent(CurrentStageScore);
         yield return true;
 
         callbackDefeat?.Invoke();

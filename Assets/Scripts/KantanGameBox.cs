@@ -76,7 +76,7 @@ public class KantanGameBox : MonoBehaviour
                 #endif
             }
             else if(mode == Mode.ModeGameEnd){
-                Debug.Log("GameEnd-Unity");
+                Debug.Log("GameEnd-Unity: " + _score);
                 # if !UNITY_EDITOR && UNITY_WEBGL
                 mode = Mode.ModeGameEndWait;
                 _GameEnd(_score);
