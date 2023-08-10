@@ -116,7 +116,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 5935260775560185022}
   _fadeInSpeed: 0.5
+  _fadeInDelay: 0
   _fadeOutSpeed: 3
+  _fadeOutDelay: 0
 --- !u!1 &4672601185912570914
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,11 +481,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 741b400538614734fb3819d7b2a27e4d, type: 3}
-    m_FontSize: 50
+    m_Font: {fileID: 12800000, guid: b36929613cd85da4f8a7e7a2ad1eee8a, type: 3}
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 5
+    m_MinSize: 3
     m_MaxSize: 50
     m_Alignment: 3
     m_AlignByGeometry: 0
