@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5328479735256575196}
   - component: {fileID: 6998990319102851990}
+  - component: {fileID: 3036737322940814432}
   m_Layer: 5
   m_Name: UIStageSelection
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6ae9d1b9648744e831eecc0b498415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GUI: {fileID: 7315522451715047565}
   stagesButton:
   - {fileID: 2777365702105907481}
   - {fileID: 2092338443379414498}
@@ -73,6 +75,25 @@ MonoBehaviour:
   - {fileID: 4684145382587630233, guid: f56a193e27937ae4baa029da7658e9e6, type: 3}
   - {fileID: 4684145382587630233, guid: 431c51c356366e84d81e867dd88b602a, type: 3}
   OnStageSelectEvent: {fileID: 11400000, guid: d9c9e5b3259837646ae85db2df5b75ab, type: 2}
+  PanelInspectEvent: {fileID: 11400000, guid: d078365bd29106442ab5fe509693e53f, type: 2}
+  OnFireShowEvent: {fileID: 11400000, guid: 266b574cc5599794aa723a6dc34c3666, type: 2}
+  OnFireHideEvent: {fileID: 11400000, guid: 665103e814b33394cad5ff5b7b17d1d8, type: 2}
+  _fadeInFadeOutUI: {fileID: 3036737322940814432}
+--- !u!114 &3036737322940814432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5328479735256575197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e7bd1c180012aa4dae43936bf9058be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 8449518208184763479}
+  _fadeInSpeed: 3
+  _fadeOutSpeed: 3
 --- !u!1 &6998699005475812910
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,6 +183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8435618766167656460}
+  - component: {fileID: 8449518208184763479}
   m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
@@ -191,6 +213,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &8449518208184763479
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7315522451715047565}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7964280235275592433
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +278,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7964280235275592433}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

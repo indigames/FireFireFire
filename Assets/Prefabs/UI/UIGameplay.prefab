@@ -633,9 +633,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5876622891314676780}
   - component: {fileID: 3351374153170234024}
-  - component: {fileID: 845532736088213044}
   m_Layer: 5
-  m_Name: Image
+  m_Name: GUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -678,36 +677,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3146272847934657549}
   m_CullTransparentMesh: 0
---- !u!114 &845532736088213044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3146272847934657549}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.09411765}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3180949586779277492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 434659b997f1b074f96bbd06c53e1b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GUI: {fileID: 3146272847934657549}
   gameplay: {fileID: 0}
   itemPreview: {fileID: 7683674102606242608}
   grabIcon: {fileID: 6770579408676402504}
@@ -1073,7 +1043,9 @@ MonoBehaviour:
   textStageFormat: Stage {0}
   _txtScore: {fileID: 5864414942287194934}
   SCORE_UPDATE_DURATION: 0.2
-  OnScoreChangeEvent: {fileID: 11400000, guid: 64ec65f2f005db24fafce7f1d456c997, type: 2}
+  OnScoreChangeEvent: {fileID: 11400000, guid: 6f4f423ab73aa7e40b6d9f319a7c4b52, type: 2}
+  OnPanelInspect: {fileID: 11400000, guid: 9cacf332df81cc44b9bf21084301d11a, type: 2}
+  OnPanelHide: {fileID: 11400000, guid: 4d0ba19a1dd710549846e9d83457fd04, type: 2}
 --- !u!223 &5411552361855676704
 Canvas:
   m_ObjectHideFlags: 0

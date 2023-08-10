@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,34 +7,70 @@ public class UIOverlay : MonoBehaviour
 {
 
     public Gameplay gameplay;
-    public Animator animator;
+
+    [SerializeField] private GameObject GUI;
+    [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
+
+    [SerializeField] private CallBackEventChannel _ShowPanelEvent;
+    [SerializeField] private CallBackEventChannel _HidePanelEvent;
 
     bool firstTime = true;
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        gameplay.callbackRestart += Show;
-        gameplay.callbackWaitForConfirmStart += Hide;
+        gameplay.callbackRestart += OnShowPanelEvent;
+        gameplay.callbackWaitForConfirmStart += OnHidePanelEvent;
 
         yield return new WaitForSeconds(0.2f);
-        Hide();
+        HidePanel();
     }
 
-    void Show()
+    private void OnEnable()
+    {
+        _ShowPanelEvent.OnEventRaised += OnShowPanelReceived;
+        _HidePanelEvent.OnEventRaised += OnHidePanelReceived;
+
+    }
+    void OnDisable()
+    {
+        _ShowPanelEvent.OnEventRaised -= OnShowPanelReceived;
+        _HidePanelEvent.OnEventRaised -= OnHidePanelReceived;
+    }
+
+    private void OnShowPanelReceived(Action callback)
+    {
+
+        ShowPanel();
+        _fadeInFadeOutUI.FadeIn(callback);
+    }
+
+    private void OnHidePanelReceived(Action callback)
+    {
+        Action totalCallBack = HidePanel;
+        totalCallBack += callback;
+        _fadeInFadeOutUI.FadeOut(totalCallBack);
+    }
+
+    private void OnShowPanelEvent()
     {
         if (firstTime)
         {
             firstTime = false;
             return;
         }
-
-        gameObject.SetActive(true);
-
-        animator.Play("Show", 0, 0);
+        ShowPanel();
+        _fadeInFadeOutUI.FadeIn();
     }
-
-    void Hide()
+    void ShowPanel()
     {
-        animator.Play("Hide", 0, 0);
+        GUI.SetActive(true);
+    }
+    private void OnHidePanelEvent()
+    {
+        _fadeInFadeOutUI.FadeOut(HidePanel);
+    }
+    void HidePanel()
+    {
+        GUI.SetActive(false);
     }
 }

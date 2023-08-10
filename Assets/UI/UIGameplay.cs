@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UIGameplay : MonoBehaviour
 {
+    [SerializeField] private GameObject GUI;
     public Gameplay gameplay;
 
     [Space]
@@ -21,15 +22,21 @@ public class UIGameplay : MonoBehaviour
     [Header("Event")]
     [SerializeField] private IntEventChannel OnScoreChangeEvent;
 
+    [SerializeField] private VoidEventChannel OnPanelInspect;
+    [SerializeField] private VoidEventChannel OnPanelHide;
+
     private float _lastScore;
 
     void OnEnable()
     {
+        OnPanelInspect.OnEventRaised += ShowPanel;
+        OnPanelHide.OnEventRaised += HidePanel;
         OnScoreChangeEvent.OnEventRaised += OnScoreChange;
     }
     void OnDisable()
     {
-
+        OnPanelInspect.OnEventRaised -= ShowPanel;
+        OnPanelHide.OnEventRaised -= HidePanel;
         OnScoreChangeEvent.OnEventRaised -= OnScoreChange;
     }
 
@@ -59,6 +66,7 @@ public class UIGameplay : MonoBehaviour
     {
         gameplay.callbackRestart += Restart;
         gameplay.callbackRemainingMeshblock += ResetRemainingCount;
+        HidePanel();
     }
 
     private void Update()
@@ -106,5 +114,15 @@ public class UIGameplay : MonoBehaviour
         //    textRemaining.text = "<color=red>1</color> item remaning";
         //else
         //    textRemaining.text = "No item remaning";
+    }
+
+    private void ShowPanel()
+    {
+        GUI.SetActive(true);
+    }
+
+    private void HidePanel()
+    {
+        GUI.SetActive(false);
     }
 }

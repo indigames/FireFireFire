@@ -5,23 +5,34 @@ using UnityEngine.UI;
 
 public class UIStageSelection : MonoBehaviour
 {
+    [SerializeField] private GameObject GUI;
     [SerializeField] private UIStageItemEntry[] stagesButton;
     [SerializeField] private Stage[] stages;
 
     [Header("Events")]
     [SerializeField] private StageEventChannel OnStageSelectEvent;
+    [SerializeField] private VoidEventChannel PanelInspectEvent;
+
+    [SerializeField] private VoidEventChannel OnFireShowEvent;
+    [SerializeField] private VoidEventChannel OnFireHideEvent;
+
+    [Header("Animations")]
+    [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
 
     private void Awake()
     {
         Init();
     }
-    
+
     void OnEnable()
     {
+        PanelInspectEvent.OnEventRaised += ShowPanelEvent;
         OnStageSelectEvent.OnEventRaised += OnStageSelectedReceived;
+
     }
     void OnDisable()
     {
+        PanelInspectEvent.OnEventRaised -= ShowPanelEvent;
         OnStageSelectEvent.OnEventRaised -= OnStageSelectedReceived;
     }
     public void Init()
@@ -30,20 +41,34 @@ public class UIStageSelection : MonoBehaviour
         {
             stagesButton[i].Init(stages[i]);
         }
+        HidePanel();
     }
 
     private void OnStageSelectedReceived(Stage stage)
     {
-        HidePanel();
+        HidePanelEvent();
+    }
+
+    public void HidePanelEvent()
+    {
+        _fadeInFadeOutUI.FadeOut(HidePanel);
     }
 
     public void HidePanel()
     {
-        this.gameObject.SetActive(false);
+        this.GUI.SetActive(false);
+        OnFireHideEvent.RaiseEvent();
+    }
+
+    public void ShowPanelEvent()
+    {
+        ShowPanel();
+        _fadeInFadeOutUI.FadeIn();
     }
 
     public void ShowPanel()
     {
-        this.gameObject.SetActive(true);
+        this.GUI.SetActive(true);
+        OnFireShowEvent.RaiseEvent();
     }
 }

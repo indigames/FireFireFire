@@ -37,16 +37,19 @@ public class Gameplay : MonoBehaviour
 
     public Camera previewCamera;
     // public List<Stage> ScoreAchivableStages;
+
+    [Header("Events")]
     public VoidEventChannel OnGameEndEvent;
-
     public StageEventChannel OnStageSelectEvent;
-
+    public VoidEventChannel OnUIGamePlayInspect;
     public IntEventChannel OnSendScoreEvent;
     public IntEventChannel OnScoreAddedEvent;
-
     public IntEventChannel OnUIScoreAddedEvent;
-
     public VoidEventChannel OnStageTargetBurnedEvent;
+
+    public CallBackEventChannel OnOverlayShowEvent;
+    public CallBackEventChannel OnOverlayHideEvent;
+    [Space]
 
     WrapMeshInteraction targetWarpMeshInteraction;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
@@ -95,7 +98,17 @@ public class Gameplay : MonoBehaviour
 
     private void OnStageSelectReceived(Stage stage)
     {
-        RestartGame(false, stage);
+        if (stage)
+        {
+            this.currentStage = stage;
+        }
+        OnOverlayShowEvent.RaiseEvent(PrepareGamePlay);
+    }
+
+    private void PrepareGamePlay()
+    {
+        RestartGame(false);
+        OnUIGamePlayInspect.RaiseEvent();
     }
 
     private void Awake()
@@ -133,17 +146,12 @@ public class Gameplay : MonoBehaviour
         OnSendScoreEvent.RaiseEvent(CurrentStageScore + RemainingBurnableObjectScore);
     }
 
-    public void RestartGame(bool isAdWatched, Stage nextStage = null)
+    public void RestartGame(bool isAdWatched)
     {
         StopAllCoroutines();
         CurrentStageScore = 0;
         RemainingBurnableObjectCount = 0;
         RemainingBurnableObjectScore = 0;
-
-        if (nextStage)
-        {
-            currentStage = nextStage;
-        }
 
         callbackRestart?.Invoke();
         StartCoroutine(CoGameplay(isAdWatched));
@@ -177,6 +185,8 @@ public class Gameplay : MonoBehaviour
             attachmentInstance = null;
         }
 
+        yield return null;
+
         // create new meshblocks here
         var mass = baseMeshBlock.rigidBody.mass;
 
@@ -198,6 +208,7 @@ public class Gameplay : MonoBehaviour
 
             availableMeshBlocks.Add(newMeshBlock);
         }
+        yield return null;
 
         // crete the obstacle here
         List<StageObstacle> stageObstacles = (currentStage.StageObstacles);
@@ -209,6 +220,8 @@ public class Gameplay : MonoBehaviour
 
             availableObstacle.Add(stageObstacle);
         }
+
+        yield return null;
 
         // create the target here
         WrapMesh targetWrapMesh = baseWrapMesh.MakeInstanceFromModel(currentStage.stageTarget);
@@ -228,8 +241,7 @@ public class Gameplay : MonoBehaviour
             this.attachmentInstance.gameObject.SetActive(false);
         }
 
-        yield return true;
-        yield return true;
+        yield return null;
 
         if (attachmentInstance != null)
         {
@@ -243,6 +255,8 @@ public class Gameplay : MonoBehaviour
             meshBlock.transform.position = areaPreview.position - meshBlock.GetBoundOffset();
             meshBlock.gameObject.SetActive(false);
         }
+
+        OnOverlayHideEvent.RaiseEvent(null);
 
         StartCoroutine(CoCheckDefeat());
 
