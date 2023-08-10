@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 1804204972923319570}
   - component: {fileID: 1804204972923319568}
   - component: {fileID: 3147921380449634757}
+  - component: {fileID: 8246333933540717069}
   m_Layer: 5
   m_Name: UIHelp
   m_TagString: Untagged
@@ -292,6 +293,24 @@ MonoBehaviour:
   OnPanelHideEvent: {fileID: 11400000, guid: 2cea97c52e7bcb5408128082b97f4908, type: 2}
   UIGamePlayInspect: {fileID: 11400000, guid: 9cacf332df81cc44b9bf21084301d11a, type: 2}
   UIGamePlayHide: {fileID: 11400000, guid: 4d0ba19a1dd710549846e9d83457fd04, type: 2}
+  _fadeInFadeOutUI: {fileID: 8246333933540717069}
+--- !u!114 &8246333933540717069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804204972923319598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e7bd1c180012aa4dae43936bf9058be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 2416357532832784788}
+  _fadeInSpeed: 2
+  _fadeInDelay: 0
+  _fadeOutSpeed: 2
+  _fadeOutDelay: 0
 --- !u!1 &2000234574792765364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,6 +1103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8209627541485382941}
+  - component: {fileID: 2416357532832784788}
   m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
@@ -1115,3 +1135,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2416357532832784788
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8145827049294506679}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

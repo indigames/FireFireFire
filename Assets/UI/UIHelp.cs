@@ -19,14 +19,17 @@ public class UIHelp : MonoBehaviour
     [SerializeField] private VoidEventChannel UIGamePlayInspect;
     [SerializeField] private VoidEventChannel UIGamePlayHide;
 
+    [Header("Animation")]
+    [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
+
     private void OnEnable()
     {
-        OnPanelInspectEvent.OnEventRaised += ShowPanel;
+        OnPanelInspectEvent.OnEventRaised += OnShowPanelEvent;
     }
 
     void OnDisable()
     {
-        OnPanelInspectEvent.OnEventRaised -= ShowPanel;
+        OnPanelInspectEvent.OnEventRaised -= OnShowPanelEvent;
     }
 
 
@@ -45,7 +48,18 @@ public class UIHelp : MonoBehaviour
 
 
         btnNext.onClick.RemoveAllListeners();
-        btnNext.onClick.AddListener(HidePanel);
+        btnNext.onClick.AddListener(OnHidePanelEvent);
+    }
+
+    private void OnShowPanelEvent()
+    {
+        ShowPanel();
+        _fadeInFadeOutUI.FadeIn();
+    }
+
+    private void OnHidePanelEvent()
+    {
+        _fadeInFadeOutUI.FadeOut(HidePanel);
     }
 
     private void ShowPanel()
