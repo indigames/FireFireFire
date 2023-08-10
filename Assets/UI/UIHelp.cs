@@ -42,7 +42,7 @@ public class UIHelp : MonoBehaviour
     {
         FirstTutorial.SetActive(false);
         SecondTutorial.SetActive(true);
-        TutorialModel.SetActive(true);
+
 
         btnNext.onClick.RemoveAllListeners();
         btnNext.onClick.AddListener(HidePanel);
@@ -52,6 +52,7 @@ public class UIHelp : MonoBehaviour
     {
         GUI.SetActive(true);
         ShowFirstTutorial();
+        TutorialModel.SetActive(true);
         UIGamePlayInspect.RaiseEvent();
     }
 
