@@ -47,6 +47,7 @@ public class FirestarterArea : MonoBehaviour
 
     public void DisableFire()
     {
+        fireEnabled = false;
         fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
@@ -61,7 +62,7 @@ public class FirestarterArea : MonoBehaviour
 
                 if (Time.time > _FireDurationLeft && !isPauseGamePlay)
                 {
-                    fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                    DisableFire();
                     yield return null;
                     continue;
                 }

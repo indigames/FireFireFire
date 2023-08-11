@@ -296,10 +296,11 @@ public class Gameplay : MonoBehaviour
 
         OnOverlayHideEvent.RaiseEvent(null);
 
-        StartCoroutine(CoCheckDefeat());
-        StartCoroutine(CoCheckForVictory());
 
         yield return CoWaitForStart();
+        
+        StartCoroutine(CoCheckDefeat());
+        StartCoroutine(CoCheckForVictory());
 
         if (isAdWatched)
             yield return SpawnBonusWoods();
@@ -323,7 +324,7 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
-            
+
             yield return new WaitForSeconds(0.1f);
             nextMeshBlock.MovementMode = false;
             nextMeshBlock.transform.localScale = Vector3.one;
@@ -387,30 +388,37 @@ public class Gameplay : MonoBehaviour
         yield return new WaitForSeconds(1.25f);
     }
 
-    bool isForceQuit;
     IEnumerator CoCheckDefeat()
     {
         while (true)
         {
-            if (isForceQuit)
-            {
-                break;
-            }
+            // check victory
+            if (victory) yield break;
 
+            // check fire still burning
             if (fireStarterArea.FireEnabled)
             {
-                yield return true;
+                yield return null;
                 continue;
             }
 
-            if (victory) yield break;
+            bool isFailLevel = true;
+            foreach (var meshBlock in availableMeshBlocks)
+            {
+                if (!meshBlock.MeshIgnited)
+                {
+                    continue;
+                }
 
-            bool burning = false;
-            foreach (var meshBlock in availableMeshBlocks) if (meshBlock.MeshIgnited && meshBlock.MeshSnuffed == false) burning = true;
+                if (!meshBlock.MeshSnuffed)
+                {
+                    isFailLevel = false;
+                    break;
+                }
+            }
 
-            //all is snuffed
-            if (burning == false) break;
-            yield return new WaitForSeconds(0.1f);
+            if (isFailLevel) break;
+            yield return new WaitForSeconds(0.2f);
         }
 
         OnGameEnd();
