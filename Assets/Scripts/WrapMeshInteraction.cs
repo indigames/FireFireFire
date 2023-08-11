@@ -49,6 +49,23 @@ public class WrapMeshInteraction : MonoBehaviour
     private StageUnderlay underlayModel;
     public bool HasUnderlayModel => underlayModel != null;
 
+    [SerializeField] private BoolEventChannel OnPauseGamePlayChange;
+    private bool _isPauseGamePlay;
+
+    private void OnEnable()
+    {
+        OnPauseGamePlayChange.OnEventRaised += OnPauseGamePlayReceived;
+    }
+
+    private void OnPauseGamePlayReceived(bool value)
+    {
+        _isPauseGamePlay = value;
+    }
+
+    void OnDisable()
+    {
+        OnPauseGamePlayChange.OnEventRaised -= OnPauseGamePlayReceived;
+    }
     public void SetUp()
     {
         SetupVertices();
@@ -110,21 +127,21 @@ public class WrapMeshInteraction : MonoBehaviour
     bool isTurnOffMesh = false;
     private void Update()
     {
-        if (this.canSpreadTo == false)
+        if (this.canSpreadTo == false || _isPauseGamePlay)
         {
             return;
         }
         deltaTime = Time.deltaTime;
         if (deltaTime > 0.1f) deltaTime = 0.1f;
 
-        //CheckIgniteMouse();
         CheckSpreadVertices();
 
         if (applyingColors)
         {
             applyingColors = false;
             this.meshFilter.mesh.SetColors(colors);
-        }else
+        }
+        else
         {
             if (!isTurnOffMesh && IsBurned && IsSpreaded)
             {
@@ -434,7 +451,8 @@ public class WrapMeshInteraction : MonoBehaviour
         }
     }
 
-    public void ForceStopFire(){
+    public void ForceStopFire()
+    {
         meshSnuffed = true;
     }
 }

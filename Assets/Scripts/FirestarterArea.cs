@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,14 +12,23 @@ public class FirestarterArea : MonoBehaviour
     public bool FireEnabled => fireEnabled;
     public float DisableAfter;
 
+    [SerializeField] private BoolEventChannel _onPauseGamePlayChange;
+
     private void OnDisable()
     {
         StopAllCoroutines();
+        _onPauseGamePlayChange.OnEventRaised -= OnPauseGamePlayReceived;
     }
 
     private void OnEnable()
     {
         StartCoroutine(CoAutoLit());
+        _onPauseGamePlayChange.OnEventRaised += OnPauseGamePlayReceived;
+    }
+
+    private void OnPauseGamePlayReceived(bool value)
+    {
+        isPauseGamePlay = value;
     }
 
     public void Restart()
@@ -41,6 +51,7 @@ public class FirestarterArea : MonoBehaviour
     }
 
     private float _FireDurationLeft;
+    private bool isPauseGamePlay;
     IEnumerator CoAutoLit()
     {
         while (true)
@@ -48,7 +59,7 @@ public class FirestarterArea : MonoBehaviour
             if (fireEnabled)
             {
 
-                if (Time.time > _FireDurationLeft)
+                if (Time.time > _FireDurationLeft && !isPauseGamePlay)
                 {
                     fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
                     yield return null;

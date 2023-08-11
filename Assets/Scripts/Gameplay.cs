@@ -178,11 +178,8 @@ public class Gameplay : MonoBehaviour
         StartCoroutine(CoGameplay(isAdWatched));
     }
 
-    IEnumerator CoGameplay(bool isAdWatched)
+    private void ResetGamePlay()
     {
-        //UI DELAY
-        yield return new WaitForSeconds(0.5f);
-
         snuffingFirestarter = false;
         gameover = false;
         victory = false;
@@ -205,12 +202,11 @@ public class Gameplay : MonoBehaviour
             Destroy(attachmentInstance);
             attachmentInstance = null;
         }
-
-        yield return null;
-
+    }
+    private void InitMeshBlock()
+    {
         // create new meshblocks here
         var mass = baseMeshBlock.rigidBody.mass;
-
         int totalItemUsing = UnityEngine.Random.Range(currentStage.ItemUseMinMax.x, currentStage.ItemUseMinMax.y + 1);
         List<StageItem> totalItems = new(currentStage.stageItems);
 
@@ -229,8 +225,10 @@ public class Gameplay : MonoBehaviour
 
             availableMeshBlocks.Add(newMeshBlock);
         }
-        yield return null;
+    }
 
+    private void InitObstacle()
+    {
         // crete the obstacle here
         List<StageObstacle> stageObstacles = (currentStage.StageObstacles);
         foreach (var item in stageObstacles)
@@ -241,9 +239,10 @@ public class Gameplay : MonoBehaviour
 
             availableObstacle.Add(stageObstacle);
         }
+    }
 
-        yield return null;
-
+    private void InitTarget()
+    {
         // create the target here
         WrapMesh targetWrapMesh = baseWrapMesh.MakeInstanceFromModel(currentStage.stageTarget);
         targetWarpMeshInteraction = targetWrapMesh.wrapMeshInteraction;
@@ -262,13 +261,31 @@ public class Gameplay : MonoBehaviour
             this.attachmentInstance.gameObject.SetActive(false);
         }
 
-        yield return null;
-
         if (attachmentInstance != null)
         {
             this.attachmentInstance.transform.position = targetWarpMeshInteraction.GetComponent<MeshRenderer>().bounds.center + Vector3.forward;
             this.attachmentInstance.gameObject.SetActive(true);
         }
+    }
+    IEnumerator CoGameplay(bool isAdWatched)
+    {
+        //UI DELAY
+        yield return new WaitForSeconds(0.5f);
+
+        ResetGamePlay();
+
+        yield return null;
+        InitMeshBlock();
+
+        yield return null;
+
+        InitObstacle();
+
+        yield return null;
+
+        InitTarget();
+
+        yield return null;
 
         crumbleParticle.Clear();
         foreach (var meshBlock in availableMeshBlocks)
@@ -289,7 +306,6 @@ public class Gameplay : MonoBehaviour
 
         for (var i = 0; i < availableMeshBlocks.Count; i++)
         {
-            //if (i < availableMeshBlocks.Count - 1) availableMeshBlocks[i + 1].gameObject.SetActive(true);44
 
             var nextMeshBlock = availableMeshBlocks[i];
             nextMeshBlock.MovementMode = true;
@@ -297,15 +313,6 @@ public class Gameplay : MonoBehaviour
             nextMeshBlock.gameObject.SetActive(true);
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i);
-
-            //for (var dt = 0f; dt < 1; dt += Time.deltaTime / 0.25f)
-            //{
-            //    nextMeshBlock.transform.position = Vector3.Lerp(new Vector3(0, 22, -2), new Vector3(0, 20, 0), dt);
-            //    nextMeshBlock.transform.localScale = Vector3.Lerp(new Vector3(2, 2, 2), new Vector3(1, 1, 1), dt);
-            //    yield return true;
-            //}
-            //nextMeshBlock.transform.position = new Vector3(0, 20, 0);
-            //nextMeshBlock.transform.localScale = Vector3.one;
 
             this.nextMeshBlock = nextMeshBlock;
             nextMeshBlock.MovementMode = false;
@@ -316,27 +323,22 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
+
+            
             yield return new WaitForSeconds(0.1f);
             nextMeshBlock.MovementMode = false;
             nextMeshBlock.transform.localScale = Vector3.one;
 
             callbackRemainingMeshblock?.Invoke(availableMeshBlocks.Count - i - 1);
 
-            //StartCoroutine(CoSnuffFirestarter());
             if (victory) yield break;
 
-            //var fromLaunchPosition = nextMeshBlock.transform.position;
-            //for (var dt = 0f; dt < 1; dt += Time.deltaTime / 0.15f)
-            //{
-            //    nextMeshBlock.transform.position = Vector3.Lerp(fromLaunchPosition, nextLaunchPosition, dt);
-            //    yield return true;
-            //}
-            //nextMeshBlock.transform.position = nextLaunchPosition;
             nextMeshBlock.rigidBody.isKinematic = false;
             nextMeshBlock.ResetStatus();
 
             if (victory) yield break;
         }
+
         yield return new WaitForSeconds(3);
 
         bool allSnuffed = false;

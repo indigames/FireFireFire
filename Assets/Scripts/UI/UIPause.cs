@@ -22,6 +22,8 @@ public class UIPause : MonoBehaviour
     [SerializeField] private VoidEventChannel _onUIStageSelectInspect;
     [SerializeField] private VoidEventChannel _onUIGamePlayHide;
 
+    [SerializeField] private BoolEventChannel _onPauseGamePlayChange;
+
     [Header("Animations")]
     [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
 
@@ -72,7 +74,7 @@ public class UIPause : MonoBehaviour
     }
     private void ShowPanel()
     {
-        Time.timeScale = 0;
+        _onPauseGamePlayChange.RaiseEvent(true);
         this.GUI.SetActive(true);
     }
 
@@ -84,7 +86,7 @@ public class UIPause : MonoBehaviour
     }
     private void HidePanel()
     {
-        Time.timeScale = 1;
+        _onPauseGamePlayChange.RaiseEvent(false);
         this.GUI.SetActive(false);
     }
 }

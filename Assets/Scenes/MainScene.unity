@@ -960,6 +960,8 @@ MonoBehaviour:
   animator: {fileID: 351918127}
   fireParticle: {fileID: 674423878}
   DisableAfter: 10
+  _onPauseGamePlayChange: {fileID: 11400000, guid: 7ce6069b5b38c914fb5b6d2c55839086,
+    type: 2}
 --- !u!33 &351918126
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2417,6 +2419,8 @@ MonoBehaviour:
   spreadSpeed: 4
   IsBurned: 0
   OnObjectBurnedAction: {fileID: 0}
+  OnPauseGamePlayChange: {fileID: 11400000, guid: 7ce6069b5b38c914fb5b6d2c55839086,
+    type: 2}
   crumbleParticle: {fileID: 1970152933}
 --- !u!114 &896245053
 MonoBehaviour:
@@ -8033,6 +8037,8 @@ MonoBehaviour:
   spreadSpeed: 4.97
   IsBurned: 0
   OnObjectBurnedAction: {fileID: 0}
+  OnPauseGamePlayChange: {fileID: 11400000, guid: 7ce6069b5b38c914fb5b6d2c55839086,
+    type: 2}
   crumbleParticle: {fileID: 0}
 --- !u!114 &1091334395
 MonoBehaviour:
@@ -14068,6 +14074,8 @@ MonoBehaviour:
   spreadSpeed: 4
   IsBurned: 0
   OnObjectBurnedAction: {fileID: 0}
+  OnPauseGamePlayChange: {fileID: 11400000, guid: 7ce6069b5b38c914fb5b6d2c55839086,
+    type: 2}
   crumbleParticle: {fileID: 1970152933}
 --- !u!114 &1770925310
 MonoBehaviour:
@@ -25663,6 +25671,12 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.5882353
       objectReference: {fileID: 0}
+    - target: {fileID: 7018143370696529628, guid: 2989ee1635cf6e8449774291d58c7350,
+        type: 3}
+      propertyPath: _onPauseGamePlayChange
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ce6069b5b38c914fb5b6d2c55839086,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2989ee1635cf6e8449774291d58c7350, type: 3}
 --- !u!1001 &4245943304682905236
