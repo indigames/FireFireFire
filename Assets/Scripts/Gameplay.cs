@@ -654,7 +654,6 @@ public class Gameplay : MonoBehaviour
     private void OnGameEnd()
     {
         StopAllCoroutines();
-        Debug.Log("HideGameplayUI");
         OnUIGamePlayHide.RaiseEvent();
         fireStarterArea.DisableFire();
     }
