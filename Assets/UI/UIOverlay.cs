@@ -39,7 +39,6 @@ public class UIOverlay : MonoBehaviour
 
     private void OnShowPanelReceived(Action callback)
     {
-
         ShowPanel();
         _fadeInFadeOutUI.FadeIn(callback);
     }

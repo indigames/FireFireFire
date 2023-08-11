@@ -11,11 +11,6 @@ public class FirestarterArea : MonoBehaviour
     public bool FireEnabled => fireEnabled;
     public float DisableAfter;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
     private void OnDisable()
     {
         StopAllCoroutines();
@@ -42,7 +37,6 @@ public class FirestarterArea : MonoBehaviour
 
     public void DisableFire()
     {
-        fireEnabled = false;
         fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 

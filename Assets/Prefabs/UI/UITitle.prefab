@@ -115,9 +115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 5935260775560185022}
-  _fadeInSpeed: 0.5
+  _fadeInSpeed: 1
   _fadeInDelay: 0
-  _fadeOutSpeed: 3
+  _fadeOutSpeed: 5
   _fadeOutDelay: 0
 --- !u!1 &4672601185912570914
 GameObject:

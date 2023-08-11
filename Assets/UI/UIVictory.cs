@@ -6,38 +6,55 @@ using static KantanManager;
 
 public class UIVictory : MonoBehaviour
 {
-    public Gameplay gameplay;
-    public Animator anim;
-    public GameObject nextBtn;
-    // public GameObject adBtn;
-    public Text txtScore;
+    [SerializeField] private GameObject GUI;
 
+    public Gameplay gameplay;
+    public Button btnNext;
+
+
+    [Space]
+    public Text txtScore;
     public Text txtRemainingBlockCount;
     public Text txtRemainingBlockBonusScore;
 
-
+    [Header("Events")]
     public VoidEventChannel ShowVictoryAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
     public VoidEventChannel gameEndEvent;
+    public VoidEventChannel UITitleInspectEvent;
+
+    [Space]
+    [SerializeField] private VoidEventChannel PanelInspectEvent;
+    [SerializeField] private CallBackEventChannel PanelHideEvent;
+
+    [Header("Animation")]
+    [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
+
     AdMode adMode = AdMode.NoAd;
     // Start is called before the first frame update
     void Start()
     {
-        gameplay.callbackVictory += () => gameObject.SetActive(true);
-        gameObject.SetActive(false);
-
+        Hide();
     }
     private void OnEnable()
     {
-        nextBtn.SetActive(false);
-        StartCoroutine(Show());
         if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
+
+        PanelHideEvent.OnEventRaised += OnPanelHideEvent;
+        PanelInspectEvent.OnEventRaised += OnPanelInspectEvent;
+
+        btnNext.onClick.AddListener(OnNext);
     }
     private void OnDisable()
     {
         if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised -= OnShowRewardAds;
+
+        PanelHideEvent.OnEventRaised -= OnPanelHideEvent;
+        PanelInspectEvent.OnEventRaised -= OnPanelInspectEvent;
+
+        btnNext.onClick.RemoveAllListeners();
     }
     // private void Update()
     // {
@@ -47,10 +64,10 @@ public class UIVictory : MonoBehaviour
     //         adMode = AdMode.ShowAd;
     //     }
     // }
-    public void Continue()
+    public void OnNext()
     {
         SendGameEndEvent();
-        StartCoroutine(Hide());
+        OnPanelHideEvent(ShowUiTitle);
     }
     public void ShowVictoryAds()
     {
@@ -59,29 +76,45 @@ public class UIVictory : MonoBehaviour
     public void OnShowRewardAds(bool isSuccess)
     {
         SendGameEndEvent();
-        StartCoroutine(Hide());
+        OnPanelHideEvent(ShowUiTitle);
+    }
+
+    private void ShowUiTitle()
+    {
+        UITitleInspectEvent.RaiseEvent();
     }
 
     public void OnAdsFail()
     {
-        StartCoroutine(Hide());
+        OnPanelHideEvent();
     }
     public void SendGameEndEvent()
     {
         gameEndEvent.RaiseEvent();
     }
-    IEnumerator Hide()
+
+    private void OnPanelHideEvent(System.Action callback = null)
     {
-        yield return true;
-        anim.Play("Hide");
+        System.Action totalCallBack = Hide;
+        totalCallBack += callback;
+        _fadeInFadeOutUI.FadeOut(totalCallBack);
     }
-    IEnumerator Show()
+    private void Hide()
+    {
+        GUI.SetActive(false);
+    }
+
+    private void OnPanelInspectEvent()
+    {
+        Show();
+        _fadeInFadeOutUI.FadeIn();
+        Debug.Log("ShowVictory UI");
+    }
+    private void Show()
     {
         txtScore.text = "Score: " + (gameplay.CurrentStageScore + gameplay.RemainingBurnableObjectScore);
         txtRemainingBlockBonusScore.text = "+" + gameplay.RemainingBurnableObjectScore.ToString();
         txtRemainingBlockCount.text = gameplay.RemainingBurnableObjectCount.ToString();
-
-        yield return null;
-        nextBtn.SetActive(true);
+        GUI.SetActive(true);
     }
 }

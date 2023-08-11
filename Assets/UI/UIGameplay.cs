@@ -19,11 +19,16 @@ public class UIGameplay : MonoBehaviour
     [SerializeField] private Text _txtScore;
     [SerializeField] private float SCORE_UPDATE_DURATION = 0.2f;
 
+    [SerializeField] private Button _btnPause;
+
     [Header("Event")]
     [SerializeField] private IntEventChannel OnScoreChangeEvent;
 
     [SerializeField] private VoidEventChannel OnPanelInspect;
     [SerializeField] private VoidEventChannel OnPanelHide;
+
+    [Space]
+    [SerializeField] private VoidEventChannel OnUIPauseInspect;
 
     private float _lastScore;
 
@@ -32,12 +37,21 @@ public class UIGameplay : MonoBehaviour
         OnPanelInspect.OnEventRaised += ShowPanel;
         OnPanelHide.OnEventRaised += HidePanel;
         OnScoreChangeEvent.OnEventRaised += OnScoreChange;
+
+        _btnPause.onClick.AddListener(OnPause);
     }
+
     void OnDisable()
     {
         OnPanelInspect.OnEventRaised -= ShowPanel;
         OnPanelHide.OnEventRaised -= HidePanel;
         OnScoreChangeEvent.OnEventRaised -= OnScoreChange;
+
+        _btnPause.onClick.RemoveAllListeners();
+    }
+    private void OnPause()
+    {
+        OnUIPauseInspect.RaiseEvent();
     }
 
     private void OnScoreChange(int value)

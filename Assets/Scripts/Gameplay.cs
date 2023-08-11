@@ -10,8 +10,6 @@ public class Gameplay : MonoBehaviour
 
     public Action callbackRestart;
     public Action<int> callbackRemainingMeshblock;
-    public Action callbackVictory;
-    public Action callbackDefeat;
 
     public StageCollection stageCollection;
     [Space]
@@ -42,14 +40,20 @@ public class Gameplay : MonoBehaviour
     public VoidEventChannel OnGameEndEvent;
     public StageEventChannel OnStageSelectEvent;
     public VoidEventChannel OnUIGamePlayInspect;
+    public VoidEventChannel OnUIGamePlayHide;
     public IntEventChannel OnSendScoreEvent;
     public IntEventChannel OnScoreAddedEvent;
     public IntEventChannel OnUIScoreAddedEvent;
     public VoidEventChannel OnStageTargetBurnedEvent;
 
+    public VoidEventChannel OnGamePlayRetryEvent;
+    public VoidEventChannel OnGamePlayRetireEvent;
+
     public CallBackEventChannel OnOverlayShowEvent;
     public CallBackEventChannel OnOverlayHideEvent;
     [Space]
+    [SerializeField] private VoidEventChannel OnUIVictoryInspect;
+    [SerializeField] private VoidEventChannel OnUIDefeatInspect;
 
     WrapMeshInteraction targetWarpMeshInteraction;
     List<MeshBlock> availableMeshBlocks = new List<MeshBlock>();
@@ -82,18 +86,36 @@ public class Gameplay : MonoBehaviour
     }
     private void OnEnable()
     {
-        OnGameEndEvent.OnEventRaised += OnGameEnd;
+        OnGameEndEvent.OnEventRaised += OnGameEndReceived;
         OnScoreAddedEvent.OnEventRaised += OnScoreAddReceived;
         OnStageTargetBurnedEvent.OnEventRaised += OnStageTargetBurned;
+
         OnStageSelectEvent.OnEventRaised += OnStageSelectReceived;
+        OnGamePlayRetryEvent.OnEventRaised += OnGamePlayRetryReceived;
+        OnGamePlayRetireEvent.OnEventRaised += OnGamePlayRetireReceived;
     }
+
+
+
     private void OnDisable()
     {
-        OnGameEndEvent.OnEventRaised -= OnGameEnd;
+        OnGameEndEvent.OnEventRaised -= OnGameEndReceived;
         OnScoreAddedEvent.OnEventRaised -= OnScoreAddReceived;
         OnStageTargetBurnedEvent.OnEventRaised -= OnStageTargetBurned;
 
         OnStageSelectEvent.OnEventRaised -= OnStageSelectReceived;
+        OnGamePlayRetryEvent.OnEventRaised -= OnGamePlayRetryReceived;
+        OnGamePlayRetireEvent.OnEventRaised -= OnGamePlayRetireReceived;
+    }
+
+    private void OnGamePlayRetireReceived()
+    {
+        OnGameEnd();
+    }
+
+    private void OnGamePlayRetryReceived()
+    {
+        OnStageSelectEvent.RaiseEvent(currentStage);
     }
 
     private void OnStageSelectReceived(Stage stage)
@@ -119,7 +141,6 @@ public class Gameplay : MonoBehaviour
     {
         //UpdateLaunch();
         UpdateDrag();
-        UpdateCheckForVictory();
         UpdateVisualTarget();
     }
     IEnumerator SpawnBonusWoods()
@@ -141,7 +162,7 @@ public class Gameplay : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
         }
     }
-    void OnGameEnd()
+    void OnGameEndReceived()
     {
         OnSendScoreEvent.RaiseEvent(CurrentStageScore + RemainingBurnableObjectScore);
     }
@@ -259,6 +280,7 @@ public class Gameplay : MonoBehaviour
         OnOverlayHideEvent.RaiseEvent(null);
 
         StartCoroutine(CoCheckDefeat());
+        StartCoroutine(CoCheckForVictory());
 
         yield return CoWaitForStart();
 
@@ -326,7 +348,11 @@ public class Gameplay : MonoBehaviour
             yield return true;
         }
         //all is snuffed
-        if (targetWarpMeshInteraction.MeshIgnited == false) StartCoroutine(CoDefeat());
+        if (targetWarpMeshInteraction.MeshIgnited == false)
+        {
+            OnGameEnd();
+            StartCoroutine(CoDefeat());
+        }
     }
 
     public void OnStageTargetBurned()
@@ -358,10 +384,16 @@ public class Gameplay : MonoBehaviour
         yield return new WaitForSeconds(1.25f);
     }
 
+    bool isForceQuit;
     IEnumerator CoCheckDefeat()
     {
         while (true)
         {
+            if (isForceQuit)
+            {
+                break;
+            }
+
             if (fireStarterArea.FireEnabled)
             {
                 yield return true;
@@ -378,7 +410,7 @@ public class Gameplay : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        StopAllCoroutines();
+        OnGameEnd();
         StartCoroutine(CoDefeat());
     }
 
@@ -399,7 +431,7 @@ public class Gameplay : MonoBehaviour
         explosionParticle.Stop();
         var explodePos = targetWarpMeshInteraction.GetComponentInChildren<Explosion>().ExplosionPos.transform.position;
         explosionParticle.transform.position = explodePos;
-        yield return true;
+        yield return null;
         explosionParticle.Play();
         fireStarterArea.PlayVictory();
 
@@ -408,14 +440,14 @@ public class Gameplay : MonoBehaviour
 
         confettiParticle.transform.position = targetWarpMeshInteraction.transform.position + Vector3.back * 2;
         confettiParticle.Stop();
-        yield return true;
+        yield return null;
         confettiParticle.Play();
         yield return new WaitForSeconds(1.2f);
         targetWarpMeshInteraction.StartCrumble();
 
         yield return new WaitForSeconds(1.5f);
         CalculateRemainingBurnableScore();
-        callbackVictory?.Invoke();
+        OnUIVictoryInspect.RaiseEvent();
     }
 
 
@@ -445,7 +477,7 @@ public class Gameplay : MonoBehaviour
         OnSendScoreEvent.RaiseEvent(CurrentStageScore);
         yield return true;
 
-        callbackDefeat?.Invoke();
+        OnUIDefeatInspect.RaiseEvent();
     }
 
     Vector2 InputPosition
@@ -601,14 +633,27 @@ public class Gameplay : MonoBehaviour
         return pos;
     }
 
-    void UpdateCheckForVictory()
+    IEnumerator CoCheckForVictory()
     {
-        if (targetWarpMeshInteraction != null && targetWarpMeshInteraction.MeshIgnited && victory == false)
+        while (true)
         {
-            victory = true;
-            StopAllCoroutines();
-            StartCoroutine(CoVictory());
+            yield return null;
+            if (targetWarpMeshInteraction != null && targetWarpMeshInteraction.MeshIgnited && victory == false)
+            {
+                victory = true;
+                OnGameEnd();
+                StartCoroutine(CoVictory());
+                break;
+            }
         }
+    }
+
+    private void OnGameEnd()
+    {
+        StopAllCoroutines();
+        Debug.Log("HideGameplayUI");
+        OnUIGamePlayHide.RaiseEvent();
+        fireStarterArea.DisableFire();
     }
     private IEnumerator CheckResponse(Func<bool> condition, Action callback)
     {

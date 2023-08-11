@@ -1,39 +1,52 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIDefeat : MonoBehaviour
 {
+    [SerializeField] private GameObject GUI;
     public Gameplay gameplay;
     public Animator anim;
-    public GameObject retryBtn;
+    public Button retryBtn;
     public GameObject adBtn;
     public Text txtScore;
     public VoidEventChannel ShowLostAdsEnvent;
     public BoolEventChannel OnShowRewardAdsEvent;
 
+    [SerializeField] private VoidEventChannel OnUIDefeatInspect;
+    [SerializeField] private CallBackEventChannel OnUIDefeatHide;
+
+    [SerializeField] private VoidEventChannel OnUITitleInspect;
+
+    [Header("Animations")]
+    [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
+
     // Start is called before the first frame update
     void Start()
     {
-        gameplay.callbackDefeat += () => gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        HidePanel();
     }
     private void OnEnable()
     {
-        retryBtn.SetActive(false);
-        StartCoroutine(Show());
+        ShowPanel();
         if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised += OnShowRewardAds;
+
+        OnUIDefeatInspect.OnEventRaised += OnShowPanelEvent;
+        OnUIDefeatHide.OnEventRaised += OnHidePanelEvent;
     }
     private void OnDisable()
     {
         if (OnShowRewardAdsEvent != null)
             OnShowRewardAdsEvent.OnEventRaised -= OnShowRewardAds;
+        OnUIDefeatInspect.OnEventRaised -= OnShowPanelEvent;
+        OnUIDefeatHide.OnEventRaised -= OnHidePanelEvent;
     }
     public void Continue()
     {
-        StartCoroutine(Hide());
+        OnHidePanelEvent(OnUITitleInspect.RaiseEvent);
     }
     public void ShowLostAds()
     {
@@ -41,17 +54,27 @@ public class UIDefeat : MonoBehaviour
     }
     public void OnShowRewardAds(bool isSuccess)
     {
-        StartCoroutine(Hide());
+        OnHidePanelEvent();
     }
-    IEnumerator Hide()
+    private void OnHidePanelEvent(Action callback = null)
     {
-        yield return true;
-        anim.Play("Hide");
+        Action totalCallback = HidePanel;
+        totalCallback += callback;
+        _fadeInFadeOutUI.FadeOut(totalCallback);
     }
-    IEnumerator Show()
+    private void HidePanel()
+    {
+        this.GUI.SetActive(false);
+    }
+
+    private void OnShowPanelEvent()
+    {
+        ShowPanel();
+        _fadeInFadeOutUI.FadeIn();
+    }
+    private void ShowPanel()
     {
         txtScore.text = "Score: " + gameplay.CurrentStageScore;
-        yield return null;
-        retryBtn.SetActive(true);
+        this.GUI.SetActive(true);
     }
 }
