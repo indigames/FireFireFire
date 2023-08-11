@@ -323,7 +323,6 @@ public class Gameplay : MonoBehaviour
             yield return true;
             newWaitingForLaunch = false;
             while (waitingForLaunch && victory == false) yield return true;
-
             
             yield return new WaitForSeconds(0.1f);
             nextMeshBlock.MovementMode = false;
@@ -376,6 +375,8 @@ public class Gameplay : MonoBehaviour
     {
         confirmStart = false;
         callbackWaitForConfirmStart?.Invoke();
+        OnOverlayHideEvent.RaiseEvent(null);
+
         while (confirmStart == false) yield return true;
         StartCoroutine(CheckResponse(() => KantanGameBox.IsGameStartFinish(),
                               () =>

@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class UIOverlay : MonoBehaviour
 {
-
-    public Gameplay gameplay;
-
     [SerializeField] private GameObject GUI;
     [SerializeField] private FadeInFadeOutUI _fadeInFadeOutUI;
 
@@ -18,9 +15,6 @@ public class UIOverlay : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        gameplay.callbackRestart += OnShowPanelEvent;
-        gameplay.callbackWaitForConfirmStart += OnHidePanelEvent;
-
         yield return new WaitForSeconds(0.2f);
         HidePanel();
     }
