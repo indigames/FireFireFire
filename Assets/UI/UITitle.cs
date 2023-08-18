@@ -26,6 +26,17 @@ public class UITitle : MonoBehaviour
     void Start()
     {
         ShowPanelEvent();
+        CheckFirstTime();
+    }
+
+    private void CheckFirstTime()
+    {
+        if (PlayerPrefs.GetInt("IsFirstTime", -1) == -1)
+        {
+            OnHelpButtonPressed();
+            PlayerPrefs.SetInt("IsFirstTime", 0);
+            
+        }
     }
 
     private void OnEnable()
