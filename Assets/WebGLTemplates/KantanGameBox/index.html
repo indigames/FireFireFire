@@ -73,6 +73,17 @@
             // loadingBar.style.display = "block";
             var script = document.createElement("script");
             script.src = loaderUrl;
+
+            document.addEventListener("visibilitychange", () => {
+                if (document.visibilityState === "visible") {
+                    canvas.focus();
+                    console.log("Start focusing unity-canvas");
+                } else {
+                    canvas.blur();
+                    window.unityInstance.SendMessage('UIPressToContinue', 'OnUnFocus');
+                    console.log("Stop focusing unity-canvas");
+                }
+            });
             
             document.addEventListener('DOMContentLoaded', function () { 
                 window.GameStart = function () {
